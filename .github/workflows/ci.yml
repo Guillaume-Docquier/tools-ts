@@ -1,0 +1,57 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ${{ github.ref_name }}
+        uses: actions/checkout@v6
+
+      - name: Setting up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setting up nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - name: Install packages
+        run: pnpm i
+
+      - name: Format
+        run: pnpm format
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test:coverage
+
+      - name: Build
+        run: npm run build
+
+  publish:
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ${{ github.ref_name }}
+        uses: actions/checkout@v6
+
+      - name: Setting up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setting up nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm

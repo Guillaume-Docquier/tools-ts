@@ -2,14 +2,45 @@
   "name": "@guillaume-docquier/tools-ts",
   "version": "0.0.1",
   "description": "My personal collection of typescript tools",
-  "publishConfig": {
-    "access": "public"
-  },
+  "license": "MIT",
+  "author": "Guillaume Docquier",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier --check . && pnpm format:package-json --check",
+    "format:fix": "prettier --write --list-different . && pnpm format:package-json",
+    "format:package-json": "sort-package-json package.json shared/eslint/package.json shared/toolbox/package.json frontend/package.json backend/package.json",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
+    "prepare": "husky"
   },
-  "author": "Guillaume Docquier",
-  "license": "MIT",
-  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
+  "lint-staged": {
+    "*package.json": "sort-package-json",
+    "*.{md,json,yml,yaml,css,scss}": "prettier --write",
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "printWidth": 140,
+    "semi": false
+  },
+  "dependencies": {
+    "@logtape/logtape": "^2.0.5"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
+    "sort-package-json": "^3.6.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vitest": "^4.1.2"
+  },
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,6 +1,6 @@
 import { describe, it, afterEach, expect, vi } from "vitest"
 import { reset } from "@logtape/logtape"
-import { Logger } from "#src/logging/Logger.js"
+import { Logger } from "../../logging/Logger.js"
 import { createConsoleLogSink } from "./ConsoleLogSink.js"
 
 describe("ConsoleLogSink", () => {

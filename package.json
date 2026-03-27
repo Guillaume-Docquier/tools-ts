@@ -10,9 +10,6 @@
   "license": "MIT",
   "author": "Guillaume Docquier",
   "type": "module",
-  "imports": {
-    "#src/*": "./src/*"
-  },
   "exports": {
     ".": {
       "types": "./dist/entry.tools-ts.d.ts",

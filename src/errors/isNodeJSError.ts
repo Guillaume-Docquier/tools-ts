@@ -1,4 +1,4 @@
-import { TypeGuard } from "#src/TypeGuard.js"
+import { TypeGuard } from "../TypeGuard.js"
 
 /**
  * Errors thrown by NodeJS satisfy the {@link NodeJS.ErrnoException} interface, but are of type {@link Error}.

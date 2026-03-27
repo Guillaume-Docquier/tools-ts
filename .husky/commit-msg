@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+MESSAGE="$(cat $1)"
+
+CONVENTIONAL_COMMIT_REGEX="^((Merge[ a-z-]* branch.*)|(Revert*)|((feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.*\))?!?: .*))"
+
+if ! [[ $MESSAGE =~ $CONVENTIONAL_COMMIT_REGEX ]]; then
+	echo -e "\n❌ Conventional commit format"
+	exit 1
+fi

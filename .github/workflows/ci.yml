@@ -56,6 +56,9 @@ jobs:
           node-version-file: ".nvmrc"
           cache: pnpm
 
+      - name: Install packages
+        run: pnpm i
+
       # semantic-release only officially supports npm (https://github.com/semantic-release/npm/issues/280)
       # I tried creating an alias, but commands are executed in sub shells (https://github.com/VentionCo/mm-machine-logic/pull/5186)
       # I tried @anolilab/semantic-release-pnpm but it doesn't work with the github registry (https://github.com/VentionCo/mm-machine-logic/pull/5187)

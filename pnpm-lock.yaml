@@ -10,6 +10,9 @@ importers:
       "@logtape/logtape":
         specifier: ^2.0.5
         version: 2.0.5
+      "@logtape/redaction":
+        specifier: ^2.0.5
+        version: 2.0.5(@logtape/logtape@2.0.5)
     devDependencies:
       "@eslint/js":
         specifier: ^10.0.1
@@ -184,6 +187,11 @@ packages:
 
   "@logtape/logtape@2.0.5":
     resolution: { integrity: sha512-UizDkh20ZPJVOddRxG1F77WhHdlNl/sbQgoO8T534R7XvUBMAJ9En9f35u+meW2tRsNLvjz6R87Zanwf53tspQ== }
+
+  "@logtape/redaction@2.0.5":
+    resolution: { integrity: sha512-EyC6gaTITsZCujGvEl6jNf1+od6YtY8H+Y6Rs9aWXtbr0LDMcts/Tk2v6T3uXf1M/YPwb+xCmcBU+r8NQcJmxA== }
+    peerDependencies:
+      "@logtape/logtape": ^2.0.5
 
   "@napi-rs/wasm-runtime@1.1.1":
     resolution: { integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A== }
@@ -2256,6 +2264,10 @@ snapshots:
       "@jridgewell/sourcemap-codec": 1.5.5
 
   "@logtape/logtape@2.0.5": {}
+
+  "@logtape/redaction@2.0.5(@logtape/logtape@2.0.5)":
+    dependencies:
+      "@logtape/logtape": 2.0.5
 
   "@napi-rs/wasm-runtime@1.1.1":
     dependencies:

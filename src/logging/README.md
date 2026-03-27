@@ -4,12 +4,6 @@ This module is meant to be a logging implementation. It includes the Logger API,
 
 ## Current scope and architecture
 
-The module currently contains:
-
-- `Logger`
-- `ConsoleLogSink` and the `LogSink` interface
-- `LogContextProvider` and `LogContext` interfaces
-
 The `Logger` is a wrapper over [LogTape](https://logtape.org/). It works in both the browser and node.  
 The logger encourages structured logging and streamlines the log formatting.  
 It is customizable, you can create your own sinks and log formatters, but ideally we would offer all necessary sinks to avoid each project having to implement their own sinks and have uniform logs.
@@ -71,13 +65,32 @@ Libraries that use the logger can get the logger with `Logger.get()`. This logge
 
 Applications will eventually configure `Logger`, which will correctly propagate the logger context and sinks to all loggers that were created before the configuration.
 
+## Available Sinks
+
+### ConsoleLogSink
+
+The `ConsoleLogSink` outputs logs to the browser console or terminal. It works in both browser and Node.js environments.
+
+```ts
+import { VentionLogger, createConsoleLogSink, jsonLinesConsoleFormatter, prettyConsoleFormatter } from "@ventionco/tech-toolbox"
+
+// You can use a single set of options for dev and prod
+const isProd = process.env.NODE_ENV === "production" // or however you know
+const logger = await VentionLogger.configure({
+  sinks: {
+    console: createConsoleLogSink({
+      formatter: isProd ? jsonLinesConsoleFormatter : prettyConsoleFormatter,
+      redaction: { enabled: isProd },
+    }),
+  },
+})
+
+logger.info("Hello world", { foo: "bar", password: "leaking" })
+// Development:  [14:46:28.187] INFO: Hello world { foo: "bar", password: "leaking" }
+// Production:   {"timestamp":"2024-01-01T14:46:28.187Z","level":"INFO","message":"Hello world","foo":"bar","password":"[REDACTED]"}
+```
+
 ## Future work
-
-### High Performance Environments
-
-Because `Logger` is mostly just a wrapper, it allows us to easily change the logging engine, if we ever need to. For example, we've explored Pino, which is more performant, but due to time constraints we didn't choose it as the logging engine.
-
-If we find that we need to improve the logger's performance, we should look to replace LogTape with Pino.
 
 ### Log buffering before configuration
 

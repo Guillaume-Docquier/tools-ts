@@ -46,7 +46,8 @@
     "semi": false
   },
   "dependencies": {
-    "@logtape/logtape": "^2.0.5"
+    "@logtape/logtape": "^2.0.5",
+    "@logtape/redaction": "^2.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

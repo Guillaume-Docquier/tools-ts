@@ -37,7 +37,7 @@ jobs:
         run: pnpm test:coverage
 
       - name: Build
-        run: npm run build
+        run: pnpm build
 
   publish:
     needs: ci

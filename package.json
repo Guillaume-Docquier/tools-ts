@@ -1,6 +1,6 @@
 {
   "name": "@guillaume-docquier/tools-ts",
-  "version": "0.0.1",
+  "version": "0.0.0-semantically-released",
   "description": "My personal collection of typescript tools",
   "homepage": "https://github.com/Guillaume-Docquier/tools-ts",
   "repository": {
@@ -83,6 +83,7 @@
     }
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }

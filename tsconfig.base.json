@@ -1,13 +1,33 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
+    "paths": {
+      "src/*": ["./src/*"]
+    },
+
+    "module": "nodenext",
+    "target": "esnext",
+
+    // Somehow I need "dom" for structuredClone, even though it is supported in browser and node
+    "lib": ["esnext", "dom"],
+    // It doesn't run in node but we offer some node functions
+    "types": ["node"],
+
+    "useDefineForClassFields": true,
     "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "nodenext",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

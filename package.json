@@ -13,8 +13,7 @@
   "exports": {
     ".": {
       "types": "./dist/entry.tools-ts.d.ts",
-      "import": "./dist/entry.tools-ts.js",
-      "require": "./dist/entry.tools-ts.cjs"
+      "import": "./dist/entry.tools-ts.js"
     }
   },
   "files": [
@@ -26,10 +25,10 @@
     "format:fix": "prettier --write --list-different . && pnpm format:package-json",
     "format:package-json": "sort-package-json package.json",
     "lint": "eslint . --max-warnings 0",
-    "lint:fix": "npm run lint -- --fix",
-    "prepack": "npm run build",
+    "lint:fix": "pnpm lint -- --fix",
+    "prepack": "pnpm build",
     "prepare": "husky",
-    "prepublishOnly": "npm ci",
+    "prepublishOnly": "pnpm i",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc -b --noEmit"

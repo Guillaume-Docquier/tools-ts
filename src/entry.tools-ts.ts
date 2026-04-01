@@ -23,3 +23,5 @@ export { createConsoleLogSink } from "./logging/sink/ConsoleLogSink.js"
 export type { LogContext } from "./logging/log-context/LogContext.js"
 export type { LoggerContext } from "./logging/log-context/LoggerContext.js"
 export type { LogContextProvider } from "./logging/log-context/LogContextProvider.js"
+
+export { debounce } from "./debounce.js"

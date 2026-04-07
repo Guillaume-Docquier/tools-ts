@@ -149,3 +149,26 @@ export type PartialProperties<TObject, TKey extends keyof TObject> = Omit<TObjec
  * ```
  */
 export type ValueOf<T> = T[keyof T]
+
+/**
+ * Creates an enum type out of a const object.
+ * Useful for projects that run native Typescript in node and can't use enums, but want the same ergonomics.
+ * This is basically an alias of {@link ValueOf}.
+ *
+ * @example
+ * ```ts
+ * type MyEnum = Enumify<MyEnum>
+ * ^? "a" | "b" | "c"
+ * const MyEnum = {
+ *   A: "a",
+ *   B: "b",
+ *   C: "c",
+ * } as const
+ *
+ * function useEnum(value: MyEnum) {}
+ *
+ * useEnum(MyEnum.A) // works
+ * useEnum("a") // also works
+ * ```
+ */
+export type Enumify<TObject extends Record<string, string>> = ValueOf<TObject>

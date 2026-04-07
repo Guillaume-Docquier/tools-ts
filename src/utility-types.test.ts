@@ -60,4 +60,6 @@ describe("utility-types", () => {
       expectTypeOf({ something: "not a response" }).not.toMatchTypeOf<Responses>()
     })
   })
+
+  describe("Enumify")
 })

@@ -1,7 +1,6 @@
 import { describe, it, expect, expectTypeOf } from "vitest"
 import { Assert } from "./Assert.js"
 import { AssertionError } from "./errors/AssertionError.js"
-import { Result, type Failure } from "./Result.js"
 
 describe("Assert", () => {
   describe("isInstanceOf", () => {
@@ -21,13 +20,16 @@ describe("Assert", () => {
       { instance: undefined, expectedName: "undefined" },
     ])("should throw a clear error message with a $expectedName", ({ instance, expectedName }) => {
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isInstanceOf(Foo, instance)
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         expected: "Foo",
         received: expectedName,
       })
@@ -39,13 +41,16 @@ describe("Assert", () => {
       const paramName = "my parameter name"
 
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isInstanceOf(Foo, instance, paramName)
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         paramName,
         expected: "Foo",
         received: instance.constructor.name,
@@ -88,13 +93,16 @@ describe("Assert", () => {
       const paramName = "my parameter name"
 
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isDefined(null, paramName)
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         paramName,
         expected: "neither null nor undefined",
         received: "null",
@@ -106,14 +114,17 @@ describe("Assert", () => {
       const paramName = "my parameter name"
 
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isDefined(undefined, paramName)
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.message).toContain('"received": "undefined"') // JSON.stringify drops undefined values, so we test that it was properly serialized and displayed
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.message).toContain('"received": "undefined"') // JSON.stringify drops undefined values, so we test that it was properly serialized and displayed
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         paramName,
         expected: "neither null nor undefined",
         received: "undefined",
@@ -165,13 +176,16 @@ describe("Assert", () => {
       { value: false, received: "false" },
     ])("should throw a AssertionError with a clear context when maybeEnumValue is not an enum value ($value)", ({ value, received }) => {
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isEnumMember(NumberEnum, value)
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         expected: "one of ['ONE', 'TWO', 'THREE', 0, 1, 2]",
         received,
       })
@@ -179,13 +193,16 @@ describe("Assert", () => {
 
     it("should quote strings to make it obvious when it's a number or a string", () => {
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isEnumMember(NumberEnum, "2")
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         expected: "one of ['ONE', 'TWO', 'THREE', 0, 1, 2]",
         received: "2", // The string "2" is invalid, but the number 2 is valid
       })
@@ -193,13 +210,16 @@ describe("Assert", () => {
 
     it("should not escape single quotes because it's complicated for no reason. Please don't be a dick!", () => {
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isEnumMember(StringEnum, "hey")
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         expected: "one of ['one', 'two', 'three', 'one, one', 'hey']", // That would be hella confusing, because it looks like 'hey' is valid, but why would you expect the value "one, one', 'hey" ???
         received: "hey",
       })
@@ -254,13 +274,16 @@ describe("Assert", () => {
       "should throw a AssertionError with a clear context when maybeValue is not an expected value ($value)",
       ({ maybeValue, received }) => {
         // Act
-        const failure = Result.tryCatch(() => {
+        let error: unknown
+        try {
           Assert.isOneOf([0, 1, 2] as const, maybeValue)
-        }) as Failure<unknown>
+        } catch (e) {
+          error = e
+        }
 
         // Assert
-        Assert.isInstanceOf(AssertionError, failure.error)
-        expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+        Assert.isInstanceOf(AssertionError, error)
+        expect(error.context).toStrictEqual<(typeof error)["context"]>({
           expected: "one of [0, 1, 2]",
           received,
         })
@@ -269,13 +292,16 @@ describe("Assert", () => {
 
     it("should quote strings to make it obvious when it's a number or a string", () => {
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isOneOf([0, "1", 2] as const, "2")
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         expected: "one of [0, '1', 2]",
         received: "2", // The string "2" is invalid, but the number 2 is valid
       })
@@ -283,13 +309,16 @@ describe("Assert", () => {
 
     it("should not escape single quotes because it's complicated for no reason. Please don't be a dick!", () => {
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isOneOf([0, "1', '3", 2] as const, "3")
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         expected: "one of [0, '1', '3', 2]", // That would be hella confusing, because it looks like '3' is valid, but why would you expect the value "1', '3" ???
         received: "3",
       })
@@ -303,13 +332,16 @@ describe("Assert", () => {
       const condition = false
 
       // Act
-      const failure = Result.tryCatch(() => {
+      let error: unknown
+      try {
         Assert.isTrue(condition, paramName)
-      }) as Failure<unknown>
+      } catch (e) {
+        error = e
+      }
 
       // Assert
-      Assert.isInstanceOf(AssertionError, failure.error)
-      expect(failure.error.context).toStrictEqual<(typeof failure.error)["context"]>({
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
         paramName,
         expected: "a true value",
         received: "false",

@@ -1,3 +1,5 @@
+import { Rethrow } from "./errors/Rethrow.js"
+
 /**
  * A Result is either a Success or a Failure.
  * You can use the Result utility functions to work nicely with Results
@@ -60,6 +62,7 @@ export const Result = {
  * Creates a Result from the result of a promise.
  * If the promise resolves, you will get a {@link Result.Success}.
  * If the promise rejects, you will get a {@link Result.Failure}.
+ * If the promise rejects with a fatal error, the error will be rethrown.
  *
  * @param fn The callback to execute.
  */
@@ -68,6 +71,7 @@ function tryCatch<T>(fn: () => Promise<T>): Promise<Result<T, unknown>>
  * Creates a Result from the result of a function that could throw.
  * If the function does not throw, you will get a {@link Result.Success}.
  * If the function throws, you will get a {@link Result.Failure}.
+ * If the function throws a fatal error, the error will be rethrown.
  *
  * @param fn The callback to execute.
  */
@@ -78,12 +82,16 @@ function tryCatch<T>(fn: () => T | Promise<T>): Result<T, unknown> | Promise<Res
 
     // Async handling
     if (result instanceof Promise) {
-      return result.then(Result.Success).catch(Result.Failure)
+      return result.then(Result.Success).catch((error) => {
+        Rethrow.ifFatal(error)
+        return Result.Failure(error)
+      })
     }
 
     // Sync handling
     return Result.Success(result)
   } catch (error) {
+    Rethrow.ifFatal(error)
     return Result.Failure(error)
   }
 }

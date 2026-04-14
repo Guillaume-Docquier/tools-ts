@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { Result } from "./Result.js"
+import { FatalError } from "./errors/FatalError.js"
 
 describe("Result", () => {
   describe("Success", () => {
@@ -123,6 +124,17 @@ describe("Result", () => {
         // Assert
         expect(result).toEqual<typeof result>(Result.Failure(expectedError))
       })
+
+      it("should throw when the function throws a fatal error", async () => {
+        // Arrange
+        const expectedError = new FatalError("boom", {})
+        function synchronous(): number {
+          throw expectedError
+        }
+
+        // Act & Assert
+        expect(() => Result.tryCatch(synchronous)).toThrow(expectedError)
+      })
     })
 
     describe("asynchronous", () => {
@@ -152,6 +164,17 @@ describe("Result", () => {
 
         // Assert
         expect(result).toEqual<typeof result>(Result.Failure(expectedError))
+      })
+
+      it("should throw when the promise rejects with a fatal error", async () => {
+        // Arrange
+        const expectedError = new FatalError("boom", {})
+        async function asynchronous(): Promise<number> {
+          throw expectedError
+        }
+
+        // Act & Assert
+        await expect(async () => await Result.tryCatch(asynchronous)).rejects.toThrow(expectedError)
       })
     })
   })

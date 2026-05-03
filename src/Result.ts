@@ -54,7 +54,7 @@ export const Result = {
     return maybeFailure.type === "Failure"
   },
 
-  // You can overload while defining object properties, which is why the function implementation is not inlined
+  // You can't overload while defining object properties, which is why the function implementation is not inlined
   tryCatch,
 }
 

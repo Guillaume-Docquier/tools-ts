@@ -138,7 +138,7 @@ describe("Result", () => {
     })
 
     describe("asynchronous", () => {
-      it("should return a Success when the promise resolves", async () => {
+      it("should return a Success when the returned promise resolves", async () => {
         // Arrange
         const expectedValue = 1
         async function asynchronous(): Promise<number> {
@@ -152,7 +152,7 @@ describe("Result", () => {
         expect(result).toEqual<typeof result>(Result.Success(expectedValue))
       })
 
-      it("should return a Failure when the promise rejects", async () => {
+      it("should return a Failure when the returned promise rejects", async () => {
         // Arrange
         const expectedError = new Error("boom")
         async function asynchronous(): Promise<number> {
@@ -166,7 +166,7 @@ describe("Result", () => {
         expect(result).toEqual<typeof result>(Result.Failure(expectedError))
       })
 
-      it("should throw when the promise rejects with a fatal error", async () => {
+      it("should throw when the returned promise rejects with a fatal error", async () => {
         // Arrange
         const expectedError = new FatalError("boom", {})
         async function asynchronous(): Promise<number> {
@@ -175,6 +175,41 @@ describe("Result", () => {
 
         // Act & Assert
         await expect(async () => await Result.tryCatch(asynchronous)).rejects.toThrow(expectedError)
+      })
+    })
+
+    describe("promise", () => {
+      it("should return a Success when the promise resolves", async () => {
+        // Arrange
+        const expectedValue = 1
+        const promise = Promise.resolve(expectedValue)
+
+        // Act
+        const result = await Result.tryCatch(promise)
+
+        // Assert
+        expect(result).toEqual<typeof result>(Result.Success(expectedValue))
+      })
+
+      it("should return a Failure when the promise rejects", async () => {
+        // Arrange
+        const expectedError = new Error("boom")
+        const promise = Promise.reject(expectedError)
+
+        // Act
+        const result = await Result.tryCatch(promise)
+
+        // Assert
+        expect(result).toEqual<typeof result>(Result.Failure(expectedError))
+      })
+
+      it("should throw when the promise rejects with a fatal error", async () => {
+        // Arrange
+        const expectedError = new FatalError("boom", {})
+        const promise = Promise.reject(expectedError)
+
+        // Act & Assert
+        await expect(async () => await Result.tryCatch(promise)).rejects.toThrow(expectedError)
       })
     })
   })

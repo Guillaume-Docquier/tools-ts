@@ -21,11 +21,12 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc --project tsconfig.build.json",
+    "checks": "pnpm lint:fix && pnpm format:fix && pnpm typecheck && pnpm test --run",
     "format": "prettier --check . && pnpm format:package-json --check",
     "format:fix": "prettier --write --list-different . && pnpm format:package-json",
     "format:package-json": "sort-package-json package.json",
     "lint": "eslint . --max-warnings 0",
-    "lint:fix": "pnpm lint -- --fix",
+    "lint:fix": "pnpm lint --fix",
     "prepack": "pnpm build",
     "prepare": "husky",
     "prepublishOnly": "pnpm i",

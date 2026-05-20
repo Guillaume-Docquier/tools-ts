@@ -64,28 +64,38 @@ export const Result = {
  * If the promise rejects, you will get a {@link Result.Failure}.
  * If the promise rejects with a fatal error, the error will be rethrown.
  *
- * @param fn The callback to execute.
+ * @param promise The promise.
  */
-function tryCatch<T>(fn: () => Promise<T>): Promise<Result<T, unknown>>
+function tryCatch<T>(promise: Promise<T>): Promise<Result<T, Error>>
+/**
+ * Creates a Result from the result of a function that returns a promise.
+ * If the returned promise resolves, you will get a {@link Result.Success}.
+ * If the returned promise rejects, you will get a {@link Result.Failure}.
+ * If the returned promise rejects with a fatal error, the error will be rethrown.
+ *
+ * @param asyncFn The asynchronous callback to execute.
+ */
+function tryCatch<T>(asyncFn: () => Promise<T>): Promise<Result<T, Error>>
 /**
  * Creates a Result from the result of a function that could throw.
  * If the function does not throw, you will get a {@link Result.Success}.
  * If the function throws, you will get a {@link Result.Failure}.
  * If the function throws a fatal error, the error will be rethrown.
  *
- * @param fn The callback to execute.
+ * @param syncFn The synchronous callback to execute.
  */
-function tryCatch<T>(fn: () => T): Result<T, unknown>
-function tryCatch<T>(fn: () => T | Promise<T>): Result<T, unknown> | Promise<Result<T, unknown>> {
+function tryCatch<T>(syncFn: () => T): Result<T, Error>
+function tryCatch<T>(op: Promise<T> | (() => T | Promise<T>)): Result<T, Error> | Promise<Result<T, Error>> {
+  if (op instanceof Promise) {
+    return tryCatchPromise(op)
+  }
+
   try {
-    const result = fn()
+    const result = op()
 
     // Async handling
     if (result instanceof Promise) {
-      return result.then(Result.Success).catch((error) => {
-        Rethrow.ifFatal(error)
-        return Result.Failure(error)
-      })
+      return tryCatchPromise(result)
     }
 
     // Sync handling
@@ -94,4 +104,11 @@ function tryCatch<T>(fn: () => T | Promise<T>): Result<T, unknown> | Promise<Res
     Rethrow.ifFatal(error)
     return Result.Failure(error)
   }
+}
+
+function tryCatchPromise<T>(promise: Promise<T>): Promise<Result<T, Error>> {
+  return promise.then(Result.Success).catch((error) => {
+    Rethrow.ifFatal(error)
+    return Result.Failure(error)
+  })
 }

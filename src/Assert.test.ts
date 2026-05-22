@@ -1,10 +1,11 @@
 import { describe, it, expect, expectTypeOf } from "vitest"
 import { Assert } from "./Assert.js"
 import { AssertionError } from "./errors/AssertionError.js"
+import { Result, Success } from "./Result.js"
 
 describe("Assert", () => {
   describe("isInstanceOf", () => {
-    it("should throw a AssertionError when the argument is not an instance of the expected class", () => {
+    it("should throw an AssertionError when the argument is not an instance of the expected class", () => {
       // Arrange
       const maybeFoo: unknown = new Bar()
 
@@ -72,7 +73,7 @@ describe("Assert", () => {
   })
 
   describe("isDefined", () => {
-    it.each([null, undefined])("should throw a AssertionError when the argument is %o", () => {
+    it.each([null, undefined])("should throw an AssertionError when the argument is %o", () => {
       // Act & Assert
       expect(() => {
         Assert.isDefined(undefined)
@@ -142,7 +143,7 @@ describe("Assert", () => {
       })
 
       const INVALID_THEORY = ["0", "1", "2", "", "string", {}, [], null, undefined, true, false]
-      it.each(INVALID_THEORY)("should throw a AssertionError when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
+      it.each(INVALID_THEORY)("should throw an AssertionError when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
         expect(() => {
           Assert.isEnumMember(NumberEnum, notAnEnumValue)
         }).toThrow(AssertionError)
@@ -158,7 +159,7 @@ describe("Assert", () => {
       })
 
       const INVALID_THEORY = ["0", "1", "2", "ONE", "TWO", "THREE", "", "string", {}, [], null, undefined, true, false]
-      it.each(INVALID_THEORY)("should throw a AssertionError when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
+      it.each(INVALID_THEORY)("should throw an AssertionError when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
         expect(() => {
           Assert.isEnumMember(StringEnum, notAnEnumValue)
         }).toThrow(AssertionError)
@@ -174,7 +175,7 @@ describe("Assert", () => {
       { value: undefined, received: "undefined" },
       { value: true, received: "true" },
       { value: false, received: "false" },
-    ])("should throw a AssertionError with a clear context when maybeEnumValue is not an enum value ($value)", ({ value, received }) => {
+    ])("should throw an AssertionError with a clear context when maybeEnumValue is not an enum value ($value)", ({ value, received }) => {
       // Act
       let error: unknown
       try {
@@ -255,7 +256,7 @@ describe("Assert", () => {
     })
 
     const INVALID_THEORY = ["0", "1", "2", "ONE", "TWO", "THREE", "", "string", {}, [], null, undefined, true, false]
-    it.each(INVALID_THEORY)("should throw a AssertionError when maybeValue is not an expected value given %o", (notOneOf) => {
+    it.each(INVALID_THEORY)("should throw an AssertionError when maybeValue is not an expected value given %o", (notOneOf) => {
       expect(() => {
         Assert.isOneOf([0, 1, 2] as const, notOneOf)
       }).toThrow(AssertionError)
@@ -271,7 +272,7 @@ describe("Assert", () => {
       { maybeValue: true, received: "true" },
       { maybeValue: false, received: "false" },
     ])(
-      "should throw a AssertionError with a clear context when maybeValue is not an expected value ($value)",
+      "should throw an AssertionError with a clear context when maybeValue is not an expected value ($value)",
       ({ maybeValue, received }) => {
         // Act
         let error: unknown
@@ -326,7 +327,7 @@ describe("Assert", () => {
   })
 
   describe("isTrue", () => {
-    it("should throw a AssertionError when the condition is false", () => {
+    it("should throw an AssertionError when the condition is false", () => {
       // Arrange
       const paramName = "my condition"
       const condition = false
@@ -411,6 +412,44 @@ describe("Assert", () => {
     })
   })
 
+  describe("isSuccess", () => {
+    it("should throw an AssertionError when the Result is a Failure", () => {
+      // Arrange
+      const paramName = "my result"
+      const result = Result.Failure("ouch")
+
+      // Act
+      let error: unknown
+      try {
+        Assert.isSuccess(result, paramName)
+      } catch (e) {
+        error = e
+      }
+
+      // Assert
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
+        paramName,
+        expected: "a Success",
+        received: "a Failure: ouch",
+      })
+    })
+
+    it("should narrow the type when the Result is a Success", () => {
+      // Arrange
+      const result = Result.Success("yay") as Result<string, unknown>
+
+      expectTypeOf(result).toEqualTypeOf<Result<string, unknown>>()
+      expectTypeOf(result).not.toEqualTypeOf<Success<string>>()
+
+      // Act
+      Assert.isSuccess(result)
+
+      // Assert
+      expectTypeOf(result).toEqualTypeOf<Success<string>>()
+    })
+  })
+
   describe.skip("unskip to inspect the output of thrown errors", () => {
     it("Assert.isInstanceOf", () => {
       Assert.isInstanceOf(Bar, new Foo())
@@ -434,6 +473,10 @@ describe("Assert", () => {
 
     it("Assert.isTrue", () => {
       Assert.isTrue(false)
+    })
+
+    it("Assert.isSuccess", () => {
+      Assert.isSuccess(Result.Failure("something went wrong"))
     })
   })
 })

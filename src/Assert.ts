@@ -1,6 +1,7 @@
 import { AssertionError } from "./errors/AssertionError.js"
 import type { EnumType, ConstructorType } from "./utility-types.js"
 import { TypeGuard } from "./TypeGuard.js"
+import { Result, Success } from "./Result.js"
 
 /**
  * From Wikipedia
@@ -221,6 +222,24 @@ export class Assert {
       },
       Assert.isExhausted,
     )
+  }
+
+  /**
+   * Asserts that the Result is a success.
+   * This is mostly useful in tests, as real code should handle Failures.
+   */
+  public static isSuccess<T>(this: void, result: Result<T, unknown>, paramName?: string): asserts result is Success<T> {
+    if (Result.isFailure(result)) {
+      throw new AssertionError(
+        "Expected result to be Success",
+        {
+          paramName,
+          expected: "a Success",
+          received: `a Failure: ${formatPrimitiveValue(result.error)}`,
+        },
+        Assert.isSuccess,
+      )
+    }
   }
 }
 

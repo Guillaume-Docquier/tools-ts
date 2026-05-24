@@ -1,8 +1,10 @@
 name: Continuous Integration
 
 on:
+  pull_request:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
@@ -52,6 +54,7 @@ jobs:
 
   publish:
     needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:

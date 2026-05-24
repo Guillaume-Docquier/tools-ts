@@ -35,6 +35,15 @@ external APIs, CLI input, local storage, or other unknown data.
 | `getEnumKey` | Looks up the enum key associated with a value.                                    | You have an enum value and need the more descriptive key for display, logs, or diagnostics. |
 | `asArray`    | Normalizes a single value or array into an array.                                 | An API accepts both `T` and `T[]`, but downstream logic should iterate uniformly.           |
 
+### Numeric Ranges
+
+Use this tool when code needs a reusable, validated numeric interval instead of
+duplicating min/max checks across call sites.
+
+| Export  | What it is                                                       | Use it when                                                                                   |
+| ------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `Range` | Helpers for creating, validating, comparing, and testing ranges. | You need finite integer or float intervals with inclusive minimums and configurable maximums. |
+
 ### Utility Types
 
 These exports are type-only helpers for common TypeScript modeling problems.

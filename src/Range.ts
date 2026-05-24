@@ -2,11 +2,13 @@ import { Result } from "./Result.js"
 
 /**
  * A finite numeric interval with an inclusive minimum and either an inclusive or exclusive maximum.
+ * Use {@link Range.createMaxInclusive} and {@link Range.createMaxExclusive} factory methods to create valid ranges.
  */
-export type Range<TNumericType extends NumericType> = InclusiveRange<TNumericType> | ExclusiveRange<TNumericType>
+export type Range<TNumericType extends NumericType = NumericType> = InclusiveRange<TNumericType> | ExclusiveRange<TNumericType>
 
 /**
  * A finite numeric interval whose maximum value is included in the range.
+ * Use the {@link Range.createMaxInclusive} factory method to create valid InclusiveRanges.
  */
 export type InclusiveRange<TNumericType extends NumericType> = {
   /**
@@ -37,6 +39,7 @@ export type InclusiveRange<TNumericType extends NumericType> = {
 
 /**
  * A finite numeric interval whose maximum value is excluded from the range.
+ * Use the {@link Range.createMaxExclusive} factory method to create valid ExclusiveRanges.
  */
 export type ExclusiveRange<TNumericType extends NumericType> = {
   /**
@@ -144,45 +147,17 @@ export const Range = {
   },
 
   /**
-   * Checks whether a Range is valid. This is only useful to run on untrusted input since the Range constructors already ensures the Range is valid.
+   * Checks whether a Range is valid.
+   * This is only useful to run on untrusted input since the Range constructors already ensures the Range is valid.
    *
    * @param range The range to validate.
    */
-  validate: (range: Range<NumericType>): string | undefined => {
-    const max = getMax(range)
-
-    if (!isFiniteNumber(range.min) || !isFiniteNumber(max)) {
-      return "Range bounds must be finite numbers."
-    }
-
-    if (!isValidNumberType(range.numericType, range.min) || !isValidNumberType(range.numericType, max)) {
-      return `Range bounds must be ${range.numericType} values.`
-    }
-
-    if (range.type === "MaxInclusive" && range.min > range.maxInclusive) {
-      return "Range minimum must be less than or equal to the inclusive maximum."
-    }
-
-    if (range.type === "MaxExclusive" && range.min >= range.maxExclusive) {
-      return "Range minimum must be less than the exclusive maximum."
-    }
-
-    if (range.limits === undefined) {
-      return undefined
-    }
-
-    const limitInvalidReason = Range.validate(range.limits)
-
-    if (limitInvalidReason !== undefined) {
-      return `Range limits are invalid: ${limitInvalidReason}`
-    }
-
-    if (range.numericType !== range.limits.numericType) {
-      return "Range numeric type must match its limits numeric type."
-    }
-
-    if (!isContainedByLimits(range, range.limits)) {
-      return "Range must be contained by its limits."
+  validate: (range: Range): string | undefined => {
+    for (const rule of RANGE_VALIDATION_RULES) {
+      const reason = rule(range)
+      if (reason !== undefined) {
+        return reason
+      }
     }
 
     return undefined
@@ -194,7 +169,7 @@ export const Range = {
    * @param range The range to test against.
    * @param value The value to test.
    */
-  isWithin: (range: Range<NumericType>, value: number): boolean => {
+  isWithin: (range: Range, value: number): boolean => {
     if (value < range.min) {
       return false
     }
@@ -218,34 +193,53 @@ export const Range = {
   },
 }
 
-function isFiniteNumber(value: number): boolean {
-  return Number.isFinite(value)
+type RangeValidationRule = typeof Range.validate
+const RANGE_VALIDATION_RULES: RangeValidationRule[] = [
+  minIsFinite,
+  maxIsFinite,
+  minIsValidNumberType,
+  maxIsValidNumberType,
+  minIsSmallerThanMax,
+  limitsAreValid,
+  minIsWithinLimits,
+  maxIsWithinLimits,
+]
+
+function minIsFinite(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return Number.isFinite(range.min) ? undefined : "Min must be a finite number"
+}
+function maxIsFinite(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return Number.isFinite(getMax(range)) ? undefined : "Min must be a finite number"
 }
 
-function isValidNumberType(numericType: NumericType, value: number): boolean {
-  return numericType === "float" || Number.isInteger(value)
+function minIsValidNumberType(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return range.numericType === "float" || Number.isInteger(range.min) ? undefined : `Min must be a ${range.numericType} number`
+}
+function maxIsValidNumberType(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return range.numericType === "float" || Number.isInteger(getMax(range)) ? undefined : `Max must be a ${range.numericType} number`
 }
 
-function isContainedByLimits(range: Range<NumericType>, limits: Range<NumericType>): boolean {
-  return range.min >= limits.min && rangeUpperBoundIsWithinLimits(range, limits)
-}
-
-function rangeUpperBoundIsWithinLimits(range: Range<NumericType>, limits: Range<NumericType>): boolean {
-  const rangeMax = getMax(range)
-  const limitMax = getMax(limits)
-
-  if (rangeMax < limitMax) {
-    return true
+function minIsSmallerThanMax(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  switch (range.type) {
+    case "MaxExclusive":
+      return range.min < range.maxExclusive ? undefined : "Min must be smaller than the exclusive max"
+    case "MaxInclusive":
+      return range.min <= range.maxInclusive ? undefined : "Min must be smaller or equal to the inclusive max"
   }
-
-  if (rangeMax > limitMax) {
-    return false
-  }
-
-  return range.type === "MaxExclusive" || limits.type === "MaxInclusive"
 }
 
-function getMax(range: Range<NumericType>): number {
+function limitsAreValid(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return range.limits === undefined ? undefined : Range.validate(range.limits)
+}
+
+function minIsWithinLimits(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return range.limits === undefined || Range.isWithin(range.limits, range.min) ? undefined : "Min must be within limits"
+}
+function maxIsWithinLimits(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return range.limits === undefined || Range.isWithin(range.limits, getMax(range)) ? undefined : "Max must be within limits"
+}
+
+function getMax(range: Range): number {
   switch (range.type) {
     case "MaxExclusive":
       return range.maxExclusive

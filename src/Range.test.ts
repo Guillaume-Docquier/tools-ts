@@ -368,7 +368,7 @@ describe("Range", () => {
     })
   })
 
-  describe("isValid", () => {
+  describe("validate", () => {
     it.each([
       {
         range: () => {
@@ -441,7 +441,7 @@ describe("Range", () => {
         reason: "exclusive integer range within limits",
       },
     ])("should return true for a valid range ($reason)", ({ range }) => {
-      expect(Range.isValid(range())).toBe(true)
+      expect(Range.validate(range())).toEqual(undefined)
     })
 
     it.each([
@@ -487,7 +487,7 @@ describe("Range", () => {
         reason: "unknown type",
       },
     ])("should return false for an invalid range because of $reason", ({ range }) => {
-      expect(Range.isValid(range)).toBe(false)
+      expect(Range.validate(range)).toEqual(expect.any(String))
     })
   })
 
@@ -547,6 +547,15 @@ describe("Range", () => {
         value: 3.499,
         reason: "float value below exclusive upper bound",
       },
+      {
+        range: () => {
+          const result = Range.createMaxInclusive({ numericType: "integer", min: 1, maxInclusive: 3 })
+          Assert.isSuccess(result)
+          return result.value
+        },
+        value: 2.5,
+        reason: "decimal value for integer range",
+      },
     ])("should return true when the value is within the range at $reason", ({ range, value }) => {
       expect(Range.isWithin(range(), value)).toBe(true)
     })
@@ -578,15 +587,6 @@ describe("Range", () => {
         },
         value: 3,
         reason: "equal to exclusive max",
-      },
-      {
-        range: () => {
-          const result = Range.createMaxInclusive({ numericType: "integer", min: 1, maxInclusive: 3 })
-          Assert.isSuccess(result)
-          return result.value
-        },
-        value: 2.5,
-        reason: "decimal value for integer range",
       },
       {
         range: () => {
@@ -736,20 +736,6 @@ describe("Range", () => {
 
       expect(Range.overlaps(rangeA, rangeB)).toBe(false)
       expect(Range.overlaps(rangeB, rangeA)).toBe(false)
-    })
-
-    it("should return false when the first range is invalid", () => {
-      const rangeResult = Range.createMaxInclusive({ numericType: "integer", min: 3, maxInclusive: 5 })
-      Assert.isSuccess(rangeResult)
-
-      expect(Range.overlaps({ type: "MaxInclusive", numericType: "integer", min: 4, maxInclusive: 3 }, rangeResult.value)).toBe(false)
-    })
-
-    it("should return false when the second range is invalid", () => {
-      const rangeResult = Range.createMaxInclusive({ numericType: "integer", min: 1, maxInclusive: 3 })
-      Assert.isSuccess(rangeResult)
-
-      expect(Range.overlaps(rangeResult.value, { type: "MaxExclusive", numericType: "integer", min: 3, maxExclusive: 3 })).toBe(false)
     })
   })
 })

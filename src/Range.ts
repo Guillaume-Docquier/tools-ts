@@ -1,66 +1,66 @@
 import { Result } from "./Result.js"
 
 /**
- * TODO LLM Document
+ * A finite numeric interval with an inclusive minimum and either an inclusive or exclusive maximum.
  */
 export type Range<TNumericType extends NumericType> = InclusiveRange<TNumericType> | ExclusiveRange<TNumericType>
 
 /**
- * TODO LLM Document
+ * A finite numeric interval whose maximum value is included in the range.
  */
 export type InclusiveRange<TNumericType extends NumericType> = {
   /**
-   * TODO LLM Document
+   * Discriminator for ranges where the maximum value is included.
    */
   readonly type: "MaxInclusive"
 
   /**
-   * TODO LLM Document
+   * The kind of numeric values accepted by the range.
    */
   readonly numericType: TNumericType
 
   /**
-   * TODO LLM Document
+   * The inclusive lower bound.
    */
   readonly min: number
 
   /**
-   * TODO LLM Document
+   * The inclusive upper bound.
    */
   readonly maxInclusive: number
 
   /**
-   * TODO LLM Document
+   * Optional outer range that this range must stay within.
    */
   readonly limits?: Range<TNumericType>
 }
 
 /**
- * TODO LLM Document
+ * A finite numeric interval whose maximum value is excluded from the range.
  */
 export type ExclusiveRange<TNumericType extends NumericType> = {
   /**
-   * TODO LLM Document
+   * Discriminator for ranges where the maximum value is excluded.
    */
   readonly type: "MaxExclusive"
 
   /**
-   * TODO LLM Document
+   * The kind of numeric values accepted by the range.
    */
   readonly numericType: TNumericType
 
   /**
-   * TODO LLM Document
+   * The inclusive lower bound.
    */
   readonly min: number
 
   /**
-   * TODO LLM Document
+   * The exclusive upper bound.
    */
   readonly maxExclusive: number
 
   /**
-   * TODO LLM Document
+   * Optional outer range that this range must stay within.
    */
   readonly limits?: Range<TNumericType>
 }
@@ -68,12 +68,13 @@ export type ExclusiveRange<TNumericType extends NumericType> = {
 type NumericType = "float" | "integer"
 
 /**
- * TODO LLM Document
+ * Helpers for creating, validating, comparing, and narrowing numeric ranges.
  */
 export const Range = {
   /**
-   * // TODO LLM Document
-   * @param range
+   * Creates a range that includes its maximum value.
+   *
+   * @param range The range values, excluding the discriminator added by this function.
    */
   createMaxInclusive: <TNumericType extends NumericType>(
     range: Omit<InclusiveRange<TNumericType>, "type">,
@@ -92,8 +93,9 @@ export const Range = {
   },
 
   /**
-   * // TODO LLM Document
-   * @param range
+   * Creates a range that excludes its maximum value.
+   *
+   * @param range The range values, excluding the discriminator added by this function.
    */
   createMaxExclusive: <TNumericType extends NumericType>(
     range: Omit<ExclusiveRange<TNumericType>, "type">,
@@ -112,43 +114,47 @@ export const Range = {
   },
 
   /**
-   * // TODO LLM Document
-   * @param fromRange
-   * @param withValues
+   * Creates a new range with the same discriminator, numeric type, and limits as another range.
+   *
+   * @param fromRange The range to copy the shape from.
+   * @param withValues The replacement minimum and maximum values.
    */
   from: <TRange extends Range<TNumericType>, TNumericType extends NumericType>(
     fromRange: TRange,
     withValues: { min: number; max: number },
   ): Result<TRange, string> => {
-    if (Range.isInclusive(fromRange)) {
-      return Range.createMaxInclusive({
-        numericType: fromRange.numericType,
-        min: withValues.min,
-        maxInclusive: withValues.max,
-        limits: fromRange.limits,
-      }) as Result<TRange, string>
+    switch (fromRange.type) {
+      case "MaxExclusive":
+        return Range.createMaxExclusive({
+          numericType: fromRange.numericType,
+          min: withValues.min,
+          maxExclusive: withValues.max,
+          limits: fromRange.limits,
+        }) as Result<TRange, string>
+      case "MaxInclusive":
+        return Range.createMaxInclusive({
+          numericType: fromRange.numericType,
+          min: withValues.min,
+          maxInclusive: withValues.max,
+          limits: fromRange.limits,
+        }) as Result<TRange, string>
     }
-
-    return Range.createMaxExclusive({
-      numericType: fromRange.numericType,
-      min: withValues.min,
-      maxExclusive: withValues.max,
-      limits: fromRange.limits,
-    }) as Result<TRange, string>
   },
 
   /**
-   * // TODO LLM Document
-   * @param range
+   * Checks whether a range has finite bounds, valid ordering, matching numeric values, and valid limits.
+   *
+   * @param range The range to validate.
    */
   isValid: (range: Range<NumericType>): boolean => {
     return validateRange(range) === undefined
   },
 
   /**
-   * // TODO LLM Document
-   * @param range
-   * @param value
+   * Checks whether a finite numeric value is inside a valid range.
+   *
+   * @param range The range to test against.
+   * @param value The value to test.
    */
   isWithin: (range: Range<NumericType>, value: number): boolean => {
     if (!Range.isValid(range) || !isFiniteNumber(value) || !isValidNumberType(range.numericType, value)) {
@@ -159,9 +165,10 @@ export const Range = {
   },
 
   /**
-   * // TODO LLM Document
-   * @param a
-   * @param b
+   * Checks whether two valid ranges share at least one value.
+   *
+   * @param a The first range.
+   * @param b The second range.
    */
   overlaps: (a: Range<NumericType>, b: Range<NumericType>): boolean => {
     if (!Range.isValid(a) || !Range.isValid(b) || a.numericType !== b.numericType) {
@@ -169,22 +176,6 @@ export const Range = {
     }
 
     return upperBoundIntersectsMin(a, b.min) && upperBoundIntersectsMin(b, a.min)
-  },
-
-  /**
-   * // TODO LLM Document
-   * @param range
-   */
-  isInclusive: <TNumericType extends NumericType>(range: Range<TNumericType>): range is InclusiveRange<TNumericType> => {
-    return range.type === "MaxInclusive"
-  },
-
-  /**
-   * // TODO LLM Document
-   * @param range
-   */
-  isExclusive: <TNumericType extends NumericType>(range: Range<TNumericType>): range is ExclusiveRange<TNumericType> => {
-    return range.type === "MaxExclusive"
   },
 }
 
@@ -199,11 +190,11 @@ function validateRange(range: Range<NumericType>): string | undefined {
     return `Range bounds must be ${range.numericType} values.`
   }
 
-  if (Range.isInclusive(range) && range.min > range.maxInclusive) {
+  if (range.type === "MaxInclusive" && range.min > range.maxInclusive) {
     return "Range minimum must be less than or equal to the inclusive maximum."
   }
 
-  if (Range.isExclusive(range) && range.min >= range.maxExclusive) {
+  if (range.type === "MaxExclusive" && range.min >= range.maxExclusive) {
     return "Range minimum must be less than the exclusive maximum."
   }
 
@@ -241,11 +232,12 @@ function isWithinBounds(range: Range<NumericType>, value: number): boolean {
     return false
   }
 
-  if (Range.isInclusive(range)) {
-    return value <= range.maxInclusive
+  switch (range.type) {
+    case "MaxExclusive":
+      return value < range.maxExclusive
+    case "MaxInclusive":
+      return value <= range.maxInclusive
   }
-
-  return value < range.maxExclusive
 }
 
 function isContainedByLimits(range: Range<NumericType>, limits: Range<NumericType>): boolean {
@@ -264,23 +256,25 @@ function rangeUpperBoundIsWithinLimits(range: Range<NumericType>, limits: Range<
     return false
   }
 
-  return Range.isExclusive(range) || Range.isInclusive(limits)
+  return range.type === "MaxExclusive" || limits.type === "MaxInclusive"
 }
 
 function getMax(range: Range<NumericType>): number {
-  if (Range.isInclusive(range)) {
-    return range.maxInclusive
+  switch (range.type) {
+    case "MaxExclusive":
+      return range.maxExclusive
+    case "MaxInclusive":
+      return range.maxInclusive
   }
-
-  return range.maxExclusive
 }
 
 function upperBoundIntersectsMin(range: Range<NumericType>, min: number): boolean {
   const max = getMax(range)
 
-  if (max > min) {
-    return true
+  switch (range.type) {
+    case "MaxExclusive":
+      return max > min
+    case "MaxInclusive":
+      return max >= min
   }
-
-  return max === min && Range.isInclusive(range)
 }

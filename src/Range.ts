@@ -1,14 +1,15 @@
 import { Result } from "./Result.js"
+import { Assert } from "./Assert.js"
 
 /**
  * A finite numeric interval with an inclusive minimum and either an inclusive or exclusive maximum.
- * Use {@link Range.createMaxInclusive} and {@link Range.createMaxExclusive} factory methods to create valid ranges.
+ * Use the Range factory methods to create valid ranges.
  */
 export type Range<TNumericType extends NumericType = NumericType> = InclusiveRange<TNumericType> | ExclusiveRange<TNumericType>
 
 /**
  * A finite numeric interval whose maximum value is included in the range.
- * Use the {@link Range.createMaxInclusive} factory method to create valid InclusiveRanges.
+ * Use the {@link Range.safeCreateMaxInclusive} or {@link Range.createMaxInclusive} factory methods to create valid InclusiveRanges.
  */
 export type InclusiveRange<TNumericType extends NumericType> = {
   /**
@@ -39,7 +40,7 @@ export type InclusiveRange<TNumericType extends NumericType> = {
 
 /**
  * A finite numeric interval whose maximum value is excluded from the range.
- * Use the {@link Range.createMaxExclusive} factory method to create valid ExclusiveRanges.
+ * Use the {@link Range.safeCreateMaxExclusive} or {@link Range.createMaxExclusive} factory methods to create valid ExclusiveRanges.
  */
 export type ExclusiveRange<TNumericType extends NumericType> = {
   /**
@@ -76,15 +77,30 @@ type NumericType = "float" | "integer"
 export const Range = {
   /**
    * Creates a range that includes its maximum value.
-   * The function returns a Failure if the Range parameters are invalid.
+   * The function throws if the Range parameters are invalid. You should use this for trusted code only.
    *
-   * @param range The range values, excluding the discriminator added by this function.
+   * @param data The range values, excluding the discriminator added by this function.
    */
   createMaxInclusive: <TNumericType extends NumericType>(
-    range: Omit<InclusiveRange<TNumericType>, "type">,
+    data: Omit<InclusiveRange<TNumericType>, "type">,
+  ): InclusiveRange<TNumericType> => {
+    const rangeResult = Range.safeCreateMaxInclusive(data)
+    Assert.isSuccess(rangeResult)
+
+    return rangeResult.value
+  },
+
+  /**
+   * Creates a range that includes its maximum value.
+   * The function returns a Failure if the Range parameters are invalid.
+   *
+   * @param data The range values, excluding the discriminator added by this function.
+   */
+  safeCreateMaxInclusive: <TNumericType extends NumericType>(
+    data: Omit<InclusiveRange<TNumericType>, "type">,
   ): Result<InclusiveRange<TNumericType>, string> => {
     const inclusiveRange: InclusiveRange<TNumericType> = {
-      ...range,
+      ...data,
       type: "MaxInclusive",
     }
 
@@ -98,11 +114,26 @@ export const Range = {
 
   /**
    * Creates a range that excludes its maximum value.
+   * The function throws if the Range parameters are invalid. You should use this for trusted code only.
+   *
+   * @param data The range values, excluding the discriminator added by this function.
+   */
+  createMaxExclusive: <TNumericType extends NumericType>(
+    data: Omit<ExclusiveRange<TNumericType>, "type">,
+  ): ExclusiveRange<TNumericType> => {
+    const rangeResult = Range.safeCreateMaxExclusive(data)
+    Assert.isSuccess(rangeResult)
+
+    return rangeResult.value
+  },
+
+  /**
+   * Creates a range that excludes its maximum value.
    * The function returns a Failure if the Range parameters are invalid.
    *
    * @param range The range values, excluding the discriminator added by this function.
    */
-  createMaxExclusive: <TNumericType extends NumericType>(
+  safeCreateMaxExclusive: <TNumericType extends NumericType>(
     range: Omit<ExclusiveRange<TNumericType>, "type">,
   ): Result<ExclusiveRange<TNumericType>, string> => {
     const exclusiveRange: ExclusiveRange<TNumericType> = {
@@ -130,14 +161,14 @@ export const Range = {
   ): Result<TRange, string> => {
     switch (fromRange.type) {
       case "MaxExclusive":
-        return Range.createMaxExclusive({
+        return Range.safeCreateMaxExclusive({
           numericType: fromRange.numericType,
           min: withValues.min,
           maxExclusive: withValues.max,
           limits: fromRange.limits,
         }) as Result<TRange, string>
       case "MaxInclusive":
-        return Range.createMaxInclusive({
+        return Range.safeCreateMaxInclusive({
           numericType: fromRange.numericType,
           min: withValues.min,
           maxInclusive: withValues.max,

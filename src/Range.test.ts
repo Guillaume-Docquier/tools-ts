@@ -1,16 +1,37 @@
 import { describe, expect, expectTypeOf, it } from "vitest"
-import { Assert } from "./Assert.js"
 import { Result } from "./Result.js"
 import { Range, type ExclusiveRange, type InclusiveRange } from "./Range.js"
+import { AssertionError } from "./errors/AssertionError.js"
 
 describe("Range", () => {
   describe("createMaxInclusive", () => {
+    it("should return a Range with valid data", () => {
+      // Arrange
+      const data = { numericType: "integer", min: 2, maxInclusive: 8 } as const
+
+      // Act
+      const range = Range.createMaxInclusive(data)
+
+      // Assert
+      expect(range).toEqual<typeof range>({ ...data, type: "MaxInclusive" })
+    })
+
+    it("should throw with invalid data", () => {
+      // Arrange
+      const invalidData = { numericType: "integer", min: 3, maxInclusive: 2 } as const
+
+      // Act & Assert
+      expect(() => Range.createMaxInclusive(invalidData)).toThrow(AssertionError)
+    })
+  })
+
+  describe("safeCreateMaxInclusive", () => {
     it("should return a Success for integer range", () => {
       // Arrange
       const range = { numericType: "integer", min: 1, maxInclusive: 3 } as const
 
       // Act
-      const result = Range.createMaxInclusive({ numericType: "integer", min: 1, maxInclusive: 3 })
+      const result = Range.safeCreateMaxInclusive({ numericType: "integer", min: 1, maxInclusive: 3 })
 
       // Assert
       expectTypeOf(result).toEqualTypeOf<Result<InclusiveRange<"integer">, string>>()
@@ -23,7 +44,7 @@ describe("Range", () => {
       const range = { numericType: "float", min: 1.5, maxInclusive: 3.5 } as const
 
       // Act
-      const result = Range.createMaxInclusive(range)
+      const result = Range.safeCreateMaxInclusive(range)
 
       // Assert
       expectTypeOf(result).toEqualTypeOf<Result<InclusiveRange<"float">, string>>()
@@ -36,7 +57,7 @@ describe("Range", () => {
       const range = { numericType: "integer", min: 3, maxInclusive: 3 } as const
 
       // Act
-      const result = Range.createMaxInclusive(range)
+      const result = Range.safeCreateMaxInclusive(range)
 
       // Assert
       expect(result).toEqual<typeof result>(Result.Success({ ...range, type: "MaxInclusive" }))
@@ -44,13 +65,11 @@ describe("Range", () => {
 
     it("should return a Success when min and max are within the limits", () => {
       // Arrange
-      const limitsResult = Range.createMaxInclusive({ numericType: "float", min: 0, maxInclusive: 10 })
-      Assert.isSuccess(limitsResult)
-
-      const range = { numericType: "integer", min: 2, maxInclusive: 8, limits: limitsResult.value } as const
+      const limits = Range.createMaxInclusive({ numericType: "float", min: 0, maxInclusive: 10 })
+      const range = { numericType: "integer", min: 2, maxInclusive: 8, limits } as const
 
       // Act
-      const result = Range.createMaxInclusive(range)
+      const result = Range.safeCreateMaxInclusive(range)
 
       // Assert
       expect(result).toEqual<typeof result>(Result.Success({ ...range, type: "MaxInclusive" }))
@@ -87,7 +106,7 @@ describe("Range", () => {
       },
     ])("should return a Failure when $reason", ({ range }) => {
       // Act
-      const result = Range.createMaxInclusive(range)
+      const result = Range.safeCreateMaxInclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>(Result.Failure(expect.any(String)))
@@ -95,12 +114,11 @@ describe("Range", () => {
 
     it("should return a Failure when min is below the limits", () => {
       // Arrange
-      const limitsResult = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
-      Assert.isSuccess(limitsResult)
-      const range = { type: "MaxInclusive", numericType: "integer", min: -1, maxInclusive: 3, limits: limitsResult.value } as const
+      const limits = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
+      const range = { type: "MaxInclusive", numericType: "integer", min: -1, maxInclusive: 3, limits } as const
 
       // Act
-      const result = Range.createMaxInclusive(range)
+      const result = Range.safeCreateMaxInclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
@@ -108,13 +126,11 @@ describe("Range", () => {
 
     it("should return a Failure when max is above the limits", () => {
       // Arrange
-      const limitsResult = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
-      Assert.isSuccess(limitsResult)
-
-      const range = { numericType: "integer", min: 1, maxInclusive: 11, limits: limitsResult.value } as const
+      const limits = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
+      const range = { numericType: "integer", min: 1, maxInclusive: 11, limits } as const
 
       // Act
-      const result = Range.createMaxInclusive(range)
+      const result = Range.safeCreateMaxInclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
@@ -122,11 +138,10 @@ describe("Range", () => {
 
     it("should return a Failure when max equals an exclusive limit", () => {
       // Arrange
-      const limitsResult = Range.createMaxExclusive({ numericType: "integer", min: 0, maxExclusive: 10 })
-      Assert.isSuccess(limitsResult)
+      const limits = Range.createMaxExclusive({ numericType: "integer", min: 0, maxExclusive: 10 })
 
       // Act
-      const result = Range.createMaxInclusive({ numericType: "integer", min: 1, maxInclusive: 10, limits: limitsResult.value })
+      const result = Range.safeCreateMaxInclusive({ numericType: "integer", min: 1, maxInclusive: 10, limits })
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
@@ -135,24 +150,44 @@ describe("Range", () => {
     it("should return a Failure when limits are invalid", () => {
       // Arrange
       const invalidLimits: Range = { type: "MaxExclusive", numericType: "integer", min: 10, maxExclusive: 0 }
-
       const range = { numericType: "integer", min: 2, maxInclusive: 3, limits: invalidLimits } as const
 
       // Act
-      const result = Range.createMaxInclusive(range)
+      const result = Range.safeCreateMaxInclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
     })
   })
 
-  describe("createMaxExclusive", () => {
+  describe("createMaxInclusive", () => {
+    it("should return a Range with valid data", () => {
+      // Arrange
+      const data = { numericType: "integer", min: 2, maxExclusive: 8 } as const
+
+      // Act
+      const range = Range.createMaxExclusive(data)
+
+      // Assert
+      expect(range).toEqual<typeof range>({ ...data, type: "MaxExclusive" })
+    })
+
+    it("should throw with invalid data", () => {
+      // Arrange
+      const invalidData = { numericType: "integer", min: 3, maxExclusive: 2 } as const
+
+      // Act & Assert
+      expect(() => Range.createMaxExclusive(invalidData)).toThrow(AssertionError)
+    })
+  })
+
+  describe("safeCreateMaxExclusive", () => {
     it("should return a Success for integer range", () => {
       // Arrange
       const range = { numericType: "integer", min: 1, maxExclusive: 4 } as const
 
       // Act
-      const result = Range.createMaxExclusive(range)
+      const result = Range.safeCreateMaxExclusive(range)
 
       // Assert
       expectTypeOf(result).toEqualTypeOf<Result<ExclusiveRange<"integer">, string>>()
@@ -165,7 +200,7 @@ describe("Range", () => {
       const range = { numericType: "float", min: 1.5, maxExclusive: 3.5 } as const
 
       // Act
-      const result = Range.createMaxExclusive(range)
+      const result = Range.safeCreateMaxExclusive(range)
 
       // Assert
       expectTypeOf(result).toEqualTypeOf<Result<ExclusiveRange<"float">, string>>()
@@ -175,13 +210,11 @@ describe("Range", () => {
 
     it("should return a Success when min and max are within the limits", () => {
       // Arrange
-      const limitsResult = Range.createMaxExclusive({ numericType: "integer", min: 0, maxExclusive: 10 })
-      Assert.isSuccess(limitsResult)
-
-      const range = { numericType: "integer", min: 2, maxExclusive: 8, limits: limitsResult.value } as const
+      const limits = Range.createMaxExclusive({ numericType: "integer", min: 0, maxExclusive: 10 })
+      const range = { numericType: "integer", min: 2, maxExclusive: 8, limits } as const
 
       // Act
-      const result = Range.createMaxExclusive(range)
+      const result = Range.safeCreateMaxExclusive(range)
 
       // Assert
       expect(result).toEqual<typeof result>(Result.Success({ ...range, type: "MaxExclusive" }))
@@ -222,7 +255,7 @@ describe("Range", () => {
       },
     ])("should return a Failure when $reason", ({ range }) => {
       // Act
-      const result = Range.createMaxExclusive(range)
+      const result = Range.safeCreateMaxExclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
@@ -230,13 +263,11 @@ describe("Range", () => {
 
     it("should return a Failure when min is below the limits", () => {
       // Arrange
-      const limitsResult = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
-      Assert.isSuccess(limitsResult)
-
-      const range = { numericType: "integer", min: -1, maxExclusive: 3, limits: limitsResult.value } as const
+      const limits = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
+      const range = { numericType: "integer", min: -1, maxExclusive: 3, limits } as const
 
       // Act
-      const result = Range.createMaxExclusive(range)
+      const result = Range.safeCreateMaxExclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
@@ -244,13 +275,11 @@ describe("Range", () => {
 
     it("should return a Failure when max is above the limits", () => {
       // Arrange
-      const limitsResult = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
-      Assert.isSuccess(limitsResult)
-
-      const range = { numericType: "integer", min: 1, maxExclusive: 11, limits: limitsResult.value } as const
+      const limits = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
+      const range = { numericType: "integer", min: 1, maxExclusive: 11, limits } as const
 
       // Act
-      const result = Range.createMaxExclusive(range)
+      const result = Range.safeCreateMaxExclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
@@ -259,11 +288,10 @@ describe("Range", () => {
     it("should return a Failure when limits are invalid", () => {
       // Arrange
       const invalidLimits: Range = { type: "MaxExclusive", numericType: "integer", min: 10, maxExclusive: 0 }
-
       const range = { numericType: "integer", min: 2, maxExclusive: 3, limits: invalidLimits } as const
 
       // Act
-      const result = Range.createMaxExclusive(range)
+      const result = Range.safeCreateMaxExclusive(range)
 
       // Assert
       expect(result).toMatchObject<typeof result>({ type: "Failure", error: expect.any(String) })
@@ -273,53 +301,36 @@ describe("Range", () => {
   describe("from", () => {
     it("should return a Success for inclusive range", () => {
       // Arrange
-      const limitsResult = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
-      Assert.isSuccess(limitsResult)
-
-      const rangeResult = Range.createMaxInclusive({
-        numericType: "integer",
-        min: 2,
-        maxInclusive: 8,
-        limits: limitsResult.value,
-      })
-      Assert.isSuccess(rangeResult)
+      const limits = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
+      const range = Range.createMaxInclusive({ numericType: "integer", min: 2, maxInclusive: 8, limits })
 
       // Act
-      const result = Range.from(rangeResult.value, { min: 3, max: 7 })
+      const result = Range.from(range, { min: 3, max: 7 })
 
       // Assert
-      expectTypeOf(result).toEqualTypeOf<Result<typeof rangeResult.value, string>>()
-      expect(result).toEqual<typeof result>(Result.Success({ ...rangeResult.value, min: 3, maxInclusive: 7 }))
+      expectTypeOf(result).toEqualTypeOf<Result<typeof range, string>>()
+      expect(result).toEqual<typeof result>(Result.Success({ ...range, min: 3, maxInclusive: 7 }))
     })
 
     it("should return a Success for exclusive range", () => {
       // Arrange
-      const limitsResult = Range.createMaxExclusive({ numericType: "float", min: 0, maxExclusive: 10 })
-      Assert.isSuccess(limitsResult)
-
-      const rangeResult = Range.createMaxExclusive({
-        numericType: "float",
-        min: 2,
-        maxExclusive: 8,
-        limits: limitsResult.value,
-      })
-      Assert.isSuccess(rangeResult)
+      const limits = Range.createMaxExclusive({ numericType: "float", min: 0, maxExclusive: 10 })
+      const range = Range.createMaxExclusive({ numericType: "float", min: 2, maxExclusive: 8, limits })
 
       // Act
-      const result = Range.from(rangeResult.value, { min: 3.25, max: 7.75 })
+      const result = Range.from(range, { min: 3.25, max: 7.75 })
 
       // Assert
-      expectTypeOf(result).toEqualTypeOf<Result<typeof rangeResult.value, string>>()
-      expect(result).toEqual<typeof result>(Result.Success({ ...rangeResult.value, min: 3.25, maxExclusive: 7.75 }))
+      expectTypeOf(result).toEqualTypeOf<Result<typeof range, string>>()
+      expect(result).toEqual<typeof result>(Result.Success({ ...range, min: 3.25, maxExclusive: 7.75 }))
     })
 
     it("should return a Failure when the resulting range would be invalid", () => {
       // Arrange
-      const fromRangeResult = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
-      Assert.isSuccess(fromRangeResult)
+      const fromRange = Range.createMaxInclusive({ numericType: "integer", min: 0, maxInclusive: 10 })
 
       // Act
-      const result = Range.from(fromRangeResult.value, { min: 1.1, max: 2 })
+      const result = Range.from(fromRange, { min: 1.1, max: 2 })
 
       // Assert
       expect(result).toMatchObject<typeof result>(Result.Failure(expect.any(String)))
@@ -381,8 +392,7 @@ describe("Range", () => {
         reason: "float value is within integer range",
       },
     ])("should return true when $reason", ({ range, value }) => {
-      Assert.isSuccess<Range>(range)
-      expect(Range.isWithin(range.value, value)).toBe(true)
+      expect(Range.isWithin(range, value)).toBe(true)
     })
 
     it.each([
@@ -412,8 +422,7 @@ describe("Range", () => {
         reason: "value is infinite",
       },
     ])("should return false when $reason", ({ range, value }) => {
-      Assert.isSuccess<Range>(range)
-      expect(Range.isWithin(range.value, value)).toBe(false)
+      expect(Range.isWithin(range, value)).toBe(false)
     })
   })
 
@@ -440,11 +449,8 @@ describe("Range", () => {
         reason: "float min is within range",
       },
     ])("should return true when $reason", ({ a, b }) => {
-      Assert.isSuccess<Range>(a)
-      Assert.isSuccess<Range>(b)
-
-      expect(Range.overlaps(a.value, b.value)).toBe(true)
-      expect(Range.overlaps(b.value, a.value)).toBe(true)
+      expect(Range.overlaps(a, b)).toBe(true)
+      expect(Range.overlaps(b, a)).toBe(true)
     })
 
     it.each([
@@ -464,11 +470,8 @@ describe("Range", () => {
         reason: "min of exclusive range is equal to exclusive max",
       },
     ])("should return false when $reason", ({ a, b }) => {
-      Assert.isSuccess<Range>(a)
-      Assert.isSuccess<Range>(b)
-
-      expect(Range.overlaps(a.value, b.value)).toBe(false)
-      expect(Range.overlaps(b.value, a.value)).toBe(false)
+      expect(Range.overlaps(a, b)).toBe(false)
+      expect(Range.overlaps(b, a)).toBe(false)
     })
   })
 })

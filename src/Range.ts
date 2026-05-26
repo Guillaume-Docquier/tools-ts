@@ -35,7 +35,7 @@ export type InclusiveRange<TNumericType extends NumericType> = {
   /**
    * Optional outer range that this range must stay within.
    */
-  readonly limits?: Range<TNumericType> | undefined
+  readonly limits?: Range<TNumericType>
 }
 
 /**
@@ -66,7 +66,7 @@ export type ExclusiveRange<TNumericType extends NumericType> = {
   /**
    * Optional outer range that this range must stay within.
    */
-  readonly limits?: Range<TNumericType> | undefined
+  readonly limits?: Range<TNumericType>
 }
 
 type NumericType = "float" | "integer"

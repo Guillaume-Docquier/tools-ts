@@ -1,26 +1,24 @@
 import { Result } from "./Result.js"
 import { Assert } from "./Assert.js"
+import { TypeGuard } from "./TypeGuard.js"
+
+type NumericType = "float" | "integer"
+type BoundType = "inclusive" | "exclusive"
 
 /**
  * A finite numeric interval with an inclusive minimum and either an inclusive or exclusive maximum.
  * Use the Range factory methods to create valid ranges.
  */
-export type Range<TNumericType extends NumericType = NumericType> = InclusiveRange<TNumericType> | ExclusiveRange<TNumericType>
-
-/**
- * A finite numeric interval whose maximum value is included in the range.
- * Use the {@link Range.safeCreateMaxInclusive} or {@link Range.createMaxInclusive} factory methods to create valid InclusiveRanges.
- */
-export type InclusiveRange<TNumericType extends NumericType> = {
-  /**
-   * Discriminator for ranges where the maximum value is included.
-   */
-  readonly type: "MaxInclusive"
-
+export type Range<TNumericType extends NumericType = NumericType, TBoundType extends BoundType = BoundType> = {
   /**
    * The kind of numeric values accepted by the range.
    */
   readonly numericType: TNumericType
+
+  /**
+   * Whether the max bound should be inclusive or exclusive.
+   */
+  readonly maxBoundType: TBoundType
 
   /**
    * The inclusive lower bound.
@@ -30,188 +28,64 @@ export type InclusiveRange<TNumericType extends NumericType> = {
   /**
    * The inclusive upper bound.
    */
-  readonly maxInclusive: number
-
-  /**
-   * Optional outer range that this range must stay within.
-   */
-  readonly limits?: Range<TNumericType>
+  readonly max: number
 }
-
-/**
- * A finite numeric interval whose maximum value is excluded from the range.
- * Use the {@link Range.safeCreateMaxExclusive} or {@link Range.createMaxExclusive} factory methods to create valid ExclusiveRanges.
- */
-export type ExclusiveRange<TNumericType extends NumericType> = {
-  /**
-   * Discriminator for ranges where the maximum value is excluded.
-   */
-  readonly type: "MaxExclusive"
-
-  /**
-   * The kind of numeric values accepted by the range.
-   */
-  readonly numericType: TNumericType
-
-  /**
-   * The inclusive lower bound.
-   */
-  readonly min: number
-
-  /**
-   * The exclusive upper bound.
-   */
-  readonly maxExclusive: number
-
-  /**
-   * Optional outer range that this range must stay within.
-   */
-  readonly limits?: Range<TNumericType>
-}
-
-type NumericType = "float" | "integer"
 
 /**
  * Helpers for creating, validating, comparing, and narrowing numeric ranges.
  */
 export const Range = {
   /**
-   * Creates a range that includes its maximum value.
+   * Creates a range.
    * The function throws if the Range parameters are invalid. You should use this for trusted code only.
    *
-   * @param data The range values, excluding the discriminator added by this function.
+   * @param data The range values.
    */
-  createMaxInclusive: <TNumericType extends NumericType>(
-    data: Omit<InclusiveRange<TNumericType>, "type">,
-  ): InclusiveRange<TNumericType> => {
-    const rangeResult = Range.safeCreateMaxInclusive(data)
+  create: <TNumericType extends NumericType, TBoundType extends BoundType>(
+    data: Range<TNumericType, TBoundType>,
+  ): Range<TNumericType, TBoundType> => {
+    const rangeResult = Range.safeCreate(data)
     Assert.isSuccess(rangeResult)
 
     return rangeResult.value
   },
 
   /**
-   * Creates a range that includes its maximum value.
+   * Creates a range.
    * The function returns a Failure if the Range parameters are invalid.
    *
-   * @param data The range values, excluding the discriminator added by this function.
+   * @param data The range values.
    */
-  safeCreateMaxInclusive: <TNumericType extends NumericType>(
-    data: Omit<InclusiveRange<TNumericType>, "type">,
-  ): Result<InclusiveRange<TNumericType>, string> => {
-    const inclusiveRange: InclusiveRange<TNumericType> = {
-      ...data,
-      type: "MaxInclusive",
-    }
-
-    const invalidReason = Range.validate(inclusiveRange)
+  safeCreate: <TNumericType extends NumericType, TBoundType extends BoundType>(
+    data: Range<TNumericType, TBoundType>,
+  ): Result<Range<TNumericType, TBoundType>, string> => {
+    const invalidReason = validate(data)
     if (invalidReason !== undefined) {
       return Result.Failure(invalidReason)
     }
 
-    return Result.Success(inclusiveRange)
+    return Result.Success(data)
   },
 
   /**
-   * Creates a range that excludes its maximum value.
-   * The function throws if the Range parameters are invalid. You should use this for trusted code only.
-   *
-   * @param data The range values, excluding the discriminator added by this function.
-   */
-  createMaxExclusive: <TNumericType extends NumericType>(
-    data: Omit<ExclusiveRange<TNumericType>, "type">,
-  ): ExclusiveRange<TNumericType> => {
-    const rangeResult = Range.safeCreateMaxExclusive(data)
-    Assert.isSuccess(rangeResult)
-
-    return rangeResult.value
-  },
-
-  /**
-   * Creates a range that excludes its maximum value.
-   * The function returns a Failure if the Range parameters are invalid.
-   *
-   * @param range The range values, excluding the discriminator added by this function.
-   */
-  safeCreateMaxExclusive: <TNumericType extends NumericType>(
-    range: Omit<ExclusiveRange<TNumericType>, "type">,
-  ): Result<ExclusiveRange<TNumericType>, string> => {
-    const exclusiveRange: ExclusiveRange<TNumericType> = {
-      ...range,
-      type: "MaxExclusive",
-    }
-
-    const invalidReason = Range.validate(exclusiveRange)
-    if (invalidReason !== undefined) {
-      return Result.Failure(invalidReason)
-    }
-
-    return Result.Success(exclusiveRange)
-  },
-
-  /**
-   * Creates a new range with the same discriminator, numeric type, and limits as another range.
+   * Creates a new range from another one.
+   * When passing withValues, the min and max will replace that of the base range.
+   * When withValues is omitted, this returns a clone.
    *
    * @param fromRange The range to copy the shape from.
-   * @param withValues The replacement minimum and maximum values.
+   * @param withValues The replacement minimum or maximum values.
    */
-  from: <TRange extends Range<TNumericType>, TNumericType extends NumericType>(
-    fromRange: TRange,
-    withValues: { min: number; max: number },
-  ): Result<TRange, string> => {
-    switch (fromRange.type) {
-      case "MaxExclusive":
-        return Range.safeCreateMaxExclusive({
-          numericType: fromRange.numericType,
-          min: withValues.min,
-          maxExclusive: withValues.max,
-          limits: fromRange.limits,
-        }) as Result<TRange, string>
-      case "MaxInclusive":
-        return Range.safeCreateMaxInclusive({
-          numericType: fromRange.numericType,
-          min: withValues.min,
-          maxInclusive: withValues.max,
-          limits: fromRange.limits,
-        }) as Result<TRange, string>
-    }
+  from: <TNumericType extends NumericType, TBoundType extends BoundType>(
+    fromRange: Range<TNumericType, TBoundType>,
+    withValues: { min?: number; max?: number } = {},
+  ): Result<Range<TNumericType, TBoundType>, string> => {
+    return Range.safeCreate({
+      ...fromRange,
+      ...withValues,
+    })
   },
 
-  /**
-   * Checks whether a Range is valid.
-   * This is only useful to run on untrusted input since the Range constructors already ensures the Range is valid.
-   *
-   * @param range The range to validate.
-   */
-  validate: (range: Range): string | undefined => {
-    for (const rule of RANGE_VALIDATION_RULES) {
-      const reason = rule(range)
-      if (reason !== undefined) {
-        return reason
-      }
-    }
-
-    return undefined
-  },
-
-  /**
-   * Checks whether a numeric value is inside the Range.
-   *
-   * @param range The range to test against.
-   * @param value The value to test.
-   */
-  isWithin: (range: Range, value: number): boolean => {
-    if (value < range.min) {
-      return false
-    }
-
-    switch (range.type) {
-      case "MaxExclusive":
-        return value < range.maxExclusive
-      case "MaxInclusive":
-        return value <= range.maxInclusive
-    }
-  },
+  isWithin,
 
   /**
    * Checks whether two Ranges share at least one value.
@@ -224,57 +98,120 @@ export const Range = {
   },
 }
 
-type RangeValidationRule = typeof Range.validate
+/**
+ * Checks whether a Range is inside another Range.
+ *
+ * @param bounds The largest range.
+ * @param value The range to check.
+ */
+function isWithin(bounds: Range, value: Range): boolean
+/**
+ * Checks whether a numeric value is inside the Range.
+ *
+ * @param bounds The range to test against.
+ * @param value The value to test.
+ */
+function isWithin(bounds: Range, value: number): boolean
+/**
+ * Checks whether a numeric value or Range is inside another Range.
+ *
+ * @param bounds The range to test against.
+ * @param value The value to test.
+ */
+function isWithin(bounds: Range, value: number | Range): boolean {
+  if (TypeGuard.isNumber(value)) {
+    if (value < bounds.min) {
+      return false
+    }
+
+    if (value < bounds.max) {
+      return true
+    }
+
+    if (value === bounds.max) {
+      return bounds.maxBoundType === "inclusive"
+    }
+
+    return false
+  }
+
+  const normalizedBounds = normalizeUpperBound(bounds)
+  const normalizedValue = normalizeUpperBound(value)
+
+  if (value.min < bounds.min) {
+    return false
+  }
+
+  if (normalizedValue.max < normalizedBounds.max) {
+    return true
+  }
+
+  if (normalizedValue.max > normalizedBounds.max) {
+    return false
+  }
+
+  return !(normalizedValue.boundType === "inclusive" && normalizedBounds.boundType === "exclusive")
+}
+
+function normalizeUpperBound(range: Range): { max: number; boundType: BoundType } {
+  if (range.numericType === "integer" && range.maxBoundType === "exclusive") {
+    return {
+      max: range.max - 1,
+      boundType: "inclusive",
+    }
+  }
+
+  return {
+    max: range.max,
+    boundType: range.maxBoundType,
+  }
+}
+
+/**
+ * Checks whether a Range is valid.
+ * This is only useful to run on untrusted input since the Range constructors already ensures the Range is valid.
+ *
+ * @param range The range to validate.
+ */
+function validate(range: Range): string | undefined {
+  for (const rule of RANGE_VALIDATION_RULES) {
+    const reason = rule(range)
+    if (reason !== undefined) {
+      return reason
+    }
+  }
+
+  return undefined
+}
+
+type RangeValidationRule = typeof validate
 const RANGE_VALIDATION_RULES: RangeValidationRule[] = [
   minIsFinite,
   maxIsFinite,
-  minIsValidNumberType,
-  maxIsValidNumberType,
+  minIsValidNumericType,
+  maxIsValidNumericType,
   minIsSmallerThanMax,
-  limitsAreValid,
-  minIsWithinLimits,
-  maxIsWithinLimits,
 ]
 
 function minIsFinite(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
   return Number.isFinite(range.min) ? undefined : "Min must be a finite number"
 }
 function maxIsFinite(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
-  return Number.isFinite(getMax(range)) ? undefined : "Min must be a finite number"
+  return Number.isFinite(range.max) ? undefined : "Min must be a finite number"
 }
 
-function minIsValidNumberType(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+function minIsValidNumericType(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
   return range.numericType === "float" || Number.isInteger(range.min) ? undefined : `Min must be a ${range.numericType} number`
 }
-function maxIsValidNumberType(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
-  return range.numericType === "float" || Number.isInteger(getMax(range)) ? undefined : `Max must be a ${range.numericType} number`
+function maxIsValidNumericType(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
+  return range.numericType === "float" || Number.isInteger(range.max) ? undefined : `Max must be a ${range.numericType} number`
 }
 
 function minIsSmallerThanMax(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
-  switch (range.type) {
-    case "MaxExclusive":
-      return range.min < range.maxExclusive ? undefined : "Min must be smaller than the exclusive max"
-    case "MaxInclusive":
-      return range.min <= range.maxInclusive ? undefined : "Min must be smaller or equal to the inclusive max"
-  }
-}
-
-function limitsAreValid(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
-  return range.limits === undefined ? undefined : Range.validate(range.limits)
-}
-
-function minIsWithinLimits(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
-  return range.limits === undefined || Range.isWithin(range.limits, range.min) ? undefined : "Min must be within limits"
-}
-function maxIsWithinLimits(range: Parameters<RangeValidationRule>[0]): ReturnType<RangeValidationRule> {
-  return range.limits === undefined || Range.isWithin(range.limits, getMax(range)) ? undefined : "Max must be within limits"
-}
-
-function getMax(range: Range): number {
-  switch (range.type) {
-    case "MaxExclusive":
-      return range.maxExclusive
-    case "MaxInclusive":
-      return range.maxInclusive
+  switch (range.maxBoundType) {
+    case "exclusive":
+      return range.min < range.max ? undefined : "Min must be smaller than the exclusive max"
+    case "inclusive":
+      return range.min <= range.max ? undefined : "Min must be smaller or equal to the inclusive max"
   }
 }

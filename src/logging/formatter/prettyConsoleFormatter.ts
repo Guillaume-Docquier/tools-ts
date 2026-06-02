@@ -8,7 +8,7 @@ import type { LoggerContext } from "../log-context/LoggerContext.js"
 export const prettyConsoleFormatter: ConsoleFormatter = (logRecord) => {
   const { scopes, ...context } = logRecord.properties as LoggerContext
 
-  return [
+  const consoleArgs: unknown[] = [
     formatConsoleMessage({
       timestamp: logRecord.timestamp,
       level: logRecord.level,
@@ -19,8 +19,14 @@ export const prettyConsoleFormatter: ConsoleFormatter = (logRecord) => {
       // We don't validate for performance reasons. We compensate with tests.
       message: logRecord.rawMessage as string,
     }),
-    context,
   ]
+
+  // If we always add the context, log lines with empty context log "{}"
+  if (Object.keys(context).length > 0) {
+    consoleArgs.push(context)
+  }
+
+  return consoleArgs
 }
 
 function formatConsoleMessage(data: { timestamp: number; scopes: readonly string[]; level: string; message: string }): ConsoleLogFormat {

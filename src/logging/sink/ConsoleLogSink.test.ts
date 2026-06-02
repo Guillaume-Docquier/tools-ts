@@ -39,6 +39,24 @@ describe("ConsoleLogSink", () => {
         },
       )
 
+      it.each([undefined, {}])("should not log empty contexts (%o)", async (context) => {
+        // Arrange
+        const consoleSpy = vi.spyOn(console, "info")
+        const logger = await Logger.configure({
+          sinks: {
+            console: createConsoleLogSink({ formatter: prettyConsoleFormatter, nonBlocking: false }),
+          },
+        })
+
+        const message = "my-test-message"
+
+        // Act
+        logger.info(message, context)
+
+        // Assert
+        expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
+      })
+
       it("should log an empty scope when none is provided", async () => {
         // Arrange
         const consoleSpy = vi.spyOn(console, "info")

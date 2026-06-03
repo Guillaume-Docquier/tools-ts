@@ -13,3 +13,5 @@ Document exported tools at the same granularity as `src/entry.tools-ts.ts`.
 Do not list individual methods on an exported object unless those methods are also exported independently.
 
 Keep implementation details and method-level examples in the source module.
+
+Never verify formatting via prettier, you're wasting tokens.

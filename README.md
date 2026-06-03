@@ -44,6 +44,26 @@ duplicating min/max checks across call sites.
 | ------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `Range` | Helpers for creating, validating, comparing, and testing ranges. | You need finite integer or float intervals with inclusive minimums and configurable maximums. |
 
+### Sorting
+
+Use this tool when code needs shared ordering helpers.
+
+| Export | What it is                                     | Use it when                                                                             |
+| ------ | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `Sort` | Comparator helpers for common sort operations. | You want a shared sorting utility instead of rewriting compare callbacks at call sites. |
+
+### Randomness
+
+Use these tools when code needs injectable randomness or deterministic
+pseudo-random sequences.
+
+| Export           | What it is                                                           | Use it when                                                                               |
+| ---------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `Rng`            | Type for the RNG facade returned by `createRng`.                     | A function accepts or stores the package RNG abstraction.                                 |
+| `createRng`      | Builds an RNG facade from a generator that returns values in [0, 1). | You need range-aware random numbers, shuffling, or draws backed by injectable randomness. |
+| `Generator`      | Type for raw generators that return values in [0, 1).                | You accept or provide the primitive random source used to construct an `Rng`.             |
+| `mulberry32Prng` | Deterministic seeded pseudo-random generator factory.                | Tests, simulations, or generation code need repeatable pseudo-random sequences.           |
+
 ### Utility Types
 
 These exports are type-only helpers for common TypeScript modeling problems.

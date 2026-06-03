@@ -27,3 +27,6 @@ export type { LoggerContext } from "./logging/log-context/LoggerContext.js"
 export type { LogContextProvider } from "./logging/log-context/LogContextProvider.js"
 
 export { debounce } from "./debounce.js"
+export { Sort } from "./Sort.js"
+export { createRng, type Rng, type Generator } from "./rng/rng.js"
+export { mulberry32Prng } from "./rng/mulberry32prng.js"

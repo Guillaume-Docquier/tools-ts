@@ -24,7 +24,14 @@ export default defineConfig({
         statements: 90,
       },
       include: ["src/**/*.ts"],
-      exclude: ["src/entry.tools-ts.ts", "src/utility-types.ts"],
+      exclude: [
+        // We don't test the entry point, it's only exports
+        "src/entry.tools-ts.ts",
+        // Only types, nothing to test
+        "src/utility-types.ts",
+        // Purely a test utility and vitest says we don't cover everything
+        "src/Theory",
+      ],
     },
     restoreMocks: true,
   },

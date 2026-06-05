@@ -30,8 +30,8 @@ describe("TypeGuard", () => {
       expect(TypeGuard.isPromiseLike(promiseLike)).toBe(true)
     })
 
-    it.each(Theory.NotPromiseLike)("should return false for values without a then function on a record (%o)", (notThenable) => {
-      expect(TypeGuard.isPromiseLike(notThenable)).toBe(false)
+    it.each(Theory.NotPromiseLike)("should return false for values without a then function on a record (%o)", (notPromiseLike) => {
+      expect(TypeGuard.isPromiseLike(notPromiseLike)).toBe(false)
     })
 
     it("should narrow the type", () => {

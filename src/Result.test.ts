@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { Result } from "./Result.js"
 import { FatalError } from "./errors/FatalError.js"
+import { Theory } from "./Theory.js"
 
 describe("Result", () => {
   describe("Success", () => {
@@ -179,16 +180,12 @@ describe("Result", () => {
     })
 
     describe("promise", () => {
-      it("should return a Success when the promise resolves", async () => {
-        // Arrange
-        const expectedValue = 1
-        const promise = Promise.resolve(expectedValue)
-
+      it.each(Theory.PromiseLike)("should return a Success when the promise resolves (%o)", async (promise) => {
         // Act
         const result = await Result.tryCatch(promise)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Success(expectedValue))
+        expect(result).toEqual<typeof result>(Result.Success("value"))
       })
 
       it("should return a Failure when the promise rejects", async () => {

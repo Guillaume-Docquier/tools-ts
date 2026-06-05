@@ -1,10 +1,11 @@
 import type { EnumType } from "./utility-types.js"
 
 export const TypeGuard = {
+  isFunction: (value: unknown): value is (...args: unknown[]) => unknown => typeof value === "function",
+  isPromiseLike: (value: unknown): value is PromiseLike<unknown> => TypeGuard.isRecord(value) && TypeGuard.isFunction(value.then),
   isBoolean: (value: unknown): value is boolean => typeof value === "boolean",
   isString: (value: unknown): value is string => typeof value === "string",
   isNumber: (value: unknown): value is number => typeof value === "number",
-  isInteger: (value: unknown): value is number => TypeGuard.isNumber(value) && Number.isInteger(value),
   isArray: (value: unknown): value is unknown[] => Array.isArray(value),
   isRecord: (value: unknown): value is Record<string | number | symbol, unknown> =>
     isObject(value) && value !== null && !TypeGuard.isArray(value),

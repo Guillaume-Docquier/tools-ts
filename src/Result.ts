@@ -1,4 +1,5 @@
 import { Rethrow } from "./errors/Rethrow.js"
+import { TypeGuard } from "./TypeGuard.js"
 
 /**
  * A Result is either a Success or a Failure.
@@ -86,7 +87,7 @@ function tryCatch<T>(asyncFn: () => Promise<T>): Promise<Result<T, Error>>
  */
 function tryCatch<T>(syncFn: () => T): Result<T, Error>
 function tryCatch<T>(op: Promise<T> | (() => T | Promise<T>)): Result<T, Error> | Promise<Result<T, Error>> {
-  if (op instanceof Promise) {
+  if (TypeGuard.isPromiseLike(op)) {
     return tryCatchPromise(op)
   }
 

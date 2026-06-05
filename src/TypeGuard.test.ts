@@ -3,6 +3,50 @@ import { TypeGuard } from "./TypeGuard.js"
 import { Theory } from "./Theory.js"
 
 describe("TypeGuard", () => {
+  describe("isFunction", () => {
+    it.each(Theory.Function)("should return true for functions (%o)", (func) => {
+      expect(TypeGuard.isFunction(func)).toBe(true)
+    })
+
+    it.each(Theory.NotAFunction)("should return false for non functions (%o)", (notFunction) => {
+      expect(TypeGuard.isFunction(notFunction)).toBe(false)
+    })
+
+    it("should narrow the type", () => {
+      // Arrange
+      const maybeFunction = (() => {}) as unknown
+
+      // Act
+      expectTypeOf(maybeFunction).not.toEqualTypeOf<(...args: unknown[]) => unknown>()
+      if (TypeGuard.isFunction(maybeFunction)) {
+        // Assert
+        expectTypeOf(maybeFunction).toEqualTypeOf<(...args: unknown[]) => unknown>()
+      }
+    })
+  })
+
+  describe("isPromiseLike", () => {
+    it.each(Theory.PromiseLike)("should return true for records with a then function (%o)", (promiseLike) => {
+      expect(TypeGuard.isPromiseLike(promiseLike)).toBe(true)
+    })
+
+    it.each(Theory.NotPromiseLike)("should return false for values without a then function on a record (%o)", (notThenable) => {
+      expect(TypeGuard.isPromiseLike(notThenable)).toBe(false)
+    })
+
+    it("should narrow the type", () => {
+      // Arrange
+      const maybeThenable = { then: () => Promise.resolve("value") } as unknown
+
+      // Act
+      expectTypeOf(maybeThenable).not.toEqualTypeOf<PromiseLike<unknown>>()
+      if (TypeGuard.isPromiseLike(maybeThenable)) {
+        // Assert
+        expectTypeOf(maybeThenable).toEqualTypeOf<PromiseLike<unknown>>()
+      }
+    })
+  })
+
   describe("isBoolean", () => {
     it.each(Theory.Boolean)("should return true for booleans (%o)", (boolean) => {
       expect(TypeGuard.isBoolean(boolean)).toBe(true)
@@ -30,16 +74,6 @@ describe("TypeGuard", () => {
 
     it.each(Theory.NotANumber)("should return false for non numbers (%o)", (notNumber) => {
       expect(TypeGuard.isNumber(notNumber)).toBe(false)
-    })
-  })
-
-  describe("isInteger", () => {
-    it.each(Theory.Integer)("should return true for integers (%o)", (integer) => {
-      expect(TypeGuard.isInteger(integer)).toBe(true)
-    })
-
-    it.each(Theory.NotAnInteger)("should return false for non integers (%o)", (notInteger) => {
-      expect(TypeGuard.isInteger(notInteger)).toBe(false)
     })
   })
 

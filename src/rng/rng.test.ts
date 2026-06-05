@@ -5,6 +5,44 @@ import { createRng } from "./rng.js"
 import { Sort } from "../Sort.js"
 
 describe("rng", () => {
+  describe("random", () => {
+    it("should return a float when given a float range", () => {
+      // Arrange
+      const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min: 10, max: 20 })
+      const rng = createRng(() => 0.5)
+
+      // Act
+      const random = rng.random(range)
+
+      // Assert
+      expect(random).toEqual(15)
+    })
+
+    it("should return an int when given an inclusive integer range", () => {
+      // Arrange
+      const range = Range.create({ numericType: "integer", maxBoundType: "inclusive", min: 10, max: 20 })
+      const rng = createRng(() => 0.65)
+
+      // Act
+      const random = rng.random(range)
+
+      // Assert
+      expect(random).toEqual(17)
+    })
+
+    it("should return an int when given an exclusive integer range", () => {
+      // Arrange
+      const range = Range.create({ numericType: "integer", maxBoundType: "exclusive", min: 10, max: 20 })
+      const rng = createRng(() => 1 - Number.EPSILON)
+
+      // Act
+      const random = rng.random(range)
+
+      // Assert
+      expect(random).toEqual(19)
+    })
+  })
+
   describe("float", () => {
     it("should return the generator values when no range is provided", () => {
       // Arrange

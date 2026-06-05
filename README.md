@@ -101,12 +101,13 @@ consistent context, scopes, formatting, and redaction.
 Use these small utilities to keep common asynchronous and callback patterns
 consistent.
 
-| Export            | What it is                    | Use it when                                                                     |
-| ----------------- | ----------------------------- | ------------------------------------------------------------------------------- |
-| `setTimeoutAsync` | Promise-based timeout helper. | You want `await`-friendly delays that work in browser and Node environments.    |
-| `debounce`        | Creates a debounced callback. | A repeated event should trigger work only after calls have settled for a delay. |
-| `noop`            | Synchronous no-op function.   | You need a safe default callback that intentionally does nothing.               |
-| `asyncNoop`       | Asynchronous no-op function.  | You need a safe default async callback or hook that resolves immediately.       |
+| Export            | What it is                                 | Use it when                                                                     |
+| ----------------- | ------------------------------------------ | ------------------------------------------------------------------------------- |
+| `setTimeoutAsync` | Promise-based timeout helper.              | You want `await`-friendly delays that work in browser and Node environments.    |
+| `debounce`        | Creates a debounced callback.              | A repeated event should trigger work only after calls have settled for a delay. |
+| `noop`            | Synchronous no-op function.                | You need a safe default callback that intentionally does nothing.               |
+| `asyncNoop`       | Asynchronous no-op function.               | You need a safe default async callback or hook that resolves immediately.       |
+| `omit`            | Runtime equivalent of `Omit<TType, TKey>`. | You need to remove keys from an object.                                         |
 
 ### Measurement
 

@@ -8,6 +8,7 @@ export { getEnumKey } from "./getEnumKey.js"
 export type * from "./utility-types.js"
 
 export { asArray } from "./asArray.js"
+export { omit } from "./omit.js"
 export { Assert } from "./Assert.js"
 export { Result, type Success, type Failure } from "./Result.js"
 export { Measure } from "./Measure.js"

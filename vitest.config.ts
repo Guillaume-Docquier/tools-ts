@@ -24,7 +24,7 @@ export default defineConfig({
         statements: 90,
       },
       include: ["src/**/*.ts"],
-      exclude: ["src/entry.tools-ts.ts"],
+      exclude: ["src/entry.tools-ts.ts", "src/utility-types.ts"],
     },
     restoreMocks: true,
   },

@@ -293,6 +293,11 @@ describe("Range", () => {
           reason: "integer [1, 3] contains integer [1, 4)",
         },
         {
+          bounds: Range.create({ numericType: "integer", min: 1, maxBoundType: "exclusive", max: 5 }),
+          value: Range.create({ numericType: "integer", min: 2, maxBoundType: "inclusive", max: 3 }),
+          reason: "integer [1, 5) contains integer [2, 3]",
+        },
+        {
           bounds: Range.create({ numericType: "integer", min: 1, maxBoundType: "exclusive", max: 4 }),
           value: Range.create({ numericType: "integer", min: 1, maxBoundType: "inclusive", max: 3 }),
           reason: "integer [1, 4) contains integer [1, 3]",

@@ -32,7 +32,6 @@
     "lint:fix": "pnpm lint --fix",
     "prepack": "pnpm build",
     "prepare": "husky",
-    "prepublishOnly": "pnpm ci",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc -b --noEmit"

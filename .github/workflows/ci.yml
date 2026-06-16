@@ -61,13 +61,6 @@ jobs:
       - name: Install packages
         run: pnpm ci
 
-      # semantic-release only officially supports npm (https://github.com/semantic-release/npm/issues/280)
-      # I tried creating an alias, but commands are executed in sub shells
-      # I tried @anolilab/semantic-release-pnpm but it doesn't work with the github registry
-      # So now I'll delete the devEngines restriction just before publishing.
-      - name: Allow npm for @semantic-release/npm
-        run: jq 'del(.devEngines)' package.json > package.json.tmp && mv package.json.tmp package.json
-
       - name: Release
         run: pnpm semantic-release
         env:

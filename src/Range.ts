@@ -51,6 +51,26 @@ export const Range = {
   },
 
   /**
+   * Creates a float exclusive range.
+   * The function throws if the Range parameters are invalid. You should use this for trusted code only.
+   *
+   * @param minMax The range values.
+   */
+  float: (minMax: { readonly min: number; readonly max: number }): Range<"float", "exclusive"> => {
+    return Range.create({ numericType: "float", maxBoundType: "exclusive", ...minMax })
+  },
+
+  /**
+   * Creates an integer inclusive range.
+   * The function throws if the Range parameters are invalid. You should use this for trusted code only.
+   *
+   * @param minMax The bounds values.
+   */
+  integer: (minMax: { readonly min: number; readonly max: number }): Range<"integer", "inclusive"> => {
+    return Range.create({ numericType: "integer", maxBoundType: "inclusive", ...minMax })
+  },
+
+  /**
    * Creates a range.
    * The function returns a Failure if the Range parameters are invalid.
    *

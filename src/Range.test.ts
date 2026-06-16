@@ -31,6 +31,60 @@ describe("Range", () => {
     })
   })
 
+  describe("float", () => {
+    it("should return a Range with valid data", () => {
+      // Arrange
+      const data = { min: 2, max: 8 } as const satisfies Pick<Range, "min" | "max">
+      const validateSpy = vi.spyOn(Range, "safeCreate")
+
+      // Act
+      const range = Range.float(data)
+
+      // Assert
+      const expectedRange = { numericType: "float", maxBoundType: "exclusive", ...data } as const
+      expect(range).toEqual<typeof range>(expectedRange)
+      expectTypeOf(range).toEqualTypeOf<Range<"float", "exclusive">>()
+      expect(validateSpy).toHaveBeenCalledExactlyOnceWith(expectedRange)
+    })
+
+    it("should throw with invalid data", () => {
+      // Arrange
+      const invalidData = { min: 3, max: 2 } as const satisfies Pick<Range, "min" | "max">
+      const validateSpy = vi.spyOn(Range, "safeCreate")
+
+      // Act & Assert
+      expect(() => Range.float(invalidData)).toThrow(AssertionError)
+      expect(validateSpy).toHaveBeenCalledExactlyOnceWith({ numericType: "float", maxBoundType: "exclusive", ...invalidData })
+    })
+  })
+
+  describe("integer", () => {
+    it("should return a Range with valid data", () => {
+      // Arrange
+      const data = { min: 2, max: 8 } as const satisfies Pick<Range, "min" | "max">
+      const validateSpy = vi.spyOn(Range, "safeCreate")
+
+      // Act
+      const range = Range.integer(data)
+
+      // Assert
+      const expectedRange = { numericType: "integer", maxBoundType: "inclusive", ...data } as const
+      expect(range).toEqual<typeof range>(expectedRange)
+      expectTypeOf(range).toEqualTypeOf<Range<"integer", "inclusive">>()
+      expect(validateSpy).toHaveBeenCalledExactlyOnceWith(expectedRange)
+    })
+
+    it("should throw with invalid data", () => {
+      // Arrange
+      const invalidData = { min: 3, max: 2 } as const satisfies Pick<Range, "min" | "max">
+      const validateSpy = vi.spyOn(Range, "safeCreate")
+
+      // Act & Assert
+      expect(() => Range.integer(invalidData)).toThrow(AssertionError)
+      expect(validateSpy).toHaveBeenCalledExactlyOnceWith({ numericType: "integer", maxBoundType: "inclusive", ...invalidData })
+    })
+  })
+
   describe("safeCreate", () => {
     it.each([
       {

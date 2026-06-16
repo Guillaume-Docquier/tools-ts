@@ -23,19 +23,13 @@ jobs:
 
     steps:
       - name: Checkout ${{ github.head_ref || github.ref_name }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
 
       - name: Setting up pnpm
-        uses: pnpm/action-setup@v5
-
-      - name: Setting up nodejs
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ".nvmrc"
-          cache: pnpm
+        uses: pnpm/action-setup@v6.0.8
 
       - name: Install packages
-        run: pnpm i
+        run: pnpm ci
 
       - name: Format
         run: pnpm format
@@ -59,19 +53,13 @@ jobs:
 
     steps:
       - name: Checkout ${{ github.head_ref || github.ref_name }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
 
       - name: Setting up pnpm
-        uses: pnpm/action-setup@v5
-
-      - name: Setting up nodejs
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: ".nvmrc"
-          cache: pnpm
+        uses: pnpm/action-setup@v6.0.8
 
       - name: Install packages
-        run: pnpm i
+        run: pnpm ci
 
       # semantic-release only officially supports npm (https://github.com/semantic-release/npm/issues/280)
       # I tried creating an alias, but commands are executed in sub shells

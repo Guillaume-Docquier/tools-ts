@@ -61,10 +61,10 @@
     "vitest": "^4.1.7"
   },
   "lint-staged": {
-    "*.{md,json,yml,yaml,css,scss}": "oxfmt",
+    "*.{md,json,yml,yaml,css,scss}": "oxfmt --no-error-on-unmatched-pattern",
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
-      "oxfmt"
+      "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
   "devEngines": {

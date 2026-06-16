@@ -1,8 +1,8 @@
-import type { LogSink } from "./LogSink.ts"
 import { getConsoleSink, type ConsoleSinkOptions } from "@logtape/logtape"
 import { redactByField, type FieldRedactionOptions } from "@logtape/redaction"
-import { RECOMMENDED_LOG_REDACTION } from "../redaction.js"
 import { jsonLineFormatter } from "../formatter/jsonLineFormatter.js"
+import { RECOMMENDED_LOG_REDACTION } from "../redaction.js"
+import type { LogSink } from "./LogSink.ts"
 
 type RedactionOptions = {
   enabled: boolean

@@ -1,6 +1,6 @@
 import { describe, it, expect, expectTypeOf } from "vitest"
-import { TypeGuard } from "./TypeGuard.js"
 import { Theory } from "./Theory.js"
+import { TypeGuard } from "./TypeGuard.js"
 
 describe("TypeGuard", () => {
   describe("isFunction", () => {

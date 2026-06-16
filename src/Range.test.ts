@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it, vi } from "vitest"
-import { Result } from "./Result.js"
-import { Range } from "./Range.js"
-import { AssertionError } from "./errors/AssertionError.js"
 import { Assert } from "./Assert.js"
+import { AssertionError } from "./errors/AssertionError.js"
+import { Range } from "./Range.js"
+import { Result } from "./Result.js"
 
 describe("Range", () => {
   describe("create", () => {

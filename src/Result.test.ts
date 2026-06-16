@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { Result } from "./Result.js"
 import { FatalError } from "./errors/FatalError.js"
+import { Result } from "./Result.js"
 import { Theory } from "./Theory.js"
 
 describe("Result", () => {

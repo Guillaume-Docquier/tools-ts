@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { AssertionError } from "./AssertionError.js"
 import { Assert } from "../Assert.js"
+import { AssertionError } from "./AssertionError.js"
 
 const AssertionErrorClassName = AssertionError.name
 const StartsWithAssertionErrorClassName = new RegExp("^" + AssertionErrorClassName)

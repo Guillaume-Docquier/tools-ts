@@ -1,5 +1,5 @@
-import { Result } from "./Result.js"
 import { Assert } from "./Assert.js"
+import { Result } from "./Result.js"
 import { TypeGuard } from "./TypeGuard.js"
 
 type NumericType = "float" | "integer"

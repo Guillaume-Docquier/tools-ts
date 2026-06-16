@@ -1,9 +1,9 @@
-import type { LogContextProvider } from "./log-context/LogContextProvider.js"
-import type { LogContext } from "./log-context/LogContext.js"
-import { Logger } from "./Logger.js"
-import { createConsoleLogSink } from "./sink/ConsoleLogSink.js"
 import { configure, getLogger, reset } from "@logtape/logtape"
 import { describe, afterEach, it } from "vitest"
+import type { LogContext } from "./log-context/LogContext.js"
+import type { LogContextProvider } from "./log-context/LogContextProvider.js"
+import { Logger } from "./Logger.js"
+import { createConsoleLogSink } from "./sink/ConsoleLogSink.js"
 
 // These tests showcase what Logger can do and how it compares to the native lib in terms of performance.
 // To get real benchmark results, run each test individually.

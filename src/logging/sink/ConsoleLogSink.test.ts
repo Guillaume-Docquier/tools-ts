@@ -1,8 +1,8 @@
-import { describe, it, afterEach, expect, vi, test } from "vitest"
 import { reset } from "@logtape/logtape"
+import { describe, it, afterEach, expect, vi, test } from "vitest"
+import { prettyConsoleFormatter } from "../formatter/prettyConsoleFormatter.js"
 import { Logger } from "../Logger.js"
 import { createConsoleLogSink } from "./ConsoleLogSink.js"
-import { prettyConsoleFormatter } from "../formatter/prettyConsoleFormatter.js"
 
 describe("ConsoleLogSink", () => {
   describe("createConsoleLogSink", () => {

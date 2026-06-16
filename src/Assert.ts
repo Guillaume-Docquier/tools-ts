@@ -1,7 +1,7 @@
 import { AssertionError } from "./errors/AssertionError.js"
-import type { EnumType, ConstructorType } from "./utility-types.js"
-import { TypeGuard } from "./TypeGuard.js"
 import { Result, Success } from "./Result.js"
+import { TypeGuard } from "./TypeGuard.js"
+import type { EnumType, ConstructorType } from "./utility-types.js"
 
 /**
  * From Wikipedia

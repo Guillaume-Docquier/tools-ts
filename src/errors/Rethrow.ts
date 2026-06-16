@@ -1,5 +1,5 @@
-import { FatalError } from "./FatalError.js"
 import { AssertionError } from "./AssertionError.js"
+import { FatalError } from "./FatalError.js"
 
 export class Rethrow {
   /**

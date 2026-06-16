@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { FatalError } from "./FatalError.js"
 import { Assert } from "../Assert.js"
+import { FatalError } from "./FatalError.js"
 
 const FatalErrorClassName = FatalError.name
 const StartsWithFatalErrorClassName = new RegExp("^" + FatalErrorClassName)

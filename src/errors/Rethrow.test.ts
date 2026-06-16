@@ -1,8 +1,8 @@
 import { describe, it, expect, expectTypeOf } from "vitest"
-import { Rethrow } from "./Rethrow.js"
-import { FatalError } from "./FatalError.js"
-import { Theory } from "../Theory.js"
 import { Assert } from "../Assert.js"
+import { Theory } from "../Theory.js"
+import { FatalError } from "./FatalError.js"
+import { Rethrow } from "./Rethrow.js"
 
 describe("Rethrow", () => {
   it.each([...Theory.Number, ...Theory.String, ...Theory.Record, ...Theory.Class, undefined, null])(

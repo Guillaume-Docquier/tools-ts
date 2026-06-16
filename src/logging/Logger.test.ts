@@ -1,10 +1,10 @@
-import { describe, it, afterEach, expect } from "vitest"
 import { type LogRecord } from "@logtape/logtape"
-import { Logger } from "./Logger.js"
-import type { LogContextProvider } from "./log-context/LogContextProvider.js"
-import type { LogContext } from "./log-context/LogContext.js"
-import type { LogSink } from "./sink/LogSink.js"
+import { describe, it, afterEach, expect } from "vitest"
 import { configureUnconfiguredLoggers } from "./GlobalRootLoggerRegistry.js"
+import type { LogContext } from "./log-context/LogContext.js"
+import type { LogContextProvider } from "./log-context/LogContextProvider.js"
+import { Logger } from "./Logger.js"
+import type { LogSink } from "./sink/LogSink.js"
 
 describe("Logger", () => {
   afterEach(async () => {

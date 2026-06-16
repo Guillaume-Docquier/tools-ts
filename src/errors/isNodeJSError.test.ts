@@ -1,6 +1,6 @@
+import * as fs from "node:fs"
 import { describe, it, expect } from "vitest"
 import { isNodeJSError } from "./isNodeJSError.js"
-import * as fs from "node:fs"
 
 describe("isNodeJSError", () => {
   it("should return true for an error thrown by NodeJS", async () => {

@@ -1,8 +1,4 @@
-import type { LogSink } from "./sink/LogSink.js"
-import type { LogContextProvider } from "./log-context/LogContextProvider.js"
-import type { LogContext } from "./log-context/LogContext.js"
 import { configure, getLogger, reset, type Logger as LogTapeLogger } from "@logtape/logtape"
-import type { LoggerContext } from "./log-context/LoggerContext.js"
 import {
   getRootLogger,
   setRootLogger,
@@ -10,6 +6,10 @@ import {
   configureUnconfiguredLoggers,
   unconfigureRootLogger,
 } from "./GlobalRootLoggerRegistry.js"
+import type { LogContext } from "./log-context/LogContext.js"
+import type { LogContextProvider } from "./log-context/LogContextProvider.js"
+import type { LoggerContext } from "./log-context/LoggerContext.js"
+import type { LogSink } from "./sink/LogSink.js"
 
 /**
  * The fully featured logger for .

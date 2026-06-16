@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { Range } from "../Range.js"
+import { Sort } from "../Sort.js"
 import { mulberry32Prng } from "./mulberry32prng.js"
 import { createRng } from "./rng.js"
-import { Sort } from "../Sort.js"
 
 describe("rng", () => {
   describe("random", () => {

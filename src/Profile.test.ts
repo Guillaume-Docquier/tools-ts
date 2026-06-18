@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { Measure } from "./Measure.js"
+import { Profile } from "./Profile.js"
 
-describe("Measure", () => {
+describe("Profile", () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
@@ -19,7 +19,7 @@ describe("Measure", () => {
       const logger = { info: vi.fn() }
 
       // Act
-      const result = Measure.executionTime(label, () => expectedResult, logger)
+      const result = Profile.executionTime(label, () => expectedResult, logger)
 
       // Assert
       expect(result).toBe(expectedResult)
@@ -38,7 +38,7 @@ describe("Measure", () => {
       const logger = { info: vi.fn() }
 
       // Act
-      const result = await Measure.executionTime(label, async () => expectedResult, logger)
+      const result = await Profile.executionTime(label, async () => expectedResult, logger)
 
       // Assert
       expect(result).toBe(expectedResult)
@@ -60,7 +60,7 @@ describe("Measure", () => {
       const logger = { info: vi.fn() }
 
       // Act
-      Measure.memoryUsage(logger)
+      Profile.memoryUsage(logger)
 
       // Assert
       expect(logger.info).toHaveBeenCalledExactlyOnceWith("memory usage", {

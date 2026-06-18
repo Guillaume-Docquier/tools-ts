@@ -109,12 +109,23 @@ consistent.
 | `asyncNoop`       | Asynchronous no-op function.               | You need a safe default async callback or hook that resolves immediately.       |
 | `omit`            | Runtime equivalent of `Omit<TType, TKey>`. | You need to remove keys from an object.                                         |
 
-### Measurement
+### Profiling
 
-Use these helpers for lightweight operational visibility, not for rigorous
-benchmarking.
+Use these helpers for quick profiling.
 
 | Export                  | What it is                                      | Use it when                                                                          |
 | ----------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `Measure.executionTime` | Wraps sync or async work and logs elapsed time. | You need quick timing instrumentation around a named operation.                      |
-| `Measure.memoryUsage`   | Logs process memory usage in megabytes.         | You need a snapshot of Node.js process memory for diagnostics or runtime visibility. |
+| `Profile.executionTime` | Wraps sync or async work and logs elapsed time. | You need quick timing instrumentation around a named operation.                      |
+| `Profile.memoryUsage`   | Logs process memory usage in megabytes.         | You need a snapshot of Node.js process memory for diagnostics or runtime visibility. |
+
+### Measurements
+
+| Export | What it is                                                          | Use it when                                                  |
+| ------ | ------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `Time` | Represent a time value with a unit and contains conversion methods. | You want to represent time and abstract away the units used. |
+
+### Date manipulations
+
+| Export               | What it is                                 | Use it when                                                           |
+| -------------------- | ------------------------------------------ | --------------------------------------------------------------------- |
+| `Datetime.increment` | Increments a date by a set amount of Time. | You need to increment time. Plays nicely with the `Time` measurement. |

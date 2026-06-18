@@ -1,6 +1,6 @@
 type BasicLogger = { info: (message: string, context?: Record<string, unknown>) => void }
 
-export const Measure = {
+export const Profile = {
   // You can't overload while defining object properties, which is why the function implementation is not inlined
   executionTime,
 

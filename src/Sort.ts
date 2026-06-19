@@ -5,4 +5,13 @@ export const Sort = {
   byAscending: (a: number, b: number): number => {
     return a - b
   },
+
+  /**
+   * Sorts records by a numeric property in ascending order
+   */
+  byAscendingProperty:
+    <TProperty extends PropertyKey>(property: TProperty) =>
+    <TRecord extends Record<TProperty, number>>(a: TRecord, b: TRecord): number => {
+      return Sort.byAscending(a[property], b[property])
+    },
 }

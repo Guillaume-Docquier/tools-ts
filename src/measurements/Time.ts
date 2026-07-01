@@ -59,4 +59,18 @@ export const Time = {
   in(time: Time, newUnit: UnitOfTime): number {
     return (time.value * TIME_PER_SECONDS[newUnit]) / TIME_PER_SECONDS[time.unit]
   },
+
+  /**
+   * Adds 2 times together. The unit of the first time will be used.
+   */
+  add(timeA: Time, timeB: Time): Time {
+    return Time.create(timeA.value + Time.in(timeB, timeA.unit), timeA.unit)
+  },
+
+  /**
+   * Subtracts 2 times. The unit of the first time will be used.
+   */
+  subtract(timeA: Time, timeB: Time): Time {
+    return Time.create(timeA.value - Time.in(timeB, timeA.unit), timeA.unit)
+  },
 }

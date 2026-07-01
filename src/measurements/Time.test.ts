@@ -17,20 +17,20 @@ describe("Time", () => {
   })
 
   const PRECISION = 7
-  const THEORY = [
-    { from: { value: 2500, unit: UnitOfTime.SECONDS }, to: { value: 2500, unit: UnitOfTime.SECONDS } },
-    { from: { value: 2500, unit: UnitOfTime.SECONDS }, to: { value: 41.6666667, unit: UnitOfTime.MINUTES } },
-    { from: { value: 2500, unit: UnitOfTime.SECONDS }, to: { value: 0.6944444, unit: UnitOfTime.HOURS } },
-    { from: { value: 2500, unit: UnitOfTime.MINUTES }, to: { value: 150000, unit: UnitOfTime.SECONDS } },
-    { from: { value: 2500, unit: UnitOfTime.MINUTES }, to: { value: 2500, unit: UnitOfTime.MINUTES } },
-    { from: { value: 2500, unit: UnitOfTime.MINUTES }, to: { value: 41.6666667, unit: UnitOfTime.HOURS } },
-    { from: { value: 2500, unit: UnitOfTime.HOURS }, to: { value: 9000000, unit: UnitOfTime.SECONDS } },
-    { from: { value: 2500, unit: UnitOfTime.HOURS }, to: { value: 150000, unit: UnitOfTime.MINUTES } },
-    { from: { value: 2500, unit: UnitOfTime.HOURS }, to: { value: 2500, unit: UnitOfTime.HOURS } },
+  const CONVERSIONS_THEORY = [
+    { from: Time.create(2500, UnitOfTime.SECONDS), to: Time.create(2500, UnitOfTime.SECONDS) },
+    { from: Time.create(2500, UnitOfTime.SECONDS), to: Time.create(41.6666667, UnitOfTime.MINUTES) },
+    { from: Time.create(2500, UnitOfTime.SECONDS), to: Time.create(0.6944444, UnitOfTime.HOURS) },
+    { from: Time.create(2500, UnitOfTime.MINUTES), to: Time.create(150000, UnitOfTime.SECONDS) },
+    { from: Time.create(2500, UnitOfTime.MINUTES), to: Time.create(2500, UnitOfTime.MINUTES) },
+    { from: Time.create(2500, UnitOfTime.MINUTES), to: Time.create(41.6666667, UnitOfTime.HOURS) },
+    { from: Time.create(2500, UnitOfTime.HOURS), to: Time.create(9000000, UnitOfTime.SECONDS) },
+    { from: Time.create(2500, UnitOfTime.HOURS), to: Time.create(150000, UnitOfTime.MINUTES) },
+    { from: Time.create(2500, UnitOfTime.HOURS), to: Time.create(2500, UnitOfTime.HOURS) },
   ]
 
   describe("convert", () => {
-    it.each(THEORY)("should convert $from.unit to $to.unit", ({ from, to }) => {
+    it.each(CONVERSIONS_THEORY)("should convert $from.unit to $to.unit", ({ from, to }) => {
       // Act
       const converted = Time.convert(from, to.unit)
 
@@ -41,12 +41,86 @@ describe("Time", () => {
   })
 
   describe("in", () => {
-    it.each(THEORY)("should convert $from.unit to $to.unit", ({ from, to }) => {
+    it.each(CONVERSIONS_THEORY)("should convert $from.unit to $to.unit", ({ from, to }) => {
       // Act
       const converted = Time.in(from, to.unit)
 
       // Asset
       expect(converted).toBeCloseTo(to.value, PRECISION)
+    })
+  })
+
+  describe("add", () => {
+    it.each([
+      {
+        timeA: Time.create(2, UnitOfTime.SECONDS),
+        timeB: Time.create(3, UnitOfTime.SECONDS),
+        expected: Time.create(5, UnitOfTime.SECONDS),
+      },
+      {
+        timeA: Time.create(1, UnitOfTime.SECONDS),
+        timeB: Time.create(500, UnitOfTime.MILLISECONDS),
+        expected: Time.create(1.5, UnitOfTime.SECONDS),
+      },
+      {
+        timeA: Time.create(2, UnitOfTime.MINUTES),
+        timeB: Time.create(30, UnitOfTime.SECONDS),
+        expected: Time.create(2.5, UnitOfTime.MINUTES),
+      },
+      {
+        timeA: Time.create(500, UnitOfTime.MILLISECONDS),
+        timeB: Time.create(2, UnitOfTime.SECONDS),
+        expected: Time.create(2500, UnitOfTime.MILLISECONDS),
+      },
+      {
+        timeA: Time.create(1.5, UnitOfTime.HOURS),
+        timeB: Time.create(30, UnitOfTime.MINUTES),
+        expected: Time.create(2, UnitOfTime.HOURS),
+      },
+    ])("should add $timeA.unit and $timeB.unit as $expected.unit", ({ timeA, timeB, expected }) => {
+      // Act
+      const added = Time.add(timeA, timeB)
+
+      // Assert
+      expect(added.value).toBeCloseTo(expected.value, PRECISION)
+      expect(added.unit).toEqual(expected.unit)
+    })
+  })
+
+  describe("subtract", () => {
+    it.each([
+      {
+        timeA: Time.create(5, UnitOfTime.SECONDS),
+        timeB: Time.create(3, UnitOfTime.SECONDS),
+        expected: Time.create(2, UnitOfTime.SECONDS),
+      },
+      {
+        timeA: Time.create(1.5, UnitOfTime.SECONDS),
+        timeB: Time.create(500, UnitOfTime.MILLISECONDS),
+        expected: Time.create(1, UnitOfTime.SECONDS),
+      },
+      {
+        timeA: Time.create(2, UnitOfTime.MINUTES),
+        timeB: Time.create(30, UnitOfTime.SECONDS),
+        expected: Time.create(1.5, UnitOfTime.MINUTES),
+      },
+      {
+        timeA: Time.create(2500, UnitOfTime.MILLISECONDS),
+        timeB: Time.create(2, UnitOfTime.SECONDS),
+        expected: Time.create(500, UnitOfTime.MILLISECONDS),
+      },
+      {
+        timeA: Time.create(2, UnitOfTime.HOURS),
+        timeB: Time.create(30, UnitOfTime.MINUTES),
+        expected: Time.create(1.5, UnitOfTime.HOURS),
+      },
+    ])("should subtract $timeB.unit from $timeA.unit as $expected.unit", ({ timeA, timeB, expected }) => {
+      // Act
+      const subtracted = Time.subtract(timeA, timeB)
+
+      // Assert
+      expect(subtracted.value).toBeCloseTo(expected.value, PRECISION)
+      expect(subtracted.unit).toEqual(expected.unit)
     })
   })
 })

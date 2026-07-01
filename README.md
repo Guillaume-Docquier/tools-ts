@@ -113,10 +113,11 @@ consistent.
 
 Use these helpers for quick profiling.
 
-| Export                  | What it is                                      | Use it when                                                                          |
-| ----------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `Profile.executionTime` | Wraps sync or async work and logs elapsed time. | You need quick timing instrumentation around a named operation.                      |
-| `Profile.memoryUsage`   | Logs process memory usage in megabytes.         | You need a snapshot of Node.js process memory for diagnostics or runtime visibility. |
+| Export                  | What it is                                                          | Use it when                                                                          |
+| ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `Profile.executionTime` | Wraps sync or async work and logs elapsed time.                     | You need quick timing instrumentation around a named operation.                      |
+| `Profile.memoryUsage`   | Logs process memory usage in megabytes.                             | You need a snapshot of Node.js process memory for diagnostics or runtime visibility. |
+| `Timer`                 | Captures performance timestamps and computes elapsed `Time` values. | You need elapsed-time measurements without logging.                                  |
 
 ### Measurements
 

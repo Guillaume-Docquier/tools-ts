@@ -1,5 +1,8 @@
-type BasicLogger = { info: (message: string, context?: Record<string, unknown>) => void }
+type BasicLogger = { debug: (message: string, context?: Record<string, unknown>) => void }
 
+/**
+ * Basic utilities for profiling. Useful for quick debugging, not really production ready.
+ */
 export const Profile = {
   // You can't overload while defining object properties, which is why the function implementation is not inlined
   executionTime,
@@ -10,7 +13,7 @@ export const Profile = {
   memoryUsage(logger: BasicLogger = console): void {
     const memoryUsage = process.memoryUsage() // info in bytes
 
-    logger.info("memory usage", {
+    logger.debug("memory usage", {
       /**
        * Resident Set Size, the total memory allocated for the whole process.
        * In Railway, this is what you pay for.
@@ -62,7 +65,7 @@ function executionTime<T>(label: string, action: (() => Promise<T>) | (() => T),
 }
 
 function logExecutionTime(label: string, startedAt: number, logger: BasicLogger): void {
-  logger.info(`${label}: ${(performance.now() - startedAt).toFixed(2)}ms`)
+  logger.debug(label, { executionTimeMs: (performance.now() - startedAt).toFixed(2) })
 }
 
 function bytesToMb(bytes: number): string {

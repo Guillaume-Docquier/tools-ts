@@ -1,48 +1,44 @@
-import { afterEach, describe, expect, it, vi } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import { Profile } from "./Profile.js"
 
 describe("Profile", () => {
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
   describe("executionTime", () => {
     it("should work with synchronous actions", () => {
       // Arrange
-      const timeSpentMs = 23.45
+      const executionTimeMs = 23.456
       vi.spyOn(performance, "now")
         .mockReturnValueOnce(100)
-        .mockReturnValueOnce(100 + timeSpentMs)
+        .mockReturnValueOnce(100 + executionTimeMs)
 
       const label = "test synchronous action"
       const expectedResult = { ok: true }
-      const logger = { info: vi.fn() }
+      const logger = { debug: vi.fn() }
 
       // Act
       const result = Profile.executionTime(label, () => expectedResult, logger)
 
       // Assert
       expect(result).toBe(expectedResult)
-      expect(logger.info).toHaveBeenCalledExactlyOnceWith(`${label}: ${timeSpentMs}ms`)
+      expect(logger.debug).toHaveBeenCalledExactlyOnceWith(label, { executionTimeMs: "23.46" })
     })
 
     it("should work with asynchronous actions", async () => {
       // Arrange
-      const timeSpentMs = 32.78
+      const executionTimeMs = 32.784
       vi.spyOn(performance, "now")
         .mockReturnValueOnce(100)
-        .mockReturnValueOnce(100 + timeSpentMs)
+        .mockReturnValueOnce(100 + executionTimeMs)
 
       const label = "test asynchronous action"
       const expectedResult = { ok: true }
-      const logger = { info: vi.fn() }
+      const logger = { debug: vi.fn() }
 
       // Act
       const result = await Profile.executionTime(label, async () => expectedResult, logger)
 
       // Assert
       expect(result).toBe(expectedResult)
-      expect(logger.info).toHaveBeenCalledExactlyOnceWith(`${label}: ${timeSpentMs}ms`)
+      expect(logger.debug).toHaveBeenCalledExactlyOnceWith(label, { executionTimeMs: "32.78" })
     })
   })
 
@@ -57,13 +53,13 @@ describe("Profile", () => {
         arrayBuffers: 6 * 1024 * 1024,
       })
 
-      const logger = { info: vi.fn() }
+      const logger = { debug: vi.fn() }
 
       // Act
       Profile.memoryUsage(logger)
 
       // Assert
-      expect(logger.info).toHaveBeenCalledExactlyOnceWith("memory usage", {
+      expect(logger.debug).toHaveBeenCalledExactlyOnceWith("memory usage", {
         rss: "2.00 MB",
         heapTotal: "3.00 MB",
         heapUsed: "4.00 MB",

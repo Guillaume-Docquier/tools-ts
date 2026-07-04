@@ -68,16 +68,17 @@ pseudo-random sequences.
 
 These exports are type-only helpers for common TypeScript modeling problems.
 
-| Export                                     | What it is                                                      | Use it when                                                                                |
-| ------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `ConstructorType`                          | A type for class constructors.                                  | A function accepts a class and later uses `new` or `instanceof` against it.                |
-| `EnumKeyType`, `EnumValueType`, `EnumType` | Broad shapes for enum-like objects.                             | You are writing generic utilities that operate on TypeScript enums or const-object enums.  |
-| `Enumify`                                  | Converts a const object into a union of its values.             | A project avoids TypeScript `enum` but wants enum-like ergonomics from `as const` objects. |
-| `ValueOf`                                  | Produces a union of an object's value types.                    | You need the values of a lookup object as a type.                                          |
-| `Prettify`                                 | Re-expands an object type for easier editor hovers.             | Intersections or mapped types are correct but hard to read in tooling.                     |
-| `OmitOverUnion`                            | Applies `Omit` distributively across union members.             | Native `Omit` collapses a discriminated union in a way that loses member-specific fields.  |
-| `PartialProperties`                        | Makes selected object properties partial, not the whole object. | Only nested property objects should become partial while the parent shape stays required.  |
-| `Mutable`                                  | Removes `readonly` from selected properties.                    | You have a narrow, deliberate mutation need. Avoid this unless there is no cleaner model.  |
+| Export                                     | What it is                                                        | Use it when                                                                                |
+| ------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `Branded`, `branded`                       | A nominal typing helper plus a runtime no-op for branding values. | Structurally identical values need distinct domain types, such as separate ID kinds.       |
+| `ConstructorType`                          | A type for class constructors.                                    | A function accepts a class and later uses `new` or `instanceof` against it.                |
+| `EnumKeyType`, `EnumValueType`, `EnumType` | Broad shapes for enum-like objects.                               | You are writing generic utilities that operate on TypeScript enums or const-object enums.  |
+| `Enumify`                                  | Converts a const object into a union of its values.               | A project avoids TypeScript `enum` but wants enum-like ergonomics from `as const` objects. |
+| `ValueOf`                                  | Produces a union of an object's value types.                      | You need the values of a lookup object as a type.                                          |
+| `Prettify`                                 | Re-expands an object type for easier editor hovers.               | Intersections or mapped types are correct but hard to read in tooling.                     |
+| `OmitOverUnion`                            | Applies `Omit` distributively across union members.               | Native `Omit` collapses a discriminated union in a way that loses member-specific fields.  |
+| `PartialProperties`                        | Makes selected object properties partial, not the whole object.   | Only nested property objects should become partial while the parent shape stays required.  |
+| `Mutable`                                  | Removes `readonly` from selected properties.                      | You have a narrow, deliberate mutation need. Avoid this unless there is no cleaner model.  |
 
 ### Logging
 

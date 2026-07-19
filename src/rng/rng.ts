@@ -47,10 +47,10 @@ export function createRng(generator: Generator): Rng {
   function random(range: Range): number {
     switch (range.numericType) {
       case "float":
-        // The fact we have to cast like this sucks a little bit, we'll see if we have to do this often or not.
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- The fact we have to cast like this sucks a little bit, we'll see if we have to do this often or not.
         return float(range as Range<typeof range.numericType>)
       case "integer":
-        // The fact we have to cast like this sucks a little bit, we'll see if we have to do this often or not.
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- The fact we have to cast like this sucks a little bit, we'll see if we have to do this often or not.
         return int(range as Range<typeof range.numericType>)
     }
   }
@@ -77,7 +77,7 @@ export function createRng(generator: Generator): Rng {
   function shuffle<T>(values: Array<Readonly<T>>): T[] {
     for (let i = values.length - 1; i > 0; i--) {
       const j = Math.floor(generator() * (i + 1))
-      ;[values[i], values[j]] = [values[j] as T, values[i] as T]
+      ;[values[i], values[j]] = [values[j], values[i]]
     }
 
     return values

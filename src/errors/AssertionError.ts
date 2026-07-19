@@ -1,6 +1,10 @@
 import { FatalError } from "./FatalError.js"
 
-type AssertionContext = { paramName?: string; expected: string | number; received: string | number }
+type AssertionContext = {
+  paramName?: string | undefined
+  expected: string | number
+  received: string | number
+}
 
 /**
  * An error used when the program assumptions are broken.
@@ -18,7 +22,7 @@ export class AssertionError extends FatalError<AssertionContext> {
    * @param context The assertion context.
    * @param caller You can pass the caller to remove them (and all other callers after them) from the stack trace. This is useful if you raise an error for someone else and you want the stack trace to point to them.
    */
-  constructor(message: string, context: AssertionContext, caller?: (...args: never) => unknown | undefined) {
+  public constructor(message: string, context: AssertionContext, caller?: (...args: never) => unknown) {
     super(message, cleanContext(context), caller)
 
     // We can't use "this.constructor.name" because when code gets bundled, the class names get mangled and you get a useless name

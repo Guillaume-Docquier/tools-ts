@@ -1,5 +1,5 @@
 import { AssertionError } from "./errors/AssertionError.js"
-import { Result, Success } from "./Result.js"
+import { Result, type Success } from "./Result.js"
 import { TypeGuard } from "./TypeGuard.js"
 import type { EnumType, ConstructorType } from "./utility-types.js"
 
@@ -16,7 +16,7 @@ import type { EnumType, ConstructorType } from "./utility-types.js"
  *
  * The methods in this module will throw an {@link AssertionError}, with an `isFatal: true` property so that you can decide to not catch this class of errors, if you want.
  */
-
+// oxlint-disable-next-line typescript/no-extraneous-class -- This is necessary to create Typescript Assertion functions
 export class Assert {
   /**
    * Asserts that an instance is an instance of the given class constructor.

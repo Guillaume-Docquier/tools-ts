@@ -6,6 +6,7 @@ import type { LoggerContext } from "../log-context/LoggerContext.js"
  * The message context is not stringified, so in browsers you'll be able to expand/collapse the data and have colorized output.
  */
 export const prettyConsoleFormatter: ConsoleFormatter = (logRecord) => {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- This is intended to be used with our logger, which guarantees this
   const { scopes, ...context } = logRecord.properties as LoggerContext
 
   const consoleArgs: unknown[] = [
@@ -17,6 +18,7 @@ export const prettyConsoleFormatter: ConsoleFormatter = (logRecord) => {
       // LogTape supports template literals, but we don't.
       // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals to learn more about template literals.
       // We don't validate for performance reasons. We compensate with tests.
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- This is intended to be used with our logger, which guarantees this
       message: logRecord.rawMessage as string,
     }),
   ]

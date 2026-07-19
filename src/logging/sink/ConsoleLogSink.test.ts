@@ -86,6 +86,7 @@ describe("ConsoleLogSink", () => {
       logger.info("hello", { normalField: "visible", cookie: "secret" })
 
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
       expect(JSON.parse(jsonLogLine)).toEqual({
         timestamp: expect.any(String),
@@ -117,6 +118,7 @@ describe("ConsoleLogSink", () => {
       logger.info("hello", { cookie: "visible because redaction disabled" })
 
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
       expect(JSON.parse(jsonLogLine)).toEqual({
         timestamp: expect.any(String),
@@ -140,6 +142,7 @@ describe("ConsoleLogSink", () => {
       logger.info("hello", { myCustomSecret: "value", normalField: "visible", cookie: "visible because overridden" })
 
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
       expect(JSON.parse(jsonLogLine)).toEqual({
         timestamp: expect.any(String),
@@ -165,6 +168,7 @@ describe("ConsoleLogSink", () => {
       logger.info("hello", { password: "secret" })
 
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
       expect(JSON.parse(jsonLogLine)).toEqual({
         timestamp: expect.any(String),
@@ -183,6 +187,7 @@ describe("ConsoleLogSink", () => {
 
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
       expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining("this gets lost"))
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
       expect(JSON.parse(jsonLogLine)).toEqual({
         timestamp: expect.any(String),

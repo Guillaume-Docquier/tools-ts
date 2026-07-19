@@ -7,7 +7,7 @@ export type NotImplementedContext = { trackedBy: string }
  * You should provide a url to where the implementation is tracked (usually, a jira ticket), so you don't forget.
  */
 export class NotImplementedError extends FatalError<NotImplementedContext> {
-  constructor(context: NotImplementedContext) {
+  public constructor(context: NotImplementedContext) {
     super(`This feature is not yet implemented!`, context)
 
     // We can't use "this.constructor.name" because when code gets bundled, the class names get mangled and you get a useless name

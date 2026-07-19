@@ -139,18 +139,17 @@ describe("Result", () => {
     })
 
     describe("asynchronous", () => {
-      it("should return a Success when the returned promise resolves", async () => {
+      it.each(Theory.PromiseLike)("should return a Success when the returned promise resolves", async (promiseLike) => {
         // Arrange
-        const expectedValue = 1
-        async function asynchronous(): Promise<number> {
-          return expectedValue
+        function asynchronous(): PromiseLike<"value"> {
+          return promiseLike
         }
 
         // Act
         const result = await Result.tryCatch(asynchronous)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Success(expectedValue))
+        expect(result).toEqual<typeof result>(Result.Success("value"))
       })
 
       it("should return a Failure when the returned promise rejects", async () => {

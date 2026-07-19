@@ -67,7 +67,7 @@ export const Result = {
  *
  * @param promise The promise.
  */
-function tryCatch<T>(promise: Promise<T>): Promise<Result<T, Error>>
+function tryCatch<T>(promise: PromiseLike<T>): Promise<Result<T, Error>>
 /**
  * Creates a Result from the result of a function that returns a promise.
  * If the returned promise resolves, you will get a {@link Result.Success}.
@@ -76,7 +76,7 @@ function tryCatch<T>(promise: Promise<T>): Promise<Result<T, Error>>
  *
  * @param asyncFn The asynchronous callback to execute.
  */
-function tryCatch<T>(asyncFn: () => Promise<T>): Promise<Result<T, Error>>
+function tryCatch<T>(asyncFn: () => PromiseLike<T>): Promise<Result<T, Error>>
 /**
  * Creates a Result from the result of a function that could throw.
  * If the function does not throw, you will get a {@link Result.Success}.
@@ -86,7 +86,7 @@ function tryCatch<T>(asyncFn: () => Promise<T>): Promise<Result<T, Error>>
  * @param syncFn The synchronous callback to execute.
  */
 function tryCatch<T>(syncFn: () => T): Result<T, Error>
-function tryCatch<T>(op: Promise<T> | (() => T | Promise<T>)): Result<T, Error> | Promise<Result<T, Error>> {
+function tryCatch<T>(op: PromiseLike<T> | (() => T | PromiseLike<T>)): Result<T, Error> | Promise<Result<T, Error>> {
   if (TypeGuard.isPromiseLike(op)) {
     return tryCatchPromise(op)
   }
@@ -95,7 +95,7 @@ function tryCatch<T>(op: Promise<T> | (() => T | Promise<T>)): Result<T, Error> 
     const result = op()
 
     // Async handling
-    if (result instanceof Promise) {
+    if (TypeGuard.isPromiseLike(result)) {
       return tryCatchPromise(result)
     }
 
@@ -107,9 +107,11 @@ function tryCatch<T>(op: Promise<T> | (() => T | Promise<T>)): Result<T, Error> 
   }
 }
 
-function tryCatchPromise<T>(promise: Promise<T>): Promise<Result<T, Error>> {
-  return promise.then(Result.Success).catch((error) => {
+async function tryCatchPromise<T>(promise: PromiseLike<T>): Promise<Result<T, Error>> {
+  try {
+    return await promise.then(Result.Success)
+  } catch (error) {
     Rethrow.ifFatal(error)
     return Result.Failure(error)
-  })
+  }
 }

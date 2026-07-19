@@ -17,6 +17,7 @@ export function omit<TRecord extends Record<string, unknown>, TKey extends keyof
   const result = { ...record }
 
   for (const key of keys) {
+    // oxlint-disable-next-line typescript/no-dynamic-delete -- Removing caller-selected keys is the whole point
     delete result[key]
   }
 

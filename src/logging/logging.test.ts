@@ -53,6 +53,7 @@ describe("logging", () => {
 
         const end = performance.now()
 
+        // oxlint-disable-next-line no-console -- We log time to debug the benchmark
         console.log({
           // blocking | non-blocking
           init: warm - init, // 2.97ms | 2.88ms
@@ -112,6 +113,7 @@ describe("logging", () => {
 
       const end = performance.now()
 
+      // oxlint-disable-next-line no-console -- We log time to debug the benchmark
       console.log({
         init: warm - init, // 3.64ms
         warm: log - warm, // 0.22ms

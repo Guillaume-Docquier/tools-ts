@@ -82,6 +82,7 @@ describe("Rethrow", () => {
     // Arrange
     function main(): void {
       try {
+        // oxlint-disable-next-line typescript/only-throw-error -- That's the point of the test
         throw 1
       } catch (error) {
         Rethrow.ifFatal(error)

@@ -9,6 +9,7 @@ describe("isNodeJSError", () => {
 
     // Act & Assert
     expect(isNodeJSError(nodeJsError)).toBe(true)
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- That's just because vitest's matchers can be type guards
     expect((nodeJsError as NodeJS.ErrnoException).code).toBe("ENOENT")
   })
 
@@ -20,6 +21,7 @@ describe("isNodeJSError", () => {
     expect(isNodeJSError(nodeJsError)).toBe(true)
   })
 
+  // oxlint-disable-next-line typescript/no-extraneous-class -- The contents of the class doesn't matter here
   it.each(["not an error", "Error", new (class Error {})(), undefined, null, false, true])(
     "should return false for not an error (%o)",
     (error) => {

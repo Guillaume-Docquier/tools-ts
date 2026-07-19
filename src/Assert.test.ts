@@ -1,7 +1,7 @@
 import { describe, it, expect, expectTypeOf } from "vitest"
 import { Assert } from "./Assert.js"
 import { AssertionError } from "./errors/AssertionError.js"
-import { Result, Success } from "./Result.js"
+import { Result, type Success } from "./Result.js"
 
 describe("Assert", () => {
   describe("isInstanceOf", () => {
@@ -353,6 +353,7 @@ describe("Assert", () => {
       // Arrange
       const a = true as boolean
       const b = 2 as unknown
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- That's the point of the test
       const myObj = { a, b } as unknown as { a: boolean }
 
       expectTypeOf(a).toEqualTypeOf<boolean>()
@@ -407,6 +408,7 @@ describe("Assert", () => {
 
     it("should throw if called", () => {
       expect(() => {
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- This is meant to never be called and that's what we test
         Assert.isExhausted(undefined as unknown as never)
       }).toThrow(AssertionError)
     })
@@ -468,6 +470,7 @@ describe("Assert", () => {
     })
 
     it("Assert.isExhausted", () => {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- This is meant to never be called and that's what we test
       Assert.isExhausted(true as unknown as never)
     })
 

@@ -13,7 +13,7 @@ describe("setTimeoutAsync", () => {
     const spy = vi.fn()
 
     // Act
-    setTimeoutAsync(delayMs).then(spy)
+    void setTimeoutAsync(delayMs).then(spy)
 
     // Assert
     expect(spy).not.toHaveBeenCalled()

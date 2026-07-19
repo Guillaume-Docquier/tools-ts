@@ -14,6 +14,7 @@ interface GlobalRootLoggerRegistry {
   [UNCONFIGURED_LOGGERS_SYMBOL]?: Logger[]
 }
 
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- The registry uses globally unique symbol keys, and every write is controlled by this module
 const globalRootLoggerRegistry = globalThis as GlobalRootLoggerRegistry
 
 export function getRootLogger(): Logger | undefined {

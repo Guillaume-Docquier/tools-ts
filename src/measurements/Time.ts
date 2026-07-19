@@ -1,4 +1,4 @@
-import { Measurement } from "./Measurement.js"
+import { type Measurement } from "./Measurement.js"
 
 /**
  * Represents the possible units to define time.
@@ -30,7 +30,7 @@ export type Time = Measurement<UnitOfTime>
  * A set of functions to work with Times.
  */
 export const Time = {
-  create: (value: number, unit: UnitOfTime) => {
+  create: (value: number, unit: UnitOfTime): Time => {
     return {
       value,
       unit,

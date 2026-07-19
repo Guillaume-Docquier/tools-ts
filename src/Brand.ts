@@ -26,5 +26,6 @@ export type Branded<TType, TBrand> = TType & { [brand]: TBrand } & { [baseType]:
  * This is just type gymnastics to declare intent, the value is returned as-is at runtime.
  */
 export function branded<TBrand extends AnyBrand>(value: TypeOf<TBrand>): TBrand {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Branded is a compile-time marker, casting is the only way.
   return value as TBrand
 }

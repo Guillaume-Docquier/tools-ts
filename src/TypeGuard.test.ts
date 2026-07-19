@@ -36,7 +36,8 @@ describe("TypeGuard", () => {
 
     it("should narrow the type", () => {
       // Arrange
-      const maybeThenable = { then: () => Promise.resolve("value") } as unknown
+      // oxlint-disable-next-line unicorn/no-thenable -- This is intentional to cover 3rd party code that does this
+      const maybeThenable = { then: async () => await Promise.resolve("value") } as unknown
 
       // Act
       expectTypeOf(maybeThenable).not.toEqualTypeOf<PromiseLike<unknown>>()

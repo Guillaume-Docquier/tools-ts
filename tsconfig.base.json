@@ -23,6 +23,7 @@
     "esModuleInterop": true,
 
     /* Linting */
+    "exactOptionalPropertyTypes": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

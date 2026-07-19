@@ -1,3 +1,6 @@
+// oxlint-disable unicorn/no-thenable -- This is intentional to cover 3rd party code that does this
+// oxlint-disable typescript/no-extraneous-class -- This is test code
+
 // Jest doesn't allow you to an array of arrays as a theory parameter, it tries to inspect it instead
 const toArrayEntry = (array: unknown[]): { array: unknown[] } => ({ array })
 
@@ -5,9 +8,16 @@ class AClassIsTechnicallyRecordLike {
   public readonly foo = "bar"
 }
 
-class ClassWithThenMethod {
-  public async then(): Promise<string> {
-    return "value"
+class ClassWithThenMethod implements PromiseLike<"value"> {
+  public async then<TResult1 = "value", TResult2 = never>(
+    onfulfilled?: ((value: "value") => TResult1 | PromiseLike<TResult1>) | null,
+  ): Promise<TResult1 | TResult2> {
+    if (onfulfilled !== null && onfulfilled !== undefined) {
+      return await onfulfilled("value")
+    }
+
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- This is fine
+    return "value" as TResult1
   }
 }
 
@@ -23,7 +33,17 @@ export const Theory = {
   Boolean: [true, false],
   NotABoolean: [-1, 0, 1, -1.5, 1.5, "record", "", "string", "{}", "[]", {}, [], null, undefined, "true", "false"],
   Class: [new AClassIsTechnicallyRecordLike()],
-  PromiseLike: [[Promise.resolve("value"), { then: () => Promise.resolve("value") }, new ClassWithThenMethod()]],
+  PromiseLike: [
+    (async () => "value" as const)(),
+    Promise.resolve("value"),
+    {
+      then: async <TResult1 = "value">(
+        onfulfilled?: ((value: "value") => TResult1 | PromiseLike<TResult1>) | null,
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- This is fine
+      ): Promise<TResult1> => (onfulfilled !== undefined && onfulfilled !== null ? await onfulfilled("value") : ("value" as TResult1)),
+    },
+    new ClassWithThenMethod(),
+  ] as const satisfies Array<PromiseLike<"value">>,
   NotPromiseLike: [
     undefined,
     null,
@@ -38,9 +58,11 @@ export const Theory = {
     { then: null },
     { then: "not a function" },
     [],
-    [() => Promise.resolve("value")],
-    () => Promise.resolve("value"),
+    // oxlint-disable-next-line typescript/promise-function-async -- This is intentional to cover 3rd party code that does this
+    [(): Promise<string> => Promise.resolve("value")],
+    // oxlint-disable-next-line typescript/promise-function-async -- This is intentional to cover 3rd party code that does this
+    (): Promise<string> => Promise.resolve("value"),
   ],
-  Function: [function functionDeclaration() {}, () => {}, async () => {}, class SomeClass {}],
-  NotAFunction: [undefined, null, true, false, 0, 1, "", "function", {}, { call: () => {} }, [], [() => {}]],
+  Function: [function functionDeclaration(): void {}, (): void => {}, async (): Promise<void> => {}, class SomeClass {}],
+  NotAFunction: [undefined, null, true, false, 0, 1, "", "function", {}, { call: (): void => {} }, [], [(): void => {}]],
 } as const

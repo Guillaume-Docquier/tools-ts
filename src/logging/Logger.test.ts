@@ -279,9 +279,12 @@ describe("Logger", () => {
 
     it("should be prioritized in the order: message < dynamic < static < reserved", async () => {
       // Arrange
-      const messageContext = { message: "message", dynamic: "message", context: "message", scopes: ["message"] } as unknown as LogContext // we're cheating to test scopes
-      const dynamicContext = { dynamic: "dynamic", context: "dynamic", scopes: ["dynamic"] } as unknown as LogContext // we're cheating to test scopes
-      const staticContext = { context: "context", scopes: ["context"] } as unknown as LogContext // we're cheating to test scopes
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- we're cheating to test scopes
+      const messageContext = { message: "message", dynamic: "message", context: "message", scopes: ["message"] } as unknown as LogContext
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- we're cheating to test scopes
+      const dynamicContext = { dynamic: "dynamic", context: "dynamic", scopes: ["dynamic"] } as unknown as LogContext
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- we're cheating to test scopes
+      const staticContext = { context: "context", scopes: ["context"] } as unknown as LogContext
 
       const contextProvider = new AnyLogContextProvider(dynamicContext)
       const inMemorySink = createInMemorySink()
@@ -427,7 +430,7 @@ class AnyLogContextProvider implements LogContextProvider {
     this.context = context
   }
 
-  getContext(): LogContext {
+  public getContext(): LogContext {
     return this.context
   }
 }

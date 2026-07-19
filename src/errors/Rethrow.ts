@@ -1,6 +1,7 @@
 import { AssertionError } from "./AssertionError.js"
 import { FatalError } from "./FatalError.js"
 
+// oxlint-disable-next-line typescript/no-extraneous-class -- This is necessary to create Typescript Assertion functions
 export class Rethrow {
   /**
    * Use Rethrow.ifFatal to catch only errors that are not Fatal.

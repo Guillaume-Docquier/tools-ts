@@ -14,7 +14,7 @@ export class FatalError<TContext extends Record<string, unknown>> extends Error 
    * @param context
    * @param caller You can pass the caller to remove them (and all other callers after them) from the stack trace. This is useful if you raise an error for someone else and you want the stack trace to point to them.
    */
-  constructor(message: string, context: TContext, caller?: (...args: never) => unknown | undefined) {
+  public constructor(message: string, context: TContext, caller?: (...args: never) => unknown) {
     // Putting the context in the error message allows us to see it in the console when the error is uncaught, otherwise it's lost
     super(`${message} ${JSON.stringify(context, null, 2)}`)
 

@@ -1,5 +1,6 @@
 strictPeerDependencies: true
 
+minimumReleaseAgeStrict: true
 minimumReleaseAgeExclude:
   - "@guillaume-docquier/oxlint"
   - "@guillaume-docquier/oxfmt"

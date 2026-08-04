@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { Range } from "../Range.js"
 import { Sort } from "../Sort.js"
 import { mulberry32Prng } from "./mulberry32prng.js"
-import { createRng } from "./rng.js"
+import { createRng, type Generator } from "./rng.js"
 
 describe("rng", () => {
   describe("random", () => {
@@ -240,6 +240,63 @@ describe("rng", () => {
 
       // Assert
       expect(draw1).toEqual(draw2)
+    })
+  })
+
+  describe("normal", () => {
+    const EXPECTED_ONE_STANDARD_DEVIATION_COVERAGE = 0.6827
+    const EXPECTED_TWO_STANDARD_DEVIATIONS_COVERAGE = 0.9545
+    const generators = [
+      { name: "mulberry32", create: (): Generator => mulberry32Prng(1234) },
+      { name: "Math.random", create: (): Generator => Math.random },
+    ]
+
+    it.each(generators)("should follow a standard normal distribution with $name", ({ create }) => {
+      // Arrange
+      const expectedMean = 0
+      const expectedStandardDeviation = 1
+      const sampleCount = 100_000
+      const rng = createRng(create())
+
+      // Act
+      const values = Array.from({ length: sampleCount }, () => rng.normal())
+
+      // Assert
+      const actualMean = values.reduce((sum, value) => sum + value, 0) / sampleCount
+      const actualStandardDeviation = Math.sqrt(values.reduce((sum, value) => sum + (value - actualMean) ** 2, 0) / sampleCount)
+      const actualOneStandardDeviationCoverage =
+        values.filter((value) => Math.abs(value - expectedMean) <= expectedStandardDeviation).length / sampleCount
+      const actualTwoStandardDeviationCoverage =
+        values.filter((value) => Math.abs(value - expectedMean) <= 2 * expectedStandardDeviation).length / sampleCount
+
+      expect.soft(actualMean).toBeCloseTo(expectedMean, 1)
+      expect.soft(actualStandardDeviation).toBeCloseTo(expectedStandardDeviation, 1)
+      expect.soft(actualOneStandardDeviationCoverage).toBeCloseTo(EXPECTED_ONE_STANDARD_DEVIATION_COVERAGE, 2)
+      expect.soft(actualTwoStandardDeviationCoverage).toBeCloseTo(EXPECTED_TWO_STANDARD_DEVIATIONS_COVERAGE, 2)
+    })
+
+    it.each(generators)("should follow the requested distribution with $name", ({ create }) => {
+      // Arrange
+      const expectedMean = 10
+      const expectedStandardDeviation = 2
+      const sampleCount = 100_000
+      const rng = createRng(create())
+
+      // Act
+      const values = Array.from({ length: sampleCount }, () => rng.normal(expectedMean, expectedStandardDeviation))
+
+      // Assert
+      const actualMean = values.reduce((sum, value) => sum + value, 0) / sampleCount
+      const actualStandardDeviation = Math.sqrt(values.reduce((sum, value) => sum + (value - actualMean) ** 2, 0) / sampleCount)
+      const actualOneStandardDeviationCoverage =
+        values.filter((value) => Math.abs(value - expectedMean) <= expectedStandardDeviation).length / sampleCount
+      const actualTwoStandardDeviationCoverage =
+        values.filter((value) => Math.abs(value - expectedMean) <= 2 * expectedStandardDeviation).length / sampleCount
+
+      expect.soft(actualMean).toBeCloseTo(expectedMean, 1)
+      expect.soft(actualStandardDeviation).toBeCloseTo(expectedStandardDeviation, 1)
+      expect.soft(actualOneStandardDeviationCoverage).toBeCloseTo(EXPECTED_ONE_STANDARD_DEVIATION_COVERAGE, 2)
+      expect.soft(actualTwoStandardDeviationCoverage).toBeCloseTo(EXPECTED_TWO_STANDARD_DEVIATIONS_COVERAGE, 2)
     })
   })
 })

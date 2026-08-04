@@ -1,4 +1,5 @@
 import type { Range } from "../Range.js"
+import { boxMullerSample } from "./boxMullerSample.js"
 
 /**
  * A generator that returns numbers in the range [0, 1)
@@ -32,6 +33,14 @@ export type Rng = {
    * Draws a number of elements without modifying the original array.
    */
   draw: <T>(values: T[], count: number) => { drawn: T[]; remaining: T[] }
+
+  /**
+   * Returns a random number from a normal distribution.
+   *
+   * The mean is the center of the distribution (default: 0)
+   * The std is the spread of the distribution (default: 1)
+   */
+  normal: (mean?: number, std?: number) => number
 }
 
 const intBoundsOffset = {
@@ -92,11 +101,35 @@ export function createRng(generator: Generator): Rng {
     }
   }
 
+  /**
+   * box-muller outputs 2 numbers, so we keep the extra value that we can return instead of recomputing
+   */
+  let spareNormal: number | undefined
+  function normal(mean = 0, std = 1): number {
+    if (spareNormal !== undefined) {
+      const value = spareNormal
+      spareNormal = undefined
+      return value
+    }
+
+    // u1 must be non-zero
+    let u1
+    do {
+      u1 = generator()
+    } while (u1 === 0)
+
+    const { z1, z2 } = boxMullerSample(u1, generator())
+
+    spareNormal = mean + std * z1
+    return mean + std * z2
+  }
+
   return {
     random,
     float,
     int,
     shuffle,
     draw,
+    normal,
   }
 }

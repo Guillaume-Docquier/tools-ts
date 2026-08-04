@@ -37,12 +37,12 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
-    "@logtape/logtape": "^2.2.4",
-    "@logtape/redaction": "^2.2.4"
+    "@logtape/logtape": "^2.3.0",
+    "@logtape/redaction": "^2.3.0"
   },
   "devDependencies": {
-    "@guillaume-docquier/oxfmt": "^1.0.4",
-    "@guillaume-docquier/oxlint": "^1.2.2",
+    "@guillaume-docquier/oxfmt": "^1.0.5",
+    "@guillaume-docquier/oxlint": "^1.2.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/github": "^12.0.9",
@@ -53,12 +53,12 @@
     "husky": "^9.1.7",
     "jiti": "^2.7.0",
     "lint-staged": "^16.4.0",
-    "oxfmt": ">=0.60.0",
-    "oxlint": "^1.75.0",
+    "oxfmt": ">=0.61.0",
+    "oxlint": "^1.76.0",
     "oxlint-tsgolint": "^7.0.2001",
     "semantic-release": "^25.0.8",
     "typescript": "~7.0.2",
-    "vite": "^8.1.5",
+    "vite": "^8.2.0",
     "vitest": "^4.1.10"
   },
   "lint-staged": {
@@ -71,7 +71,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.15.0",
+      "version": "11.20.0",
       "onFail": "download"
     },
     "runtime": {

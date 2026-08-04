@@ -109,7 +109,7 @@ export function createRng(generator: Generator): Rng {
     if (spareNormal !== undefined) {
       const value = spareNormal
       spareNormal = undefined
-      return value
+      return mean + std * value
     }
 
     // u1 must be non-zero
@@ -120,7 +120,7 @@ export function createRng(generator: Generator): Rng {
 
     const { z1, z2 } = boxMullerSample(u1, generator())
 
-    spareNormal = mean + std * z1
+    spareNormal = z1
     return mean + std * z2
   }
 

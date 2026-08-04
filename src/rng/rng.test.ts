@@ -298,5 +298,20 @@ describe("rng", () => {
       expect.soft(actualOneStandardDeviationCoverage).toBeCloseTo(EXPECTED_ONE_STANDARD_DEVIATION_COVERAGE, 2)
       expect.soft(actualTwoStandardDeviationCoverage).toBeCloseTo(EXPECTED_TWO_STANDARD_DEVIATIONS_COVERAGE, 2)
     })
+
+    it("should apply the requested mean and standard deviation to a spare value", () => {
+      // Arrange
+      const generatorValues = [0.5, 0.2]
+      // oxlint-disable-next-line typescript/no-non-null-assertion -- we have 2 values
+      const rng = createRng(() => generatorValues.shift()!)
+
+      // Act
+      const firstValue = rng.normal(10, 2)
+      const secondValue = rng.normal(100, 3)
+
+      // Assert
+      expect(firstValue).toBeCloseTo(12.23956694852913)
+      expect(secondValue).toBeCloseTo(101.09151911891401)
+    })
   })
 })

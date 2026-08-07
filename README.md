@@ -122,9 +122,10 @@ Use these helpers for quick profiling.
 
 ### Measurements
 
-| Export | What it is                                                          | Use it when                                                  |
-| ------ | ------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `Time` | Represent a time value with a unit and contains conversion methods. | You want to represent time and abstract away the units used. |
+| Export     | What it is                                                                             | Use it when                                                       |
+| ---------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `Time`     | Represent a time value with a unit and contains conversion methods.                    | You want to represent time and abstract away the units used.      |
+| `Distance` | Represent a distance value with a unit and contains conversion and comparison methods. | You want to represent distances and abstract away the units used. |
 
 ### Date manipulations
 

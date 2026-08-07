@@ -127,7 +127,8 @@ Use these helpers for quick profiling.
 | `Angle`, `UnitOfAngle`       | An angle measurement and its supported degree and radian units.                   | You need to represent angles and convert between degrees and radians.          |
 | `Time`, `UnitOfTime`         | A time measurement and its supported units, with conversion and arithmetic tools. | You need unit-aware durations or calculations across different time units.     |
 | `Distance`, `UnitOfDistance` | A distance measurement and its supported units, with conversion and comparison.   | You need unit-aware lengths, spatial comparisons, or distances between points. |
-| `Point3D`                    | A three-dimensional position whose coordinates are `Distance` measurements.       | You need 3D positions whose axes can use and convert between distance units.   |
+| `Point2D`, `XY`              | A two-dimensional position and its plain coordinate-value shape.                  | You need 2D positions whose axes can use and convert between distance units.   |
+| `Point3D`, `XYZ`             | A three-dimensional position and its plain coordinate-value shape.                | You need 3D positions whose axes can use and convert between distance units.   |
 
 ### Date manipulations
 

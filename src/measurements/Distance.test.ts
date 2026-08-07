@@ -132,4 +132,185 @@ describe("Distance", () => {
       expect(areEqual).toBe(false)
     })
   })
+
+  describe("betweenSquared", () => {
+    it.each([
+      {
+        description: "coincident points",
+        position1: {
+          x: Distance.create(1, UnitOfDistance.METERS),
+          y: Distance.create(-2, UnitOfDistance.METERS),
+          z: Distance.create(3, UnitOfDistance.METERS),
+        },
+        position2: {
+          x: Distance.create(1, UnitOfDistance.METERS),
+          y: Distance.create(-2, UnitOfDistance.METERS),
+          z: Distance.create(3, UnitOfDistance.METERS),
+        },
+        unitOfReference: UnitOfDistance.METERS,
+        expected: Distance.create(0, UnitOfDistance.METERS),
+      },
+      {
+        description: "positive and negative coordinates on every axis",
+        position1: {
+          x: Distance.create(-1, UnitOfDistance.METERS),
+          y: Distance.create(-2, UnitOfDistance.METERS),
+          z: Distance.create(-3, UnitOfDistance.METERS),
+        },
+        position2: {
+          x: Distance.create(2, UnitOfDistance.METERS),
+          y: Distance.create(2, UnitOfDistance.METERS),
+          z: Distance.create(9, UnitOfDistance.METERS),
+        },
+        unitOfReference: UnitOfDistance.METERS,
+        expected: Distance.create(169, UnitOfDistance.METERS),
+      },
+      {
+        description: "independently-unitized coordinates",
+        position1: {
+          x: Distance.create(0, UnitOfDistance.METERS),
+          y: Distance.create(0, UnitOfDistance.MILLIMETERS),
+          z: Distance.create(0, UnitOfDistance.ASTRONOMICAL_UNITS),
+        },
+        position2: {
+          x: Distance.create(3_000, UnitOfDistance.MILLIMETERS),
+          y: Distance.create(4, UnitOfDistance.METERS),
+          z: Distance.create(12 / 149_597_870_700, UnitOfDistance.ASTRONOMICAL_UNITS),
+        },
+        unitOfReference: UnitOfDistance.METERS,
+        expected: Distance.create(169, UnitOfDistance.METERS),
+      },
+    ])("should compute the squared distance for $description", ({ position1, position2, unitOfReference, expected }) => {
+      // Act
+      const distance = Distance.betweenSquared(position1, position2, unitOfReference)
+
+      // Assert
+      expect(distance.unit).toBe(expected.unit)
+      expect(distance.value).toBeCloseTo(expected.value, 12)
+    })
+
+    it("should default to the first position's x-axis unit", () => {
+      // Arrange
+      const position1 = {
+        x: Distance.create(0, UnitOfDistance.MILLIMETERS),
+        y: Distance.create(0, UnitOfDistance.METERS),
+        z: Distance.create(0, UnitOfDistance.METERS),
+      }
+      const position2 = {
+        x: Distance.create(3, UnitOfDistance.METERS),
+        y: Distance.create(4, UnitOfDistance.METERS),
+        z: Distance.create(12, UnitOfDistance.METERS),
+      }
+
+      // Act
+      const distance = Distance.betweenSquared(position1, position2)
+
+      // Assert
+      expect(distance).toEqual(Distance.create(169_000_000, UnitOfDistance.MILLIMETERS))
+    })
+
+    it("should be symmetric and leave both positions untouched", () => {
+      // Arrange
+      const position1 = {
+        x: Distance.create(1, UnitOfDistance.METERS),
+        y: Distance.create(2_000, UnitOfDistance.MILLIMETERS),
+        z: Distance.create(3, UnitOfDistance.METERS),
+      }
+      const position2 = {
+        x: Distance.create(-2_000, UnitOfDistance.MILLIMETERS),
+        y: Distance.create(6, UnitOfDistance.METERS),
+        z: Distance.create(-9_000, UnitOfDistance.MILLIMETERS),
+      }
+      const originalPosition1 = structuredClone(position1)
+      const originalPosition2 = structuredClone(position2)
+
+      // Act
+      const forward = Distance.betweenSquared(position1, position2, UnitOfDistance.METERS)
+      const reverse = Distance.betweenSquared(position2, position1, UnitOfDistance.METERS)
+
+      // Assert
+      expect(forward).toEqual(reverse)
+      expect(position1).toEqual(originalPosition1)
+      expect(position2).toEqual(originalPosition2)
+    })
+  })
+
+  describe("between", () => {
+    it.each([
+      {
+        description: "coincident points",
+        position1: {
+          x: Distance.create(1, UnitOfDistance.METERS),
+          y: Distance.create(2, UnitOfDistance.METERS),
+          z: Distance.create(3, UnitOfDistance.METERS),
+        },
+        position2: {
+          x: Distance.create(1, UnitOfDistance.METERS),
+          y: Distance.create(2, UnitOfDistance.METERS),
+          z: Distance.create(3, UnitOfDistance.METERS),
+        },
+        unitOfReference: UnitOfDistance.METERS,
+        expected: Distance.create(0, UnitOfDistance.METERS),
+      },
+      {
+        description: "a three-dimensional displacement",
+        position1: {
+          x: Distance.create(-1, UnitOfDistance.METERS),
+          y: Distance.create(-2, UnitOfDistance.METERS),
+          z: Distance.create(-3, UnitOfDistance.METERS),
+        },
+        position2: {
+          x: Distance.create(2, UnitOfDistance.METERS),
+          y: Distance.create(2, UnitOfDistance.METERS),
+          z: Distance.create(9, UnitOfDistance.METERS),
+        },
+        unitOfReference: UnitOfDistance.METERS,
+        expected: Distance.create(13, UnitOfDistance.METERS),
+      },
+      {
+        description: "mixed units with an explicit millimeter reference",
+        position1: {
+          x: Distance.create(0, UnitOfDistance.METERS),
+          y: Distance.create(0, UnitOfDistance.MILLIMETERS),
+          z: Distance.create(0, UnitOfDistance.METERS),
+        },
+        position2: {
+          x: Distance.create(3, UnitOfDistance.METERS),
+          y: Distance.create(4_000, UnitOfDistance.MILLIMETERS),
+          z: Distance.create(12, UnitOfDistance.METERS),
+        },
+        unitOfReference: UnitOfDistance.MILLIMETERS,
+        expected: Distance.create(13_000, UnitOfDistance.MILLIMETERS),
+      },
+    ])("should compute the distance for $description", ({ position1, position2, unitOfReference, expected }) => {
+      // Act
+      const distance = Distance.between(position1, position2, unitOfReference)
+
+      // Assert
+      expect(distance.unit).toBe(expected.unit)
+      expect(distance.value).toBeCloseTo(expected.value, 12)
+    })
+
+    it("should default to the first position's x-axis unit and be symmetric for a fixed reference unit", () => {
+      // Arrange
+      const position1 = {
+        x: Distance.create(0, UnitOfDistance.MILLIMETERS),
+        y: Distance.create(0, UnitOfDistance.METERS),
+        z: Distance.create(0, UnitOfDistance.METERS),
+      }
+      const position2 = {
+        x: Distance.create(3, UnitOfDistance.METERS),
+        y: Distance.create(4, UnitOfDistance.METERS),
+        z: Distance.create(12, UnitOfDistance.METERS),
+      }
+
+      // Act
+      const defaultDistance = Distance.between(position1, position2)
+      const reverseDistance = Distance.between(position2, position1, UnitOfDistance.MILLIMETERS)
+
+      // Assert
+      expect(defaultDistance).toEqual(Distance.create(13_000, UnitOfDistance.MILLIMETERS))
+      expect(reverseDistance).toEqual(defaultDistance)
+    })
+  })
 })

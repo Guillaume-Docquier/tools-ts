@@ -1,4 +1,5 @@
 import type { Measurement } from "./Measurement.js"
+import { Point3D } from "./Point3D.js"
 
 export enum UnitOfDistance {
   METERS = "Meters",
@@ -76,5 +77,36 @@ export const Distance = {
     const difference = Distance.in(distance1, tolerance.unit) - Distance.in(distance2, tolerance.unit)
 
     return Math.abs(difference) <= tolerance.value
+  },
+
+  /**
+   * Computes the squared distance between two positions.
+   * @param position1 The first position.
+   * @param position2 The second position.
+   * @param unitOfReference The unit to use to compare the positions. This unit will also be the unit of the resulting Distance.
+   *   If not defined, a random unit will be used. Specifying your unit can help mitigate floating point errors.
+   */
+  betweenSquared(position1: Point3D, position2: Point3D, unitOfReference?: UnitOfDistance): Distance {
+    const actualUnitOfReference = unitOfReference ?? position1.x.unit
+    const xyz1 = Point3D.in(position1, actualUnitOfReference)
+    const xyz2 = Point3D.in(position2, actualUnitOfReference)
+
+    const distanceValue = Math.pow(xyz1.x - xyz2.x, 2) + Math.pow(xyz1.y - xyz2.y, 2) + Math.pow(xyz1.z - xyz2.z, 2)
+
+    return Distance.create(distanceValue, actualUnitOfReference)
+  },
+
+  /**
+   * Computes the distance between two positions.
+   * @param position1 The first position.
+   * @param position2 The second position.
+   * @param unitOfReference The unit to use to compare the positions. This unit will also be the unit of the resulting Distance.
+   *   If not defined, a random unit will be used. Specifying your unit can help mitigate floating point errors.
+   */
+  between(position1: Point3D, position2: Point3D, unitOfReference?: UnitOfDistance): Distance {
+    const distance = Distance.betweenSquared(position1, position2, unitOfReference)
+    distance.value = Math.sqrt(distance.value)
+
+    return distance
   },
 }

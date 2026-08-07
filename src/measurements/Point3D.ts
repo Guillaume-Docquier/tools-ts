@@ -27,7 +27,7 @@ export const Point3D = {
    * @param z The z value
    * @param unit The unit to use for all values
    */
-  create({ x, y, z }: XYZ, unit: UnitOfDistance): Point3D {
+  create({ x, y, z }: Readonly<XYZ>, unit: UnitOfDistance): Point3D {
     return {
       x: { value: x, unit },
       y: { value: y, unit },
@@ -42,7 +42,7 @@ export const Point3D = {
    * @param position The position to convert.
    * @param unit The unit(s) to convert to.
    */
-  convert({ x, y, z }: Point3D, unit: Point3D | UnitOfDistance): Point3D {
+  convert({ x, y, z }: Readonly<Point3D>, unit: Readonly<Point3D> | UnitOfDistance): Point3D {
     if (TypeGuard.isEnumMember(UnitOfDistance, unit)) {
       return {
         x: Distance.convert(x, unit),
@@ -63,7 +63,7 @@ export const Point3D = {
    * @param position The position to convert.
    * @param newUnit The new unit to convert to.
    */
-  in({ x, y, z }: Point3D, newUnit: UnitOfDistance): XYZ {
+  in({ x, y, z }: Readonly<Point3D>, newUnit: UnitOfDistance): XYZ {
     return {
       x: Distance.in(x, newUnit),
       y: Distance.in(y, newUnit),
@@ -78,7 +78,7 @@ export const Point3D = {
    * @param position2 The second position to compare.
    * @param tolerance The allowed tolerance.
    */
-  areEqual(position1: Point3D, position2: Point3D, tolerance: Distance): boolean {
+  areEqual(position1: Readonly<Point3D>, position2: Readonly<Point3D>, tolerance: Readonly<Distance>): boolean {
     const distance = Distance.between(position1, position2, tolerance.unit)
 
     return Math.abs(distance.value) <= tolerance.value

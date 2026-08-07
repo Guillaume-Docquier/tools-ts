@@ -44,7 +44,7 @@ export const Time = {
    * @param newUnit The new unit to convert to.
    * @returns A new Time with the requested unit of time.
    */
-  convert(time: Time, newUnit: UnitOfTime): Time {
+  convert(time: Readonly<Time>, newUnit: UnitOfTime): Time {
     return {
       value: Time.in(time, newUnit),
       unit: newUnit,
@@ -56,21 +56,21 @@ export const Time = {
    * @param time The time to get the value of.
    * @param newUnit The unit of time to get the value of the time in.
    */
-  in(time: Time, newUnit: UnitOfTime): number {
+  in(time: Readonly<Time>, newUnit: UnitOfTime): number {
     return (time.value * TIME_PER_SECONDS[newUnit]) / TIME_PER_SECONDS[time.unit]
   },
 
   /**
    * Adds 2 times together. The unit of the first time will be used.
    */
-  add(timeA: Time, timeB: Time): Time {
+  add(timeA: Readonly<Time>, timeB: Readonly<Time>): Time {
     return Time.create(timeA.value + Time.in(timeB, timeA.unit), timeA.unit)
   },
 
   /**
    * Subtracts 2 times. The unit of the first time will be used.
    */
-  subtract(timeA: Time, timeB: Time): Time {
+  subtract(timeA: Readonly<Time>, timeB: Readonly<Time>): Time {
     return Time.create(timeA.value - Time.in(timeB, timeA.unit), timeA.unit)
   },
 }

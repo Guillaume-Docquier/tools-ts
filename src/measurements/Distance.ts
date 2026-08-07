@@ -46,7 +46,7 @@ export const Distance = {
    * @param newUnit The unit to convert to.
    * @returns A new Distance with the requested unit of distance.
    */
-  convert(distance: Distance, newUnit: UnitOfDistance): Distance {
+  convert(distance: Readonly<Distance>, newUnit: UnitOfDistance): Distance {
     return {
       value: Distance.in(distance, newUnit),
       unit: newUnit,
@@ -58,7 +58,7 @@ export const Distance = {
    * @param distance The distance to get the value of.
    * @param newUnit The unit of distance to get the value of the distance in.
    */
-  in({ value, unit }: Distance, newUnit: UnitOfDistance): number {
+  in({ value, unit }: Readonly<Distance>, newUnit: UnitOfDistance): number {
     if (unit === newUnit) {
       return value
     }
@@ -73,7 +73,7 @@ export const Distance = {
    * @param distance2 The second distance to compare.
    * @param tolerance The allowed tolerance.
    */
-  areEqual(distance1: Distance, distance2: Distance, tolerance: Distance): boolean {
+  areEqual(distance1: Readonly<Distance>, distance2: Readonly<Distance>, tolerance: Readonly<Distance>): boolean {
     const difference = Distance.in(distance1, tolerance.unit) - Distance.in(distance2, tolerance.unit)
 
     return Math.abs(difference) <= tolerance.value
@@ -86,7 +86,7 @@ export const Distance = {
    * @param unitOfReference The unit to use to compare the positions. This unit will also be the unit of the resulting Distance.
    *   If not defined, a random unit will be used. Specifying your unit can help mitigate floating point errors.
    */
-  betweenSquared(position1: Point3D, position2: Point3D, unitOfReference?: UnitOfDistance): Distance {
+  betweenSquared(position1: Readonly<Point3D>, position2: Readonly<Point3D>, unitOfReference?: UnitOfDistance): Distance {
     const actualUnitOfReference = unitOfReference ?? position1.x.unit
     const xyz1 = Point3D.in(position1, actualUnitOfReference)
     const xyz2 = Point3D.in(position2, actualUnitOfReference)
@@ -103,7 +103,7 @@ export const Distance = {
    * @param unitOfReference The unit to use to compare the positions. This unit will also be the unit of the resulting Distance.
    *   If not defined, a random unit will be used. Specifying your unit can help mitigate floating point errors.
    */
-  between(position1: Point3D, position2: Point3D, unitOfReference?: UnitOfDistance): Distance {
+  between(position1: Readonly<Point3D>, position2: Readonly<Point3D>, unitOfReference?: UnitOfDistance): Distance {
     const distance = Distance.betweenSquared(position1, position2, unitOfReference)
     distance.value = Math.sqrt(distance.value)
 

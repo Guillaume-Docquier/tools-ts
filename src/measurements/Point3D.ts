@@ -10,7 +10,7 @@ export type Point3D = {
   z: Distance
 }
 
-interface XYZ {
+export type XYZ = {
   x: Distance["value"]
   y: Distance["value"]
   z: Distance["value"]

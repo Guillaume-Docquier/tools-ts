@@ -122,10 +122,12 @@ Use these helpers for quick profiling.
 
 ### Measurements
 
-| Export     | What it is                                                                             | Use it when                                                       |
-| ---------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `Time`     | Represent a time value with a unit and contains conversion methods.                    | You want to represent time and abstract away the units used.      |
-| `Distance` | Represent a distance value with a unit and contains conversion and comparison methods. | You want to represent distances and abstract away the units used. |
+| Export                       | What it is                                                                        | Use it when                                                                    |
+| ---------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `Angle`, `UnitOfAngle`       | An angle measurement and its supported degree and radian units.                   | You need to represent angles and convert between degrees and radians.          |
+| `Time`, `UnitOfTime`         | A time measurement and its supported units, with conversion and arithmetic tools. | You need unit-aware durations or calculations across different time units.     |
+| `Distance`, `UnitOfDistance` | A distance measurement and its supported units, with conversion and comparison.   | You need unit-aware lengths, spatial comparisons, or distances between points. |
+| `Point3D`                    | A three-dimensional position whose coordinates are `Distance` measurements.       | You need 3D positions whose axes can use and convert between distance units.   |
 
 ### Date manipulations
 

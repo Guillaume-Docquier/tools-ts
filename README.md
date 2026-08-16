@@ -35,14 +35,15 @@ external APIs, CLI input, local storage, or other unknown data.
 | `getEnumKey` | Looks up the enum key associated with a value.                                    | You have an enum value and need the more descriptive key for display, logs, or diagnostics. |
 | `asArray`    | Normalizes a single value or array into an array.                                 | An API accepts both `T` and `T[]`, but downstream logic should iterate uniformly.           |
 
-### Numeric Ranges
+### Numeric Utilities
 
-Use this tool when code needs a reusable, validated numeric interval instead of
-duplicating min/max checks across call sites.
+Use these tools when code needs reusable numeric operations or validated
+intervals.
 
-| Export  | What it is                                                       | Use it when                                                                                   |
-| ------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `Range` | Helpers for creating, validating, comparing, and testing ranges. | You need finite integer or float intervals with inclusive minimums and configurable maximums. |
+| Export   | What it is                                                       | Use it when                                                                                   |
+| -------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `Scalar` | Helpers for scalar number operations.                            | You need to constrain a number to an inclusive minimum and maximum.                           |
+| `Range`  | Helpers for creating, validating, comparing, and testing ranges. | You need finite integer or float intervals with inclusive minimums and configurable maximums. |
 
 ### Sorting
 

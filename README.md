@@ -60,8 +60,7 @@ pseudo-random sequences.
 
 | Export           | What it is                                                           | Use it when                                                                               |
 | ---------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `Rng`            | Type for the RNG facade returned by `createRng`.                     | A function accepts or stores the package RNG abstraction.                                 |
-| `createRng`      | Builds an RNG facade from a generator that returns values in [0, 1). | You need range-aware random numbers, shuffling, or draws backed by injectable randomness. |
+| `Rng`            | Builds an RNG facade from a generator that returns values in [0, 1). | You need range-aware random numbers, shuffling, or draws backed by injectable randomness. |
 | `Generator`      | Type for raw generators that return values in [0, 1).                | You accept or provide the primitive random source used to construct an `Rng`.             |
 | `mulberry32Prng` | Deterministic seeded pseudo-random generator factory.                | Tests, simulations, or generation code need repeatable pseudo-random sequences.           |
 

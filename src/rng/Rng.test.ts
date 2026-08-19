@@ -2,14 +2,14 @@ import { describe, expect, it } from "vitest"
 import { Range } from "../Range.js"
 import { Sort } from "../Sort.js"
 import { mulberry32Prng } from "./mulberry32prng.js"
-import { createRng, type Generator } from "./rng.js"
+import { Rng, type Generator } from "./Rng.js"
 
-describe("rng", () => {
+describe("Rng", () => {
   describe("random", () => {
     it("should return a float when given a float range", () => {
       // Arrange
       const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min: 10, max: 20 })
-      const rng = createRng(() => 0.5)
+      const rng = Rng.create(() => 0.5)
 
       // Act
       const random = rng.random(range)
@@ -21,7 +21,7 @@ describe("rng", () => {
     it("should return an int when given an inclusive integer range", () => {
       // Arrange
       const range = Range.create({ numericType: "integer", maxBoundType: "inclusive", min: 10, max: 20 })
-      const rng = createRng(() => 0.65)
+      const rng = Rng.create(() => 0.65)
 
       // Act
       const random = rng.random(range)
@@ -33,7 +33,7 @@ describe("rng", () => {
     it("should return an int when given an exclusive integer range", () => {
       // Arrange
       const range = Range.create({ numericType: "integer", maxBoundType: "exclusive", min: 10, max: 20 })
-      const rng = createRng(() => 1 - Number.EPSILON)
+      const rng = Rng.create(() => 1 - Number.EPSILON)
 
       // Act
       const random = rng.random(range)
@@ -47,7 +47,7 @@ describe("rng", () => {
     it("should return the generator values when no range is provided", () => {
       // Arrange
       const value = 0.5
-      const rng = createRng(() => value)
+      const rng = Rng.create(() => value)
 
       // Act
       const random = [rng.float(), rng.float(), rng.float()]
@@ -72,7 +72,7 @@ describe("rng", () => {
     ])("should return values in the range when min and max are different", ({ value, expected, min, max }) => {
       // Arrange
       const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min, max })
-      const rng = createRng(() => value)
+      const rng = Rng.create(() => value)
 
       // Act
       const random = rng.float(range)
@@ -86,7 +86,7 @@ describe("rng", () => {
       (value) => {
         // Arrange
         const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min: 10, max: 10 })
-        const rng = createRng(() => value)
+        const rng = Rng.create(() => value)
 
         // Act
         const random = rng.float(range)
@@ -99,7 +99,7 @@ describe("rng", () => {
     it.each([0, 0.25, 0.5, 0.75, 1 - Number.EPSILON])("should return exactly 1 when min and max are 1", (value) => {
       // Arrange
       const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min: 1, max: 1 })
-      const rng = createRng(() => value)
+      const rng = Rng.create(() => value)
 
       // Act
       const random = rng.float(range)
@@ -120,7 +120,7 @@ describe("rng", () => {
       ])("should return values in the range when min and max are different", ({ value, expected }) => {
         // Arrange
         const range = Range.create({ numericType: "integer", maxBoundType: "inclusive", min: 10, max: 20 })
-        const rng = createRng(() => value)
+        const rng = Rng.create(() => value)
 
         // Act
         const random = rng.int(range)
@@ -134,7 +134,7 @@ describe("rng", () => {
         (value) => {
           // Arrange
           const range = Range.create({ numericType: "integer", maxBoundType: "inclusive", min: 10, max: 10 })
-          const rng = createRng(() => value)
+          const rng = Rng.create(() => value)
 
           // Act
           const random = rng.int(range)
@@ -155,7 +155,7 @@ describe("rng", () => {
       ])("should return values in the range when min and max are different", ({ value, expected }) => {
         // Arrange
         const range = Range.create({ numericType: "integer", maxBoundType: "exclusive", min: 10, max: 20 })
-        const rng = createRng(() => value)
+        const rng = Rng.create(() => value)
 
         // Act
         const random = rng.int(range)
@@ -169,7 +169,7 @@ describe("rng", () => {
         (value) => {
           // Arrange
           const range = Range.create({ numericType: "integer", maxBoundType: "exclusive", min: 10, max: 11 })
-          const rng = createRng(() => value)
+          const rng = Rng.create(() => value)
 
           // Act
           const random = rng.int(range)
@@ -186,7 +186,7 @@ describe("rng", () => {
       // Arrange
       const initialValues = [1, 2, 3, 4, 5]
       const arrayToShuffle = initialValues.slice()
-      const rng = createRng(mulberry32Prng(1234))
+      const rng = Rng.create(mulberry32Prng(1234))
 
       // Act
       const shuffled = rng.shuffle(arrayToShuffle)
@@ -203,7 +203,7 @@ describe("rng", () => {
       // Arrange
       const values = [1, 2, 3, 4, 5]
       const valuesCopy = values.slice()
-      const rng = createRng(mulberry32Prng(1234))
+      const rng = Rng.create(mulberry32Prng(1234))
 
       // Act
       const { drawn, remaining } = rng.draw(values, 3)
@@ -217,7 +217,7 @@ describe("rng", () => {
     it.each([1, 2, 3, 4, 5])("should randomly draw the requested amount", (count) => {
       // Arrange
       const values = [1, 2, 3, 4, 5]
-      const rng = createRng(mulberry32Prng(1234))
+      const rng = Rng.create(mulberry32Prng(1234))
 
       // Act
       const { drawn, remaining } = rng.draw(values, count)
@@ -231,8 +231,8 @@ describe("rng", () => {
       // Arrange
       const values = [1, 2, 3, 4, 5]
       const drawCount = 3
-      const rng1 = createRng(mulberry32Prng(1234))
-      const rng2 = createRng(mulberry32Prng(1234))
+      const rng1 = Rng.create(mulberry32Prng(1234))
+      const rng2 = Rng.create(mulberry32Prng(1234))
 
       // Act
       const draw1 = rng1.draw(values, drawCount)
@@ -256,7 +256,7 @@ describe("rng", () => {
       const expectedMean = 0
       const expectedStandardDeviation = 1
       const sampleCount = 100_000
-      const rng = createRng(create())
+      const rng = Rng.create(create())
 
       // Act
       const values = Array.from({ length: sampleCount }, () => rng.normal())
@@ -280,7 +280,7 @@ describe("rng", () => {
       const expectedMean = 10
       const expectedStandardDeviation = 2
       const sampleCount = 100_000
-      const rng = createRng(create())
+      const rng = Rng.create(create())
 
       // Act
       const values = Array.from({ length: sampleCount }, () => rng.normal(expectedMean, expectedStandardDeviation))
@@ -303,7 +303,7 @@ describe("rng", () => {
       // Arrange
       const generatorValues = [0.5, 0.2]
       // oxlint-disable-next-line typescript/no-non-null-assertion -- we have 2 values
-      const rng = createRng(() => generatorValues.shift()!)
+      const rng = Rng.create(() => generatorValues.shift()!)
 
       // Act
       const firstValue = rng.normal(10, 2)

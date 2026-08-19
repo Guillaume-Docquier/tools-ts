@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    "paths": {
-      "src/*": ["./src/*"]
-    },
-
     "module": "nodenext",
     "target": "esnext",
 

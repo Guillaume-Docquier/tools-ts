@@ -58,11 +58,12 @@ Use this tool when code needs shared ordering helpers.
 Use these tools when code needs injectable randomness or deterministic
 pseudo-random sequences.
 
-| Export           | What it is                                                           | Use it when                                                                               |
-| ---------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `Rng`            | Builds an RNG facade from a generator that returns values in [0, 1). | You need range-aware random numbers, shuffling, or draws backed by injectable randomness. |
-| `Generator`      | Type for raw generators that return values in [0, 1).                | You accept or provide the primitive random source used to construct an `Rng`.             |
-| `mulberry32Prng` | Deterministic seeded pseudo-random generator factory.                | Tests, simulations, or generation code need repeatable pseudo-random sequences.           |
+| Export           | What it is                                                        | Use it when                                                                           |
+| ---------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `Rng`            | Builds a stateful RNG facade from a serializable generator.       | You need range-aware random numbers, shuffling, draws, or resumable random sequences. |
+| `RngState`       | Serializable generator and cached-normal state captured by `Rng`. | You need to persist an `Rng` and resume its exact sequence later.                     |
+| `Generator`      | Contract for random sources that expose their serializable state. | You provide the primitive, resumable random source used to construct an `Rng`.        |
+| `mulberry32Prng` | Deterministic, resumable Mulberry32 generator factory.            | Tests, simulations, or generation code need repeatable pseudo-random sequences.       |
 
 ### Utility Types
 

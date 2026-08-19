@@ -30,7 +30,8 @@ export type { LogContextProvider } from "./logging/log-context/LogContextProvide
 
 export { debounce } from "./debounce.js"
 export { Sort } from "./Sort.js"
-export { Rng, type Generator } from "./rng/Rng.js"
+export { Rng, type RngState } from "./rng/Rng.js"
+export type { Generator } from "./rng/Generator.js"
 export { mulberry32Prng } from "./rng/mulberry32prng.js"
 export { Datetime } from "./Datetime.js"
 export { Angle, UnitOfAngle } from "./measurements/Angle.js"

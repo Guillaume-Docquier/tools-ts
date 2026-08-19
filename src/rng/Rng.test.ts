@@ -1,15 +1,52 @@
 import { describe, expect, it } from "vitest"
 import { Range } from "../Range.js"
 import { Sort } from "../Sort.js"
+import { type Generator } from "./Generator.js"
+import { createGeneratorStub } from "./Generator.stub.js"
 import { mulberry32Prng } from "./mulberry32prng.js"
-import { Rng, type Generator } from "./Rng.js"
+import { Rng, type RngState } from "./Rng.js"
 
 describe("Rng", () => {
+  describe("state", () => {
+    it("should resume from JSON-serializable state when no normal value is cached", () => {
+      // Arrange
+      const rng = Rng.create(mulberry32Prng(1234))
+      rng.float()
+
+      // Act
+      const serializedState = JSON.stringify(rng.getState())
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- The JSON comes from Rng.getState in this test.
+      const state = JSON.parse(serializedState) as RngState<number>
+      const restoredRng = Rng.fromState(state, mulberry32Prng)
+      const expectedValues = [rng.float(), rng.float(), rng.float()]
+      const restoredValues = [restoredRng.float(), restoredRng.float(), restoredRng.float()]
+
+      // Assert
+      expect(restoredValues).toEqual(expectedValues)
+    })
+
+    it("should resume the generator and cached normal value from state", () => {
+      // Arrange
+      const rng = Rng.create(mulberry32Prng(1234))
+      rng.normal()
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- The JSON comes from Rng.getState in this test.
+      const state = JSON.parse(JSON.stringify(rng.getState())) as RngState<number>
+      const restoredRng = Rng.fromState(state, mulberry32Prng)
+
+      // Act
+      const expectedValues = [rng.normal(100, 3), rng.float(), rng.normal()]
+      const restoredValues = [restoredRng.normal(100, 3), restoredRng.float(), restoredRng.normal()]
+
+      // Assert
+      expect(restoredValues).toEqual(expectedValues)
+    })
+  })
+
   describe("random", () => {
     it("should return a float when given a float range", () => {
       // Arrange
       const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min: 10, max: 20 })
-      const rng = Rng.create(() => 0.5)
+      const rng = Rng.create(createGeneratorStub(0.5))
 
       // Act
       const random = rng.random(range)
@@ -21,7 +58,7 @@ describe("Rng", () => {
     it("should return an int when given an inclusive integer range", () => {
       // Arrange
       const range = Range.create({ numericType: "integer", maxBoundType: "inclusive", min: 10, max: 20 })
-      const rng = Rng.create(() => 0.65)
+      const rng = Rng.create(createGeneratorStub(0.65))
 
       // Act
       const random = rng.random(range)
@@ -33,7 +70,7 @@ describe("Rng", () => {
     it("should return an int when given an exclusive integer range", () => {
       // Arrange
       const range = Range.create({ numericType: "integer", maxBoundType: "exclusive", min: 10, max: 20 })
-      const rng = Rng.create(() => 1 - Number.EPSILON)
+      const rng = Rng.create(createGeneratorStub(1 - Number.EPSILON))
 
       // Act
       const random = rng.random(range)
@@ -47,7 +84,7 @@ describe("Rng", () => {
     it("should return the generator values when no range is provided", () => {
       // Arrange
       const value = 0.5
-      const rng = Rng.create(() => value)
+      const rng = Rng.create(createGeneratorStub(value))
 
       // Act
       const random = [rng.float(), rng.float(), rng.float()]
@@ -72,7 +109,7 @@ describe("Rng", () => {
     ])("should return values in the range when min and max are different", ({ value, expected, min, max }) => {
       // Arrange
       const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min, max })
-      const rng = Rng.create(() => value)
+      const rng = Rng.create(createGeneratorStub(value))
 
       // Act
       const random = rng.float(range)
@@ -86,7 +123,7 @@ describe("Rng", () => {
       (value) => {
         // Arrange
         const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min: 10, max: 10 })
-        const rng = Rng.create(() => value)
+        const rng = Rng.create(createGeneratorStub(value))
 
         // Act
         const random = rng.float(range)
@@ -99,7 +136,7 @@ describe("Rng", () => {
     it.each([0, 0.25, 0.5, 0.75, 1 - Number.EPSILON])("should return exactly 1 when min and max are 1", (value) => {
       // Arrange
       const range = Range.create({ numericType: "float", maxBoundType: "inclusive", min: 1, max: 1 })
-      const rng = Rng.create(() => value)
+      const rng = Rng.create(createGeneratorStub(value))
 
       // Act
       const random = rng.float(range)
@@ -120,7 +157,7 @@ describe("Rng", () => {
       ])("should return values in the range when min and max are different", ({ value, expected }) => {
         // Arrange
         const range = Range.create({ numericType: "integer", maxBoundType: "inclusive", min: 10, max: 20 })
-        const rng = Rng.create(() => value)
+        const rng = Rng.create(createGeneratorStub(value))
 
         // Act
         const random = rng.int(range)
@@ -134,7 +171,7 @@ describe("Rng", () => {
         (value) => {
           // Arrange
           const range = Range.create({ numericType: "integer", maxBoundType: "inclusive", min: 10, max: 10 })
-          const rng = Rng.create(() => value)
+          const rng = Rng.create(createGeneratorStub(value))
 
           // Act
           const random = rng.int(range)
@@ -155,7 +192,7 @@ describe("Rng", () => {
       ])("should return values in the range when min and max are different", ({ value, expected }) => {
         // Arrange
         const range = Range.create({ numericType: "integer", maxBoundType: "exclusive", min: 10, max: 20 })
-        const rng = Rng.create(() => value)
+        const rng = Rng.create(createGeneratorStub(value))
 
         // Act
         const random = rng.int(range)
@@ -169,7 +206,7 @@ describe("Rng", () => {
         (value) => {
           // Arrange
           const range = Range.create({ numericType: "integer", maxBoundType: "exclusive", min: 10, max: 11 })
-          const rng = Rng.create(() => value)
+          const rng = Rng.create(createGeneratorStub(value))
 
           // Act
           const random = rng.int(range)
@@ -248,7 +285,7 @@ describe("Rng", () => {
     const EXPECTED_TWO_STANDARD_DEVIATIONS_COVERAGE = 0.9545
     const generators = [
       { name: "mulberry32", create: (): Generator => mulberry32Prng(1234) },
-      { name: "Math.random", create: (): Generator => Math.random },
+      { name: "Math.random", create: (): Generator => createGeneratorStub(() => Math.random()) },
     ]
 
     it.each(generators)("should follow a standard normal distribution with $name", ({ create }) => {
@@ -302,8 +339,11 @@ describe("Rng", () => {
     it("should apply the requested mean and standard deviation to a spare value", () => {
       // Arrange
       const generatorValues = [0.5, 0.2]
-      // oxlint-disable-next-line typescript/no-non-null-assertion -- we have 2 values
-      const rng = Rng.create(() => generatorValues.shift()!)
+      const rng = Rng.create({
+        // oxlint-disable-next-line typescript/no-non-null-assertion -- we have 2 values
+        next: () => generatorValues.shift()!,
+        getState: () => null,
+      })
 
       // Act
       const firstValue = rng.normal(10, 2)

@@ -1,4 +1,4 @@
-import { typescript } from "@guillaume-docquier/oxlint"
+import { typescript, vitest } from "@guillaume-docquier/oxlint"
 import { defineConfig } from "oxlint"
 
 export default defineConfig({
@@ -14,6 +14,10 @@ export default defineConfig({
       rules: {
         "oxc/no-barrel-file": "off", // it's the only allowed barrel file
       },
+    },
+    {
+      ...vitest,
+      files: ["**/*.test.ts"],
     },
   ],
 })

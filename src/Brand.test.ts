@@ -30,6 +30,7 @@ describe("Brand", () => {
       expectTypeOf(userId).toExtend<IdBase>()
     })
 
+    // oxlint-disable-next-line vitest/expect-expect -- this is a type test
     it("should require a value matching the brand base type", () => {
       // Act & Assert
       // @ts-expect-error UserId is a branded object with string property, not a number

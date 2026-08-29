@@ -3,6 +3,7 @@ import { NotImplementedError } from "./NotImplementedError.js"
 
 const NotImplementedErrorClassName = NotImplementedError.name
 
+// oxlint-disable-next-line vitest/valid-title -- It is a string
 describe(NotImplementedErrorClassName, () => {
   it("should attach the context to the error", () => {
     // Arrange
@@ -40,6 +41,6 @@ describe(NotImplementedErrorClassName, () => {
     const error = new NotImplementedError({ trackedBy: "url" })
 
     // Assert
-    expect(error.name).toEqual(NotImplementedErrorClassName)
+    expect(error.name).toStrictEqual(NotImplementedErrorClassName)
   })
 })

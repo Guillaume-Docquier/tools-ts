@@ -11,7 +11,7 @@ describe("Sort", () => {
       const sorted = unsorted.toSorted(Sort.byAscending)
 
       // Assert
-      expect(sorted).toEqual([0, 1, 1, 2, 3])
+      expect(sorted).toStrictEqual([0, 1, 1, 2, 3])
     })
   })
 
@@ -28,7 +28,7 @@ describe("Sort", () => {
       const result = records.toSorted(Sort.byAscendingProperty("value"))
 
       // Assert
-      expect(result).toEqual([
+      expect(result).toStrictEqual([
         { name: "one", value: 1 },
         { name: "two", value: 2 },
         { name: "three", value: 3 },
@@ -51,6 +51,7 @@ describe("Sort", () => {
       )
     })
 
+    // oxlint-disable-next-line vitest/expect-expect -- this one is just a type test
     it("should require the selected property to be numeric", () => {
       // Arrange
       const sorter = Sort.byAscendingProperty("name")
@@ -70,7 +71,7 @@ describe("Sort", () => {
       const sorted = unsorted.toSorted(Sort.byDescending)
 
       // Assert
-      expect(sorted).toEqual([3, 2, 1, 1, 0])
+      expect(sorted).toStrictEqual([3, 2, 1, 1, 0])
     })
   })
 
@@ -87,7 +88,7 @@ describe("Sort", () => {
       const result = records.toSorted(Sort.byDescendingProperty("value"))
 
       // Assert
-      expect(result).toEqual([
+      expect(result).toStrictEqual([
         { name: "three", value: 3 },
         { name: "two", value: 2 },
         { name: "one", value: 1 },
@@ -110,6 +111,7 @@ describe("Sort", () => {
       )
     })
 
+    // oxlint-disable-next-line vitest/expect-expect -- this one is just a type test
     it("should require the selected property to be numeric", () => {
       // Arrange
       const sorter = Sort.byDescendingProperty("name")

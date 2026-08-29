@@ -1,5 +1,5 @@
-import { reset } from "@logtape/logtape"
-import { describe, it, afterEach, expect, vi, test } from "vitest"
+import { type ConsoleFormatter, reset } from "@logtape/logtape"
+import { describe, it, afterEach, expect, vi } from "vitest"
 import { prettyConsoleFormatter } from "../formatter/prettyConsoleFormatter.js"
 import { Logger } from "../Logger.js"
 import { createConsoleLogSink } from "./ConsoleLogSink.js"
@@ -77,7 +77,7 @@ describe("ConsoleLogSink", () => {
       })
     })
 
-    it("uses JSON format and redacts sensitive fields by default", async () => {
+    it("should use JSON format and redacts sensitive fields by default", async () => {
       const consoleSpy = vi.spyOn(console, "info")
       const logger = await Logger.configure({
         sinks: { console: createConsoleLogSink({ nonBlocking: false }) },
@@ -88,7 +88,7 @@ describe("ConsoleLogSink", () => {
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
-      expect(JSON.parse(jsonLogLine)).toEqual({
+      expect(JSON.parse(jsonLogLine)).toStrictEqual({
         timestamp: expect.any(String),
         level: "INFO",
         message: "hello",
@@ -97,9 +97,9 @@ describe("ConsoleLogSink", () => {
       })
     })
 
-    it("allows overriding the formatter", async () => {
+    it("should allow overriding the formatter", async () => {
       const consoleSpy = vi.spyOn(console, "info")
-      const customFormatter = vi.fn().mockReturnValue(["custom-output"])
+      const customFormatter = vi.fn<ConsoleFormatter>().mockReturnValue(["custom-output"])
       const logger = await Logger.configure({
         sinks: { console: createConsoleLogSink({ nonBlocking: false, formatter: customFormatter }) },
       })
@@ -109,7 +109,7 @@ describe("ConsoleLogSink", () => {
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith("custom-output")
     })
 
-    it("allows disabling redaction", async () => {
+    it("should allow disabling redaction", async () => {
       const consoleSpy = vi.spyOn(console, "info")
       const logger = await Logger.configure({
         sinks: { console: createConsoleLogSink({ nonBlocking: false, redaction: { enabled: false } }) },
@@ -120,7 +120,7 @@ describe("ConsoleLogSink", () => {
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
-      expect(JSON.parse(jsonLogLine)).toEqual({
+      expect(JSON.parse(jsonLogLine)).toStrictEqual({
         timestamp: expect.any(String),
         level: "INFO",
         message: "hello",
@@ -128,7 +128,7 @@ describe("ConsoleLogSink", () => {
       })
     })
 
-    it("allows customising redaction field patterns", async () => {
+    it("should allow customising redaction field patterns", async () => {
       const consoleSpy = vi.spyOn(console, "info")
       const logger = await Logger.configure({
         sinks: {
@@ -144,7 +144,7 @@ describe("ConsoleLogSink", () => {
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
-      expect(JSON.parse(jsonLogLine)).toEqual({
+      expect(JSON.parse(jsonLogLine)).toStrictEqual({
         timestamp: expect.any(String),
         level: "INFO",
         message: "hello",
@@ -154,7 +154,7 @@ describe("ConsoleLogSink", () => {
       })
     })
 
-    it("allows customising the redaction action", async () => {
+    it("should allow customising the redaction action", async () => {
       const consoleSpy = vi.spyOn(console, "info")
       const logger = await Logger.configure({
         sinks: {
@@ -170,14 +170,14 @@ describe("ConsoleLogSink", () => {
       expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.any(String))
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
-      expect(JSON.parse(jsonLogLine)).toEqual({
+      expect(JSON.parse(jsonLogLine)).toStrictEqual({
         timestamp: expect.any(String),
         level: "INFO",
         message: "hello",
       })
     })
 
-    test("context cannot override default fields", async () => {
+    it("should not let the context override default fields", async () => {
       const consoleSpy = vi.spyOn(console, "info")
       const logger = await Logger.configure({
         sinks: { console: createConsoleLogSink({ nonBlocking: false }) },
@@ -189,7 +189,7 @@ describe("ConsoleLogSink", () => {
       expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining("this gets lost"))
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- If this is unsafe, then the test will fail
       const [jsonLogLine] = consoleSpy.mock.calls[0] as [string]
-      expect(JSON.parse(jsonLogLine)).toEqual({
+      expect(JSON.parse(jsonLogLine)).toStrictEqual({
         timestamp: expect.any(String),
         level: "INFO",
         message: "hello",

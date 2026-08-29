@@ -66,6 +66,7 @@ describe("Rethrow", () => {
     try {
       main()
     } catch (error) {
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- the conditional is the test
       if (!(error instanceof FatalError)) {
         throw error
       }
@@ -73,8 +74,10 @@ describe("Rethrow", () => {
       Assert.isDefined(error.stack)
       const stackParts = error.stack.split("\n")
 
-      expect(stackParts[1]).toEqual(expect.stringContaining("at willThrow"))
-      expect(stackParts[2]).toEqual(expect.stringContaining("at main"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(2)
+      expect(stackParts[1]).toStrictEqual(expect.stringContaining("at willThrow"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(2)
+      expect(stackParts[2]).toStrictEqual(expect.stringContaining("at main"))
     }
   })
 
@@ -94,6 +97,7 @@ describe("Rethrow", () => {
     try {
       main()
     } catch (error) {
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- the conditional is the test
       if (!(error instanceof FatalError)) {
         throw error
       }
@@ -101,7 +105,8 @@ describe("Rethrow", () => {
       Assert.isDefined(error.stack)
       const stackParts = error.stack.split(" at ")
 
-      expect(stackParts[1]).toEqual(expect.stringContaining("main"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(1)
+      expect(stackParts[1]).toStrictEqual(expect.stringContaining("main"))
     }
   })
 })

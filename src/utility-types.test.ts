@@ -5,6 +5,7 @@ describe("utility-types", () => {
   describe("PartialProperties", () => {
     type ObjectWithNestedObjects = { a: number; b: { deep: { object: string } }; c: { hello: string } }
 
+    // oxlint-disable-next-line vitest/expect-expect -- this one is just a type test
     it("should make a property partial and leave the rest as is", () => {
       const data: Array<PartialProperties<ObjectWithNestedObjects, "b">> = [
         // b.deep is now optional, as expected
@@ -26,6 +27,7 @@ describe("utility-types", () => {
       data.push({ a: 1, b: { deep: {} }, c: { hello: "hi" } })
     })
 
+    // oxlint-disable-next-line vitest/expect-expect -- this one is just a type test
     it("should make multiple properties partial and leave the rest as is", () => {
       const data: Array<PartialProperties<ObjectWithNestedObjects, "b" | "c">> = [
         // b.deep and c.hello are now optional, as expected
@@ -60,6 +62,4 @@ describe("utility-types", () => {
       expectTypeOf({ something: "not a response" }).not.toMatchTypeOf<Responses>()
     })
   })
-
-  describe("Enumify")
 })

@@ -9,7 +9,7 @@ describe("debounce", () => {
   it("should call the callback after the delay is expired", () => {
     // Arrange
     vi.useFakeTimers()
-    const callback = vi.fn()
+    const callback = vi.fn<(a: number, b: number, c: number) => void>()
     const delayMs = 250
     const debounced = debounce(callback, delayMs)
 
@@ -29,7 +29,7 @@ describe("debounce", () => {
   it("should reset the delay when the debounced function is called", () => {
     // Arrange
     vi.useFakeTimers()
-    const callback = vi.fn()
+    const callback = vi.fn<(a: number, b: number, c: number) => void>()
     const delayMs = 250
     const debounced = debounce(callback, delayMs)
 

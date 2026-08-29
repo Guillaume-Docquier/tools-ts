@@ -4,7 +4,7 @@ import { Angle, UnitOfAngle } from "./Angle.js"
 describe("Angle", () => {
   describe("create", () => {
     it("should create an angle with its unit", () => {
-      expect(Angle.create(90, UnitOfAngle.DEGREES)).toEqual({
+      expect(Angle.create(90, UnitOfAngle.DEGREES)).toStrictEqual({
         value: 90,
         unit: UnitOfAngle.DEGREES,
       })

@@ -15,7 +15,7 @@ describe("getEnumKey", () => {
   it.each([StringEnum, NumberEnum])("should throw when the key is not found", (theEnum) => {
     expect(() => {
       getEnumKey(theEnum, "not an enum value")
-    }).toThrow()
+    }).toThrow("Not defined")
   })
 
   it("should should return the key when the value matches in a string enum", () => {

@@ -18,6 +18,7 @@ describe("TypeGuard", () => {
 
       // Act
       expectTypeOf(maybeFunction).not.toEqualTypeOf<(...args: unknown[]) => unknown>()
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       if (TypeGuard.isFunction(maybeFunction)) {
         // Assert
         expectTypeOf(maybeFunction).toEqualTypeOf<(...args: unknown[]) => unknown>()
@@ -41,6 +42,7 @@ describe("TypeGuard", () => {
 
       // Act
       expectTypeOf(maybeThenable).not.toEqualTypeOf<PromiseLike<unknown>>()
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       if (TypeGuard.isPromiseLike(maybeThenable)) {
         // Assert
         expectTypeOf(maybeThenable).toEqualTypeOf<PromiseLike<unknown>>()
@@ -101,6 +103,7 @@ describe("TypeGuard", () => {
   describe("isEnumMember", () => {
     describe("when enum is a number (normal) enum", () => {
       const VALID_THEORY = ["ONE", "TWO", "THREE", NumberEnum.ONE, NumberEnum.TWO, NumberEnum.THREE, 0, 1, 2]
+
       it.each(VALID_THEORY)("should return true when maybeEnumValue is an enum value given %o", (enumValue) => {
         // Act
         const result = TypeGuard.isEnumMember(NumberEnum, enumValue)
@@ -110,6 +113,7 @@ describe("TypeGuard", () => {
       })
 
       const INVALID_THEORY = ["0", "1", "2", "", "string", {}, [], null, undefined, true, false]
+
       it.each(INVALID_THEORY)("should return false when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
         // Act
         const result = TypeGuard.isEnumMember(NumberEnum, notAnEnumValue)
@@ -121,6 +125,7 @@ describe("TypeGuard", () => {
 
     describe("when maybeEnumValue is an enum value", () => {
       const VALID_THEORY = [StringEnum.ONE, StringEnum.TWO, StringEnum.THREE, "one", "two", "three"]
+
       it.each(VALID_THEORY)("should return true when maybeEnumValue is an enum value given %o", (enumValue) => {
         // Act
         const result = TypeGuard.isEnumMember(StringEnum, enumValue)
@@ -130,6 +135,7 @@ describe("TypeGuard", () => {
       })
 
       const INVALID_THEORY = ["0", "1", "2", "ONE", "TWO", "THREE", "", "string", {}, [], null, undefined, true, false]
+
       it.each(INVALID_THEORY)("should return false when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
         // Act
         const result = TypeGuard.isEnumMember(StringEnum, notAnEnumValue)
@@ -145,6 +151,7 @@ describe("TypeGuard", () => {
 
       // Act
       expectTypeOf(maybeEnum).not.toEqualTypeOf<NumberEnum>()
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       if (TypeGuard.isEnumMember(NumberEnum, maybeEnum)) {
         // Assert
         expectTypeOf(maybeEnum).toEqualTypeOf<NumberEnum>()

@@ -8,6 +8,7 @@ const StartsWithFatalErrorClassName = new RegExp("^" + FatalErrorClassName)
 // oxlint-disable-next-line unicorn/custom-error-definition -- I guess the rule prevents the misuse we're testing here?
 class SomeOtherError extends FatalError<{ other?: string }> {}
 
+// oxlint-disable-next-line vitest/valid-title -- It is a string
 describe(FatalErrorClassName, () => {
   it("should remove the given caller from the stack trace", () => {
     // Arrange
@@ -28,8 +29,10 @@ describe(FatalErrorClassName, () => {
       Assert.isInstanceOf(FatalError, error)
       Assert.isDefined(error.stack)
       const stackParts = error.stack.split(" at ")
-      expect(stackParts[0]).toEqual(expect.stringMatching(StartsWithFatalErrorClassName))
-      expect(stackParts[1]).toEqual(expect.stringContaining("main"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(2)
+      expect(stackParts[0]).toStrictEqual(expect.stringMatching(StartsWithFatalErrorClassName))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(2)
+      expect(stackParts[1]).toStrictEqual(expect.stringContaining("main"))
     }
   })
 
@@ -53,9 +56,12 @@ describe(FatalErrorClassName, () => {
       Assert.isDefined(error.stack)
 
       const stackParts = error.stack.split(" at ")
-      expect(stackParts[0]).toEqual(expect.stringMatching(StartsWithFatalErrorClassName))
-      expect(stackParts[1]).toEqual(expect.stringContaining("willThrow"))
-      expect(stackParts[2]).toEqual(expect.stringContaining("main"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(3)
+      expect(stackParts[0]).toStrictEqual(expect.stringMatching(StartsWithFatalErrorClassName))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(3)
+      expect(stackParts[1]).toStrictEqual(expect.stringContaining("willThrow"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(3)
+      expect(stackParts[2]).toStrictEqual(expect.stringContaining("main"))
     }
   })
 
@@ -102,7 +108,7 @@ describe(FatalErrorClassName, () => {
     context.some.deep = "changed"
 
     // Assert
-    expect(error.context.some.deep).toEqual("context")
+    expect(error.context.some.deep).toBe("context")
   })
 
   it("should be fatal", () => {
@@ -118,7 +124,7 @@ describe(FatalErrorClassName, () => {
     const error = new FatalError("error", {})
 
     // Assert
-    expect(error.name).toEqual(FatalErrorClassName)
+    expect(error.name).toStrictEqual(FatalErrorClassName)
   })
 
   it("should not inherit the child class name because code minification will break it", () => {
@@ -126,6 +132,6 @@ describe(FatalErrorClassName, () => {
     const error = new SomeOtherError("error", {})
 
     // Assert
-    expect(error.name).toEqual(FatalErrorClassName)
+    expect(error.name).toStrictEqual(FatalErrorClassName)
   })
 })

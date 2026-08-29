@@ -10,7 +10,7 @@ describe("omit", () => {
     const omitted = omit(record, "b")
 
     // Assert
-    expect(omitted).toEqual({ a: 1, c: true })
+    expect(omitted).toStrictEqual({ a: 1, c: true })
     expectTypeOf(omitted).toEqualTypeOf<Omit<typeof record, "b">>()
   })
 
@@ -22,7 +22,7 @@ describe("omit", () => {
     const omitted = omit(record, "b", "d")
 
     // Assert
-    expect(omitted).toEqual({ a: 1, c: true })
+    expect(omitted).toStrictEqual({ a: 1, c: true })
     expectTypeOf(omitted).toEqualTypeOf<Omit<typeof record, "b" | "d">>()
   })
 
@@ -34,7 +34,7 @@ describe("omit", () => {
     const omitted = omit(record, "b")
 
     // Assert
-    expect(record).toEqual({ a: 1, b: "two", c: true })
+    expect(record).toStrictEqual({ a: 1, b: "two", c: true })
     expect(omitted).not.toBe(record)
   })
 
@@ -46,10 +46,11 @@ describe("omit", () => {
     const omitted = omit(record)
 
     // Assert
-    expect(omitted).toEqual(record)
+    expect(omitted).toStrictEqual(record)
     expect(omitted).not.toBe(record)
   })
 
+  // oxlint-disable-next-line vitest/expect-expect -- It is a type test
   it("should only allow keys from the record", () => {
     const record = { a: 1, b: "two" }
 

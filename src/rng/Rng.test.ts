@@ -22,7 +22,7 @@ describe("Rng", () => {
       const restoredValues = [restoredRng.float(), restoredRng.float(), restoredRng.float()]
 
       // Assert
-      expect(restoredValues).toEqual(expectedValues)
+      expect(restoredValues).toStrictEqual(expectedValues)
     })
 
     it("should resume the generator and cached normal value from state", () => {
@@ -38,7 +38,7 @@ describe("Rng", () => {
       const restoredValues = [restoredRng.normal(100, 3), restoredRng.float(), restoredRng.normal()]
 
       // Assert
-      expect(restoredValues).toEqual(expectedValues)
+      expect(restoredValues).toStrictEqual(expectedValues)
     })
   })
 
@@ -52,7 +52,7 @@ describe("Rng", () => {
       const random = rng.random(range)
 
       // Assert
-      expect(random).toEqual(15)
+      expect(random).toBe(15)
     })
 
     it("should return an int when given an inclusive integer range", () => {
@@ -64,7 +64,7 @@ describe("Rng", () => {
       const random = rng.random(range)
 
       // Assert
-      expect(random).toEqual(17)
+      expect(random).toBe(17)
     })
 
     it("should return an int when given an exclusive integer range", () => {
@@ -76,7 +76,7 @@ describe("Rng", () => {
       const random = rng.random(range)
 
       // Assert
-      expect(random).toEqual(19)
+      expect(random).toBe(19)
     })
   })
 
@@ -90,7 +90,7 @@ describe("Rng", () => {
       const random = [rng.float(), rng.float(), rng.float()]
 
       // Assert
-      expect(random).toEqual([value, value, value])
+      expect(random).toStrictEqual([value, value, value])
     })
 
     it.each([
@@ -115,7 +115,7 @@ describe("Rng", () => {
       const random = rng.float(range)
 
       // Assert
-      expect(random).toEqual(expected)
+      expect(random).toStrictEqual(expected)
     })
 
     it.each([0, 0.25, 0.5, 0.75, 1 - Number.EPSILON])(
@@ -129,7 +129,7 @@ describe("Rng", () => {
         const random = rng.float(range)
 
         // Assert
-        expect(random).toEqual(range.min)
+        expect(random).toStrictEqual(range.min)
       },
     )
 
@@ -142,7 +142,7 @@ describe("Rng", () => {
       const random = rng.float(range)
 
       // Assert
-      expect(random).toEqual(range.min)
+      expect(random).toStrictEqual(range.min)
     })
   })
 
@@ -163,7 +163,7 @@ describe("Rng", () => {
         const random = rng.int(range)
 
         // Assert
-        expect(random).toEqual(expected)
+        expect(random).toStrictEqual(expected)
       })
 
       it.each([0, 0.25, 0.5, 0.75, 1 - Number.EPSILON])(
@@ -177,7 +177,7 @@ describe("Rng", () => {
           const random = rng.int(range)
 
           // Assert
-          expect(random).toEqual(range.min)
+          expect(random).toStrictEqual(range.min)
         },
       )
     })
@@ -198,7 +198,7 @@ describe("Rng", () => {
         const random = rng.int(range)
 
         // Assert
-        expect(random).toEqual(expected)
+        expect(random).toStrictEqual(expected)
       })
 
       it.each([0, 0.25, 0.5, 0.75, 1 - Number.EPSILON])(
@@ -212,7 +212,7 @@ describe("Rng", () => {
           const random = rng.int(range)
 
           // Assert
-          expect(random).toEqual(range.min)
+          expect(random).toStrictEqual(range.min)
         },
       )
     })
@@ -229,9 +229,9 @@ describe("Rng", () => {
       const shuffled = rng.shuffle(arrayToShuffle)
 
       // Assert
-      expect(arrayToShuffle).not.toEqual(initialValues)
+      expect(arrayToShuffle).not.toStrictEqual(initialValues)
       expect(shuffled).toBe(arrayToShuffle)
-      expect(arrayToShuffle.toSorted(Sort.byAscending)).toEqual(initialValues)
+      expect(arrayToShuffle.toSorted(Sort.byAscending)).toStrictEqual(initialValues)
     })
   })
 
@@ -276,7 +276,7 @@ describe("Rng", () => {
       const draw2 = rng2.draw(values, drawCount)
 
       // Assert
-      expect(draw1).toEqual(draw2)
+      expect(draw1).toStrictEqual(draw2)
     })
   })
 

@@ -10,7 +10,7 @@ describe("asArray", () => {
     const things = asArray(thing)
 
     // Assert
-    expect(things).toEqual([thing])
+    expect(things).toStrictEqual([thing])
     expectTypeOf(things).toEqualTypeOf<number[]>()
   })
 

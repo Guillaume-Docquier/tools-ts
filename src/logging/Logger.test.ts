@@ -60,7 +60,7 @@ describe("Logger", () => {
       child3.info("child3")
 
       const expectedContext = { ...context, ...contextProvider.context }
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({ level: "info", message: "root", scopes: [], context: expectedContext }),
         createLogRecord({ level: "info", message: "child1", scopes: ["child1"], context: expectedContext }),
         createLogRecord({ level: "info", message: "child2", scopes: ["child2"], context: expectedContext }),
@@ -68,7 +68,7 @@ describe("Logger", () => {
       ])
 
       configureUnconfiguredLoggers((unconfiguredLoggers) => {
-        expect(unconfiguredLoggers).toEqual([])
+        expect(unconfiguredLoggers).toStrictEqual([])
       })
     })
   })
@@ -102,7 +102,7 @@ describe("Logger", () => {
 
       // Assert
       const expectedContext = { ...context, ...contextProvider.context }
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({ level: "info", message: "before reset", context: expectedContext }),
         createLogRecord({ level: "info", message: "after re-configure", context: expectedContext }),
       ])
@@ -134,7 +134,7 @@ describe("Logger", () => {
       childLogger.info("after re-configure")
 
       // Assert
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({
           level: "info",
           context: {},
@@ -200,7 +200,7 @@ describe("Logger", () => {
       childLogger.info(message)
 
       // Assert
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({
           level: "info",
           message,
@@ -231,7 +231,7 @@ describe("Logger", () => {
       childLogger.debug(message)
 
       // Assert
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({
           level: "debug",
           message,
@@ -252,7 +252,7 @@ describe("Logger", () => {
 
       // Assert
       configureUnconfiguredLoggers((unconfiguredLoggers) => {
-        expect(unconfiguredLoggers).toEqual([])
+        expect(unconfiguredLoggers).toStrictEqual([])
       })
     })
   })
@@ -274,7 +274,7 @@ describe("Logger", () => {
       logger.info("hello", { more: "context" })
 
       // Assert
-      expect(context).toEqual({ context: "data" })
+      expect(context).toStrictEqual({ context: "data" })
     })
 
     it("should be prioritized in the order: message < dynamic < static < reserved", async () => {
@@ -300,7 +300,7 @@ describe("Logger", () => {
       logger.info("hello", messageContext)
 
       // Assert
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({
           level: "info",
           context: { message: "message", dynamic: "dynamic", context: "context" },
@@ -341,7 +341,7 @@ describe("Logger", () => {
       childLogger.info("hello")
 
       // Assert
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({
           level: "info",
           context: { static: "parent", dynamic: "parent" },
@@ -382,7 +382,7 @@ describe("Logger", () => {
       childLogger.info("hello")
 
       // Assert
-      expect(inMemorySink.records).toEqual([
+      expect(inMemorySink.records).toStrictEqual([
         createLogRecord({
           level: "info",
           context: { static: "parent", dynamic: "parent" },
@@ -412,7 +412,7 @@ describe("Logger", () => {
     childLogger[level](message, context)
 
     // Assert
-    expect(inMemorySink.records).toEqual([
+    expect(inMemorySink.records).toStrictEqual([
       createLogRecord({
         level,
         message,

@@ -5,7 +5,7 @@ import { Point2D } from "./Point2D.js"
 describe("Point2D", () => {
   describe("create", () => {
     it("should create both coordinates with the requested unit", () => {
-      expect(Point2D.create({ x: -1, y: 2.5 }, UnitOfDistance.METERS)).toEqual({
+      expect(Point2D.create({ x: -1, y: 2.5 }, UnitOfDistance.METERS)).toStrictEqual({
         x: Distance.create(-1, UnitOfDistance.METERS),
         y: Distance.create(2.5, UnitOfDistance.METERS),
       })
@@ -22,11 +22,11 @@ describe("Point2D", () => {
 
       const converted = Point2D.convert(point, UnitOfDistance.MILLIMETERS)
 
-      expect(converted).toEqual({
+      expect(converted).toStrictEqual({
         x: Distance.create(1_000, UnitOfDistance.MILLIMETERS),
         y: Distance.create(2_000, UnitOfDistance.MILLIMETERS),
       })
-      expect(point).toEqual(original)
+      expect(point).toStrictEqual(original)
       expect(converted).not.toBe(point)
     })
 
@@ -39,7 +39,7 @@ describe("Point2D", () => {
 
       const converted = Point2D.convert(point, reference)
 
-      expect(converted.x).toEqual(Distance.create(1_000, UnitOfDistance.MILLIMETERS))
+      expect(converted.x).toStrictEqual(Distance.create(1_000, UnitOfDistance.MILLIMETERS))
       expect(converted.y.unit).toBe(UnitOfDistance.ASTRONOMICAL_UNITS)
       expect(converted.y.value).toBeCloseTo(2 / 149_597_870_700, 15)
     })

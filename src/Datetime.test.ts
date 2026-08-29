@@ -18,7 +18,7 @@ describe("Datetime", () => {
         const incremented = Datetime.increment({ date, time })
 
         // Assert
-        expect(incremented).toEqual(new Date(initialMs + incrementMs))
+        expect(incremented).toStrictEqual(new Date(initialMs + incrementMs))
       },
     )
   })

@@ -13,7 +13,7 @@ describe("mulberry32Prng", () => {
     const secondSequence = [secondPrng.next(), secondPrng.next(), secondPrng.next()]
 
     // Assert
-    expect(firstSequence).toEqual(secondSequence)
+    expect(firstSequence).toStrictEqual(secondSequence)
   })
 
   it("should return different float sequences for different seeds", () => {
@@ -26,7 +26,7 @@ describe("mulberry32Prng", () => {
     const secondSequence = [secondPrng.next(), secondPrng.next(), secondPrng.next()]
 
     // Assert
-    expect(firstSequence).not.toEqual(secondSequence)
+    expect(firstSequence).not.toStrictEqual(secondSequence)
   })
 
   it("should return default floats in the range [0, 1)", () => {
@@ -53,6 +53,6 @@ describe("mulberry32Prng", () => {
     const restoredSequence = [restoredPrng.next(), restoredPrng.next(), restoredPrng.next()]
 
     // Assert
-    expect(restoredSequence).toEqual(expectedSequence)
+    expect(restoredSequence).toStrictEqual(expectedSequence)
   })
 })

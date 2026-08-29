@@ -10,7 +10,7 @@ describe("setTimeoutAsync", () => {
     // Arrange
     vi.useFakeTimers()
     const delayMs = 250
-    const spy = vi.fn()
+    const spy = vi.fn<() => void>()
 
     // Act
     void setTimeoutAsync(delayMs).then(spy)

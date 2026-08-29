@@ -12,7 +12,7 @@ describe("Profile", () => {
 
       const label = "test synchronous action"
       const expectedResult = { ok: true }
-      const logger = { debug: vi.fn() }
+      const logger = { debug: vi.fn<(message: string) => void>() }
 
       // Act
       const result = Profile.executionTime(label, () => expectedResult, logger)
@@ -31,7 +31,7 @@ describe("Profile", () => {
 
       const label = "test asynchronous action"
       const expectedResult = { ok: true }
-      const logger = { debug: vi.fn() }
+      const logger = { debug: vi.fn<(message: string) => void>() }
 
       // Act
       const result = await Profile.executionTime(label, async () => expectedResult, logger)
@@ -53,7 +53,7 @@ describe("Profile", () => {
         arrayBuffers: 6 * 1024 * 1024,
       })
 
-      const logger = { debug: vi.fn() }
+      const logger = { debug: vi.fn<(message: string) => void>() }
 
       // Act
       Profile.memoryUsage(logger)

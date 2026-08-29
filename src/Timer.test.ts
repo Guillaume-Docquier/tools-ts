@@ -13,7 +13,7 @@ describe("Timer", () => {
       const startTime = Timer.start()
 
       // Assert
-      expect(startTime).toEqual<typeof startTime>(Time.create(nowMs, UnitOfTime.MILLISECONDS))
+      expect(startTime).toStrictEqual<typeof startTime>(Time.create(nowMs, UnitOfTime.MILLISECONDS))
       expect(performanceNow).toHaveBeenCalledOnce()
     })
   })
@@ -28,7 +28,7 @@ describe("Timer", () => {
       const elapsed = Timer.since(startedAt)
 
       // Assert
-      expect(elapsed).toEqual<typeof elapsed>(Time.create(23.47, UnitOfTime.MILLISECONDS))
+      expect(elapsed).toStrictEqual<typeof elapsed>(Time.create(23.47, UnitOfTime.MILLISECONDS))
       expect(performanceNow).toHaveBeenCalledOnce()
     })
 
@@ -41,7 +41,7 @@ describe("Timer", () => {
       const elapsed = Timer.since(startedAt)
 
       // Assert
-      expect(elapsed).toEqual<typeof elapsed>(Time.create(250, UnitOfTime.MILLISECONDS))
+      expect(elapsed).toStrictEqual<typeof elapsed>(Time.create(250, UnitOfTime.MILLISECONDS))
       expect(performanceNow).toHaveBeenCalledOnce()
     })
   })

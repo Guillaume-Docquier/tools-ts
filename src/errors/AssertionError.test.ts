@@ -6,6 +6,7 @@ const AssertionErrorClassName = AssertionError.name
 const StartsWithAssertionErrorClassName = new RegExp("^" + AssertionErrorClassName)
 const DefaultAssertionMessage = "Assertion failed!"
 
+// oxlint-disable-next-line vitest/valid-title -- it is a string
 describe(AssertionErrorClassName, () => {
   it("should remove the given caller from the stack trace", () => {
     // Arrange
@@ -26,8 +27,10 @@ describe(AssertionErrorClassName, () => {
       Assert.isDefined(error.stack)
 
       const stackParts = error.stack.split(" at ")
-      expect(stackParts[0]).toEqual(expect.stringMatching(StartsWithAssertionErrorClassName))
-      expect(stackParts[1]).toEqual(expect.stringContaining("main"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(2)
+      expect(stackParts[0]).toStrictEqual(expect.stringMatching(StartsWithAssertionErrorClassName))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(2)
+      expect(stackParts[1]).toStrictEqual(expect.stringContaining("main"))
     }
   })
 
@@ -50,9 +53,12 @@ describe(AssertionErrorClassName, () => {
       Assert.isDefined(error.stack)
 
       const stackParts = error.stack.split(" at ")
-      expect(stackParts[0]).toEqual(expect.stringMatching(StartsWithAssertionErrorClassName))
-      expect(stackParts[1]).toEqual(expect.stringContaining("willThrow"))
-      expect(stackParts[2]).toEqual(expect.stringContaining("main"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(3)
+      expect(stackParts[0]).toStrictEqual(expect.stringMatching(StartsWithAssertionErrorClassName))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(3)
+      expect(stackParts[1]).toStrictEqual(expect.stringContaining("willThrow"))
+      // oxlint-disable-next-line vitest/no-conditional-expect -- enforced by expect.assertions(3)
+      expect(stackParts[2]).toStrictEqual(expect.stringContaining("main"))
     }
   })
 
@@ -105,6 +111,6 @@ describe(AssertionErrorClassName, () => {
     const error = new AssertionError(DefaultAssertionMessage, { expected: "does not", received: "matter" })
 
     // Assert
-    expect(error.name).toEqual(AssertionErrorClassName)
+    expect(error.name).toStrictEqual(AssertionErrorClassName)
   })
 })

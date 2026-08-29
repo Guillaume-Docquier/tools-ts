@@ -12,7 +12,7 @@ describe("Time", () => {
       const time = Time.create(value, unit)
 
       // Assert
-      expect(time).toEqual<typeof time>({ value, unit })
+      expect(time).toStrictEqual<typeof time>({ value, unit })
     })
   })
 
@@ -36,7 +36,7 @@ describe("Time", () => {
 
       // Asset
       expect(converted.value).toBeCloseTo(to.value, PRECISION)
-      expect(converted.unit).toEqual(to.unit)
+      expect(converted.unit).toStrictEqual(to.unit)
     })
   })
 
@@ -83,7 +83,7 @@ describe("Time", () => {
 
       // Assert
       expect(added.value).toBeCloseTo(expected.value, PRECISION)
-      expect(added.unit).toEqual(expected.unit)
+      expect(added.unit).toStrictEqual(expected.unit)
     })
   })
 
@@ -120,7 +120,7 @@ describe("Time", () => {
 
       // Assert
       expect(subtracted.value).toBeCloseTo(expected.value, PRECISION)
-      expect(subtracted.unit).toEqual(expected.unit)
+      expect(subtracted.unit).toStrictEqual(expected.unit)
     })
   })
 })

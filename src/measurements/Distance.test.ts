@@ -33,6 +33,7 @@ describe("Distance", () => {
         to: { value: 158_102.692_710_665_69, unit: UnitOfDistance.ASTRONOMICAL_UNITS },
       },
     ]
+
     it.each(THEORY)("should convert $from.unit to $to.unit", ({ from, to }) => {
       // Act
       const converted = Distance.convert(from, to.unit)
@@ -74,6 +75,7 @@ describe("Distance", () => {
         to: { value: 158_102.692_710_665_69, unit: UnitOfDistance.ASTRONOMICAL_UNITS },
       },
     ]
+
     it.each(THEORY)("should convert $from.unit to $to.unit", ({ from, to }) => {
       // Act
       const converted = Distance.in(from, to.unit)
@@ -206,7 +208,7 @@ describe("Distance", () => {
       const distance = Distance.betweenSquared(position1, position2)
 
       // Assert
-      expect(distance).toEqual(Distance.create(169_000_000, UnitOfDistance.MILLIMETERS))
+      expect(distance).toStrictEqual(Distance.create(169_000_000, UnitOfDistance.MILLIMETERS))
     })
 
     it("should be symmetric and leave both positions untouched", () => {
@@ -229,9 +231,9 @@ describe("Distance", () => {
       const reverse = Distance.betweenSquared(position2, position1, UnitOfDistance.METERS)
 
       // Assert
-      expect(forward).toEqual(reverse)
-      expect(position1).toEqual(originalPosition1)
-      expect(position2).toEqual(originalPosition2)
+      expect(forward).toStrictEqual(reverse)
+      expect(position1).toStrictEqual(originalPosition1)
+      expect(position2).toStrictEqual(originalPosition2)
     })
   })
 
@@ -309,8 +311,8 @@ describe("Distance", () => {
       const reverseDistance = Distance.between(position2, position1, UnitOfDistance.MILLIMETERS)
 
       // Assert
-      expect(defaultDistance).toEqual(Distance.create(13_000, UnitOfDistance.MILLIMETERS))
-      expect(reverseDistance).toEqual(defaultDistance)
+      expect(defaultDistance).toStrictEqual(Distance.create(13_000, UnitOfDistance.MILLIMETERS))
+      expect(reverseDistance).toStrictEqual(defaultDistance)
     })
   })
 })

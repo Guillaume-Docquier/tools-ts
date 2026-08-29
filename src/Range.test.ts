@@ -42,7 +42,7 @@ describe("Range", () => {
 
       // Assert
       const expectedRange = { numericType: "float", maxBoundType: "exclusive", ...data } as const
-      expect(range).toEqual<typeof range>(expectedRange)
+      expect(range).toStrictEqual<typeof range>(expectedRange)
       expectTypeOf(range).toEqualTypeOf<Range<"float", "exclusive">>()
       expect(validateSpy).toHaveBeenCalledExactlyOnceWith(expectedRange)
     })
@@ -69,7 +69,7 @@ describe("Range", () => {
 
       // Assert
       const expectedRange = { numericType: "integer", maxBoundType: "inclusive", ...data } as const
-      expect(range).toEqual<typeof range>(expectedRange)
+      expect(range).toStrictEqual<typeof range>(expectedRange)
       expectTypeOf(range).toEqualTypeOf<Range<"integer", "inclusive">>()
       expect(validateSpy).toHaveBeenCalledExactlyOnceWith(expectedRange)
     })
@@ -116,7 +116,7 @@ describe("Range", () => {
       const rangeResult = Range.safeCreate(data)
 
       // Assert
-      expect(rangeResult).toEqual<typeof rangeResult>(Result.Success(data))
+      expect(rangeResult).toStrictEqual<typeof rangeResult>(Result.Success(data))
     })
 
     it("should narrow the Range type based on the input", () => {
@@ -127,7 +127,7 @@ describe("Range", () => {
       const rangeResult = Range.safeCreate(data)
 
       // Assert
-      expect(rangeResult).toEqual<typeof rangeResult>(Result.Success(data))
+      expect(rangeResult).toStrictEqual<typeof rangeResult>(Result.Success(data))
       expectTypeOf(rangeResult).toEqualTypeOf<Result<Range<"float", "exclusive">, string>>()
     })
 
@@ -185,7 +185,7 @@ describe("Range", () => {
       const rangeResult = Range.safeCreate(invalidData)
 
       // Assert
-      expect(rangeResult).toEqual<typeof rangeResult>(Result.Failure(expect.any(String)))
+      expect(rangeResult).toStrictEqual<typeof rangeResult>(Result.Failure(expect.any(String)))
     })
   })
 
@@ -200,7 +200,7 @@ describe("Range", () => {
       const result = Range.from(range, data)
 
       // Assert
-      expect(result).toEqual<typeof result>(Result.Success({ ...range, min: 3, max: 7 }))
+      expect(result).toStrictEqual<typeof result>(Result.Success({ ...range, min: 3, max: 7 }))
       expectTypeOf(result).toEqualTypeOf<Result<Range<"integer", "exclusive">, string>>()
       expect(validateSpy).toHaveBeenCalledExactlyOnceWith({ ...range, ...data })
     })
@@ -216,8 +216,8 @@ describe("Range", () => {
 
       // Assert
       Assert.isSuccess(result)
-      expect(range).toEqual(original)
-      expect(range).not.toEqual(result.value)
+      expect(range).toStrictEqual(original)
+      expect(range).not.toStrictEqual(result.value)
       expect(range).not.toBe(result.value)
     })
 

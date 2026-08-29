@@ -13,7 +13,7 @@ describe("Result", () => {
       const success = Result.Success(expectedPayload)
 
       // Assert
-      expect(success).toEqual({
+      expect(success).toStrictEqual({
         type: "Success",
         value: expectedPayload,
       })
@@ -27,10 +27,13 @@ describe("Result", () => {
       const success = Result.Success(expectedValue) as Result<string, string>
 
       // Act
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       if (Result.isSuccess(success)) {
         // This proves that we can use "value", which is only possible if the type was narrowed
-        expect(success.value).toEqual(expectedValue)
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
+        expect(success.value).toStrictEqual(expectedValue)
       } else {
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
         expect.fail("Result.isSuccess returned false, but should have returned true")
       }
     })
@@ -41,11 +44,14 @@ describe("Result", () => {
       const failure = Result.Failure(expectedError) as Result<string, string>
 
       // Act
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       if (Result.isSuccess(failure)) {
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
         expect.fail("Result.isSuccess returned false, but should have returned true")
       } else {
         // This proves that we can use "error", which is only possible if the type was narrowed
-        expect(failure.error).toEqual(expectedError)
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
+        expect(failure.error).toStrictEqual(expectedError)
       }
     })
   })
@@ -59,7 +65,7 @@ describe("Result", () => {
       const success = Result.Failure(expectedPayload)
 
       // Assert
-      expect(success).toEqual({
+      expect(success).toStrictEqual({
         type: "Failure",
         error: expectedPayload,
       })
@@ -73,11 +79,14 @@ describe("Result", () => {
       const success = Result.Success(expectedValue) as Result<string, string>
 
       // Act
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       if (Result.isFailure(success)) {
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
         expect.fail("Result.isFailure returned true, but should have returned false")
       } else {
         // This proves that we can use "value", which is only possible if the type was narrowed
-        expect(success.value).toEqual(expectedValue)
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
+        expect(success.value).toStrictEqual(expectedValue)
       }
     })
 
@@ -87,10 +96,13 @@ describe("Result", () => {
       const failure = Result.Failure(expectedError) as Result<string, string>
 
       // Act
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       if (Result.isFailure(failure)) {
         // This proves that we can use "error", which is only possible if the type was narrowed
-        expect(failure.error).toEqual(expectedError)
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
+        expect(failure.error).toStrictEqual(expectedError)
       } else {
+        // oxlint-disable-next-line vitest/no-conditional-expect -- conditionals are the test
         expect.fail("Result.isFailure returned false, but should have returned true")
       }
     })
@@ -109,7 +121,7 @@ describe("Result", () => {
         const result = Result.tryCatch(synchronous)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Success(expectedValue))
+        expect(result).toStrictEqual<typeof result>(Result.Success(expectedValue))
       })
 
       it("should return a Failure when the function throws", () => {
@@ -123,7 +135,7 @@ describe("Result", () => {
         const result = Result.tryCatch(synchronous)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Failure(expectedError))
+        expect(result).toStrictEqual<typeof result>(Result.Failure(expectedError))
       })
 
       it("should throw when the function throws a fatal error", async () => {
@@ -149,7 +161,7 @@ describe("Result", () => {
         const result = await Result.tryCatch(asynchronous)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Success("value"))
+        expect(result).toStrictEqual<typeof result>(Result.Success("value"))
       })
 
       it("should return a Failure when the returned promise rejects", async () => {
@@ -163,7 +175,7 @@ describe("Result", () => {
         const result = await Result.tryCatch(asynchronous)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Failure(expectedError))
+        expect(result).toStrictEqual<typeof result>(Result.Failure(expectedError))
       })
 
       it("should throw when the returned promise rejects with a fatal error", async () => {
@@ -184,7 +196,7 @@ describe("Result", () => {
         const result = await Result.tryCatch(promise)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Success("value"))
+        expect(result).toStrictEqual<typeof result>(Result.Success("value"))
       })
 
       it("should return a Failure when the promise rejects", async () => {
@@ -196,7 +208,7 @@ describe("Result", () => {
         const result = await Result.tryCatch(promise)
 
         // Assert
-        expect(result).toEqual<typeof result>(Result.Failure(expectedError))
+        expect(result).toStrictEqual<typeof result>(Result.Failure(expectedError))
       })
 
       it("should throw when the promise rejects with a fatal error", async () => {

@@ -15,6 +15,7 @@ describe("logging", () => {
   })
 
   describe("Logger", () => {
+    // oxlint-disable-next-line vitest/expect-expect -- It's kind of like a benchmark test... okay this one is strange
     it.each([{ nonBlocking: false }, { nonBlocking: true }])(
       "should be able to set the context after creating the logger (nonBlocking: $nonBlocking)",
       async ({ nonBlocking }) => {
@@ -76,7 +77,8 @@ describe("logging", () => {
   })
 
   describe("Native LogTape", () => {
-    it("is not able to set the context after creating the logger", async () => {
+    // oxlint-disable-next-line vitest/expect-expect -- It's kind of like a benchmark test... okay this one is strange
+    it("should not be able to set the context after creating the logger", async () => {
       const init = performance.now()
       await configure({
         sinks: {

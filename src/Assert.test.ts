@@ -136,6 +136,7 @@ describe("Assert", () => {
   describe("isEnumMember", () => {
     describe("when enum is a number (normal) enum", () => {
       const VALID_THEORY = ["ONE", "TWO", "THREE", NumberEnum.ONE, NumberEnum.TWO, NumberEnum.THREE, 0, 1, 2]
+
       it.each(VALID_THEORY)("should not throw when maybeEnumValue is an enum value given %o", (enumValue) => {
         expectTypeOf(enumValue).not.toEqualTypeOf<StringEnum>()
         Assert.isEnumMember(NumberEnum, enumValue)
@@ -143,6 +144,7 @@ describe("Assert", () => {
       })
 
       const INVALID_THEORY = ["0", "1", "2", "", "string", {}, [], null, undefined, true, false]
+
       it.each(INVALID_THEORY)("should throw an AssertionError when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
         expect(() => {
           Assert.isEnumMember(NumberEnum, notAnEnumValue)
@@ -152,6 +154,7 @@ describe("Assert", () => {
 
     describe("when enum is a string enum", () => {
       const VALID_THEORY = [StringEnum.ONE, StringEnum.TWO, StringEnum.THREE, "one", "two", "three"]
+
       it.each(VALID_THEORY)("should not throw when maybeEnumValue is an enum value given %o", (enumValue) => {
         expectTypeOf(enumValue).not.toEqualTypeOf<StringEnum>()
         Assert.isEnumMember(StringEnum, enumValue)
@@ -159,6 +162,7 @@ describe("Assert", () => {
       })
 
       const INVALID_THEORY = ["0", "1", "2", "ONE", "TWO", "THREE", "", "string", {}, [], null, undefined, true, false]
+
       it.each(INVALID_THEORY)("should throw an AssertionError when maybeEnumValue is not an enum value given %o", (notAnEnumValue) => {
         expect(() => {
           Assert.isEnumMember(StringEnum, notAnEnumValue)
@@ -256,6 +260,7 @@ describe("Assert", () => {
     })
 
     const INVALID_THEORY = ["0", "1", "2", "ONE", "TWO", "THREE", "", "string", {}, [], null, undefined, true, false]
+
     it.each(INVALID_THEORY)("should throw an AssertionError when maybeValue is not an expected value given %o", (notOneOf) => {
       expect(() => {
         Assert.isOneOf([0, 1, 2] as const, notOneOf)
@@ -361,7 +366,9 @@ describe("Assert", () => {
       expectTypeOf(myObj).not.toEqualTypeOf<{ a: boolean; b: unknown }>()
 
       // Act
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       Assert.isTrue(a && b === 2)
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       Assert.isTrue("b" in myObj && typeof myObj.b === "number")
 
       // Assert
@@ -378,6 +385,7 @@ describe("Assert", () => {
       const value = 1 as "a" | 1 | null
 
       // Act & Assert
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       switch (value) {
         case "a":
           break
@@ -395,6 +403,7 @@ describe("Assert", () => {
       const value = 1 as "a" | 1 | null
 
       // Act & Assert
+      // oxlint-disable-next-line vitest/no-conditional-in-test -- conditionals are the test
       switch (value) {
         case "a":
           break
@@ -452,33 +461,34 @@ describe("Assert", () => {
     })
   })
 
+  // oxlint-disable-next-line vitest/no-disabled-tests -- unskip to inspect the output of thrown errors
   describe.skip("unskip to inspect the output of thrown errors", () => {
-    it("Assert.isInstanceOf", () => {
+    it("should inspect Assert.isInstanceOf", () => {
       Assert.isInstanceOf(Bar, new Foo())
     })
 
-    it("Assert.isDefined", () => {
+    it("should inspect Assert.isDefined", () => {
       Assert.isDefined(undefined)
     })
 
-    it("Assert.isEnumMember", () => {
+    it("should inspect Assert.isEnumMember", () => {
       Assert.isEnumMember(StringEnum, "hey")
     })
 
-    it("Assert.isOneOf", () => {
+    it("should inspect Assert.isOneOf", () => {
       Assert.isOneOf([0, "1", 2] as const, "2")
     })
 
-    it("Assert.isExhausted", () => {
+    it("should inspect Assert.isExhausted", () => {
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- This is meant to never be called and that's what we test
       Assert.isExhausted(true as unknown as never)
     })
 
-    it("Assert.isTrue", () => {
+    it("should inspect Assert.isTrue", () => {
       Assert.isTrue(false)
     })
 
-    it("Assert.isSuccess", () => {
+    it("should inspect Assert.isSuccess", () => {
       Assert.isSuccess(Result.Failure("something went wrong"))
     })
   })

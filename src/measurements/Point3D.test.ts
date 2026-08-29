@@ -9,7 +9,7 @@ describe("Point3D", () => {
       const point = Point3D.create({ x: -1, y: 0, z: 2.5 }, UnitOfDistance.METERS)
 
       // Assert
-      expect(point).toEqual({
+      expect(point).toStrictEqual({
         x: Distance.create(-1, UnitOfDistance.METERS),
         y: Distance.create(0, UnitOfDistance.METERS),
         z: Distance.create(2.5, UnitOfDistance.METERS),
@@ -31,12 +31,12 @@ describe("Point3D", () => {
       const converted = Point3D.convert(point, UnitOfDistance.MILLIMETERS)
 
       // Assert
-      expect(converted).toEqual({
+      expect(converted).toStrictEqual({
         x: Distance.create(1_000, UnitOfDistance.MILLIMETERS),
         y: Distance.create(2_000, UnitOfDistance.MILLIMETERS),
         z: Distance.create(3_000, UnitOfDistance.MILLIMETERS),
       })
-      expect(point).toEqual(original)
+      expect(point).toStrictEqual(original)
       expect(converted).not.toBe(point)
     })
 
@@ -53,8 +53,8 @@ describe("Point3D", () => {
       const converted = Point3D.convert(point, reference)
 
       // Assert
-      expect(converted.x).toEqual(Distance.create(1_000, UnitOfDistance.MILLIMETERS))
-      expect(converted.y).toEqual(Distance.create(2, UnitOfDistance.METERS))
+      expect(converted.x).toStrictEqual(Distance.create(1_000, UnitOfDistance.MILLIMETERS))
+      expect(converted.y).toStrictEqual(Distance.create(2, UnitOfDistance.METERS))
       expect(converted.z.unit).toBe(UnitOfDistance.ASTRONOMICAL_UNITS)
       expect(converted.z.value).toBeCloseTo(3 / 149_597_870_700, 15)
     })

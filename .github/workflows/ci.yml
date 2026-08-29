@@ -23,16 +23,13 @@ jobs:
 
     steps:
       - name: Checkout ${{ github.head_ref || github.ref_name }}
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Setting up pnpm
-        uses: pnpm/action-setup@v6.0.8
+        uses: pnpm/setup@v2.1.0
 
       - name: Validate peer dependencies
         run: pnpm peers check
-
-      - name: Install packages
-        run: pnpm ci
 
       - name: Format
         run: pnpm format
@@ -56,13 +53,10 @@ jobs:
 
     steps:
       - name: Checkout ${{ github.head_ref || github.ref_name }}
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Setting up pnpm
-        uses: pnpm/action-setup@v6.0.8
-
-      - name: Install packages
-        run: pnpm ci
+        uses: pnpm/setup@v2.1.0
 
       - name: Release
         run: pnpm semantic-release

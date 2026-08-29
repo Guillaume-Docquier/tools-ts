@@ -37,29 +37,29 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
-    "@logtape/logtape": "^2.3.0",
-    "@logtape/redaction": "^2.3.0"
+    "@logtape/logtape": "^2.3.2",
+    "@logtape/redaction": "^2.3.2"
   },
   "devDependencies": {
-    "@guillaume-docquier/oxfmt": "^1.0.5",
-    "@guillaume-docquier/oxlint": "^1.2.3",
+    "@guillaume-docquier/oxfmt": "^1.0.6",
+    "@guillaume-docquier/oxlint": "^1.4.1",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/github": "^12.0.9",
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/node": "^25.9.5",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "conventional-changelog-conventionalcommits": "^9.3.1",
     "husky": "^9.1.7",
     "jiti": "^2.7.0",
     "lint-staged": "^16.4.0",
-    "oxfmt": ">=0.62.0",
-    "oxlint": "^1.77.0",
+    "oxfmt": ">=0.65.0",
+    "oxlint": "^1.80.0",
     "oxlint-tsgolint": "^7.0.2001",
     "semantic-release": "^25.0.9",
     "typescript": "~7.0.2",
-    "vite": "^8.2.0",
-    "vitest": "^4.1.10"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   },
   "lint-staged": {
     "*.{md,json,yml,yaml,css,scss}": "oxfmt --no-error-on-unmatched-pattern",

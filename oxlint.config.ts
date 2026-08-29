@@ -8,4 +8,12 @@ export default defineConfig({
     denyWarnings: true,
   },
   ignorePatterns: ["*.gen.*"],
+  overrides: [
+    {
+      files: ["entry.tools-ts.ts"],
+      rules: {
+        "oxc/no-barrel-file": "off", // it's the only allowed barrel file
+      },
+    },
+  ],
 })

@@ -5,6 +5,7 @@ import { FatalError } from "./FatalError.js"
 const FatalErrorClassName = FatalError.name
 const StartsWithFatalErrorClassName = new RegExp("^" + FatalErrorClassName)
 
+// oxlint-disable-next-line unicorn/custom-error-definition -- I guess the rule prevents the misuse we're testing here?
 class SomeOtherError extends FatalError<{ other?: string }> {}
 
 describe(FatalErrorClassName, () => {

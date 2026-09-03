@@ -108,6 +108,80 @@ describe("Result", () => {
     })
   })
 
+  describe("map", () => {
+    it("should map a Success value", () => {
+      // Arrange
+      const success = Result.Success(1) as Result<number, string>
+
+      // Act
+      const mappedSuccess = Result.map(success, {
+        success: (value) => value.toString(),
+        failure: (error) => new Error(error),
+      })
+
+      // Assert
+      expect(mappedSuccess).toStrictEqual(Result.Success("1"))
+    })
+
+    it("should map a Failure error", () => {
+      // Arrange
+      const failure = Result.Failure("boom") as Result<number, string>
+
+      // Act
+      const mappedFailure = Result.map(failure, {
+        success: (value) => value.toString(),
+        failure: (error) => new Error(error),
+      })
+
+      // Assert
+      expect(mappedFailure).toStrictEqual(Result.Failure(new Error("boom")))
+    })
+
+    it("should map a Success value when only success is provided", () => {
+      // Arrange
+      const success = Result.Success(1) as Result<number, string>
+
+      // Act
+      const mappedSuccess = Result.map(success, { success: (value) => value.toString() })
+
+      // Assert
+      expect(mappedSuccess).toStrictEqual(Result.Success("1"))
+    })
+
+    it("should preserve a Failure error when only success is provided", () => {
+      // Arrange
+      const failure = Result.Failure("boom") as Result<number, string>
+
+      // Act
+      const mappedFailure = Result.map(failure, { success: (value) => value.toString() })
+
+      // Assert
+      expect(mappedFailure).toStrictEqual(Result.Failure("boom"))
+    })
+
+    it("should map a Failure error when only failure is provided", () => {
+      // Arrange
+      const failure = Result.Failure("boom") as Result<number, string>
+
+      // Act
+      const mappedFailure = Result.map(failure, { failure: (error) => new Error(error) })
+
+      // Assert
+      expect(mappedFailure).toStrictEqual(Result.Failure(new Error("boom")))
+    })
+
+    it("should preserve a Success value when only failure is provided", () => {
+      // Arrange
+      const success = Result.Success(1) as Result<number, string>
+
+      // Act
+      const mappedSuccess = Result.map(success, { failure: (error) => new Error(error) })
+
+      // Assert
+      expect(mappedSuccess).toStrictEqual(Result.Success(1))
+    })
+  })
+
   describe("tryCatch", () => {
     describe("synchronous", () => {
       it("should return a Success when the function does not throw", () => {

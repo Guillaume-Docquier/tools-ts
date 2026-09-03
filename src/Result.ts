@@ -56,7 +56,42 @@ export const Result = {
   },
 
   // You can't overload while defining object properties, which is why the function implementation is not inlined
+  map,
+
+  // You can't overload while defining object properties, which is why the function implementation is not inlined
   tryCatch,
+}
+
+/**
+ * Maps a Result's Success value and Failure error.
+ */
+function map<TValue, TError, TSuccess, TFailure>(
+  result: Result<TValue, TError>,
+  options: { success: (value: TValue) => TSuccess; failure: (error: TError) => TFailure },
+): Result<TSuccess, TFailure>
+/**
+ * Maps a Result's Success value.
+ */
+function map<TValue, TError, TSuccess>(
+  result: Result<TValue, TError>,
+  options: { success: (value: TValue) => TSuccess },
+): Result<TSuccess, TError>
+/**
+ * Maps a Result's Failure error.
+ */
+function map<TValue, TError, TFailure>(
+  result: Result<TValue, TError>,
+  options: { failure: (error: TError) => TFailure },
+): Result<TValue, TFailure>
+function map<TValue, TError, TSuccess, TFailure>(
+  result: Result<TValue, TError>,
+  options: { success?: (value: TValue) => TSuccess; failure?: (error: TError) => TFailure },
+): Result<TValue | TSuccess, TError | TFailure> {
+  if (Result.isFailure(result)) {
+    return Result.Failure(options.failure !== undefined ? options.failure(result.error) : result.error)
+  }
+
+  return Result.Success(options.success !== undefined ? options.success(result.value) : result.value)
 }
 
 /**

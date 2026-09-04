@@ -218,8 +218,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6(oxfmt@0.65.0)
       '@guillaume-docquier/oxlint':
-        specifier: ^1.7.3
-        version: 1.7.3(oxlint-tsgolint@7.0.2001)(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))
+        specifier: ^1.8.0
+        version: 1.8.0(oxlint-tsgolint@7.0.2001)(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))
       '@semantic-release/commit-analyzer':
         specifier: ^13.0.1
         version: 13.0.1(semantic-release@25.0.9(supports-color@7.2.0)(typescript@7.0.2))(supports-color@7.2.0)
@@ -323,8 +323,8 @@ packages:
     peerDependencies:
       oxfmt: '>=0.65.0'
 
-  '@guillaume-docquier/oxlint@1.7.3':
-    resolution: {integrity: sha512-5YNbE/KAU3+MMezwCiFsTZIwkS3fvtl9hjTnl/o2cHloK16PwFV3ItUpe138LXpfyMbR4LHFc/NamoLC47E2+w==}
+  '@guillaume-docquier/oxlint@1.8.0':
+    resolution: {integrity: sha512-swgkKZ2jZNZe5fLB7i1+ncDT+8OvxJbT1dKy4YSQo/JI7kemooP6Ci1ZILOUbnsV3BSsQl8J15lSGsHCNhg09Q==}
     peerDependencies:
       oxlint: ^1.80.0
       oxlint-tsgolint: ^7.0.2001
@@ -2644,7 +2644,7 @@ snapshots:
     dependencies:
       oxfmt: 0.65.0
 
-  '@guillaume-docquier/oxlint@1.7.3(oxlint-tsgolint@7.0.2001)(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))':
+  '@guillaume-docquier/oxlint@1.8.0(oxlint-tsgolint@7.0.2001)(oxlint@1.80.0(oxlint-tsgolint@7.0.2001))':
     dependencies:
       oxlint: 1.80.0(oxlint-tsgolint@7.0.2001)
       oxlint-tsgolint: 7.0.2001

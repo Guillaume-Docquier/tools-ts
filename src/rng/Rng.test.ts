@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { Range } from "../Range.js"
 import { Sort } from "../Sort.js"
-import { type Generator } from "./Generator.js"
+import type { Generator } from "./Generator.js"
 import { createGeneratorStub } from "./Generator.stub.js"
 import { mulberry32Prng } from "./mulberry32prng.js"
 import { Rng, type RngState } from "./Rng.js"

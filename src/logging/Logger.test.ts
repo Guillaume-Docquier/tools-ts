@@ -1,4 +1,4 @@
-import { type LogRecord } from "@logtape/logtape"
+import type { LogRecord } from "@logtape/logtape"
 import { describe, it, afterEach, expect } from "vitest"
 import { configureUnconfiguredLoggers } from "./GlobalRootLoggerRegistry.js"
 import type { LogContext } from "./log-context/LogContext.js"

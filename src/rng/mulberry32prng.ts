@@ -1,4 +1,4 @@
-import { type Generator } from "./Generator.js"
+import type { Generator } from "./Generator.js"
 
 /**
  * Creates a deterministic pseudo-random number generator based on a 32-bit integer seed using the mulberry32 algorithm.

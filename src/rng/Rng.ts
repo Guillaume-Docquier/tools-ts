@@ -1,6 +1,6 @@
 import type { Range } from "../Range.js"
 import { boxMullerSample } from "./boxMullerSample.js"
-import { type Generator } from "./Generator.js"
+import type { Generator } from "./Generator.js"
 
 export type RngState<TGeneratorState> = {
   generatorState: TGeneratorState

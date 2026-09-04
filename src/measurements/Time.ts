@@ -1,4 +1,4 @@
-import { type Measurement } from "./Measurement.js"
+import type { Measurement } from "./Measurement.js"
 
 /**
  * Represents the possible units to define time.

@@ -1,45 +1,7 @@
 import { describe, it, expectTypeOf } from "vitest"
-import type { Branded } from "./Brand.js"
-import type { PartialProperties, Unbranded, UnbrandedProperties, ValueOf } from "./utility-types.js"
+import type { PartialProperties, ValueOf } from "./utility-types.js"
 
 describe("utility-types", () => {
-  describe("Unbranded", () => {
-    type UserId = Branded<number, "UserId">
-    type UserName = Branded<string, "UserName">
-
-    it("should unwrap branded types and leave other types unchanged", () => {
-      expectTypeOf<Unbranded<UserId>>().toEqualTypeOf<number>()
-      expectTypeOf<Unbranded<UserName>>().toEqualTypeOf<string>()
-      expectTypeOf<Unbranded<UserId | boolean>>().toEqualTypeOf<number | boolean>()
-      expectTypeOf<Unbranded<boolean>>().toEqualTypeOf<boolean>()
-    })
-  })
-
-  describe("UnbrandedProperties", () => {
-    type ResourceUpdateModel = {
-      readonly gameId: Branded<number, "GameId">
-      playerId?: Branded<string, "PlayerId">
-      enabled: boolean
-    }
-
-    it("should unwrap each property and preserve its modifiers", () => {
-      expectTypeOf<UnbrandedProperties<ResourceUpdateModel>>().toEqualTypeOf<{
-        readonly gameId: number
-        playerId?: string
-        enabled: boolean
-      }>()
-    })
-
-    it("should support partially specified raw object inputs", () => {
-      const input: Partial<UnbrandedProperties<ResourceUpdateModel>> = {
-        gameId: 1,
-        playerId: "player-1",
-      }
-
-      expectTypeOf(input).toEqualTypeOf<Partial<UnbrandedProperties<ResourceUpdateModel>>>()
-    })
-  })
-
   describe("PartialProperties", () => {
     type ObjectWithNestedObjects = { a: number; b: { deep: { object: string } }; c: { hello: string } }
 

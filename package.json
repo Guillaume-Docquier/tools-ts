@@ -16,7 +16,8 @@
   "exports": {
     ".": {
       "types": "./dist/entry.tools-ts.d.ts",
-      "import": "./dist/entry.tools-ts.js"
+      "import": "./dist/entry.tools-ts.js",
+      "require": "./dist/entry.tools-ts.js"
     }
   },
   "publishConfig": {

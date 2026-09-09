@@ -42,7 +42,7 @@
     "@logtape/redaction": "^2.3.2"
   },
   "devDependencies": {
-    "@guillaume-docquier/oxfmt": "^1.0.6",
+    "@guillaume-docquier/oxfmt": "^1.0.7",
     "@guillaume-docquier/oxlint": "^1.8.0",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^7.1.0",
@@ -54,8 +54,8 @@
     "husky": "^9.1.7",
     "jiti": "^2.7.0",
     "lint-staged": "^16.4.0",
-    "oxfmt": "^0.65.0",
-    "oxlint": "^1.80.0",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
     "oxlint-tsgolint": "^7.0.2001",
     "semantic-release": "^25.0.9",
     "typescript": "~7.0.2",

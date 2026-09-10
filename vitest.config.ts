@@ -2,6 +2,10 @@ import { defineConfig } from "vitest/config"
 
 export default defineConfig({
   test: {
+    // Speeds up re-runs outside of watch mode
+    // https://vitest.dev/guide/improving-performance.html#caching-between-reruns
+    fsModuleCache: true,
+
     // "threads" is faster than the default "forks".
     // https://vitest.dev/guide/improving-performance.html#pool
     pool: "threads",

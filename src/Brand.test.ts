@@ -10,116 +10,57 @@ describe("Brand", () => {
   type Integer = Branded<"Integer", number>
   type PositiveInteger = PositiveNumber & Integer
 
-  describe("branded", () => {
-    it("should return the value as-is at runtime", () => {
-      // Arrange
-      const rawUserId = { id: "user-1" }
-
-      // Act
-      const userId = branded<UserId>(rawUserId)
-
-      // Assert
-      expect(userId).toBe(rawUserId)
-    })
-
-    it("should keep the branded value assignable to its base type", () => {
-      // Arrange
-      const rawUserId = { id: "user-1" }
-
-      // Act
-      const userId = branded<UserId>(rawUserId)
-
-      // Assert
-      expectTypeOf(userId).toEqualTypeOf<UserId>()
-      expectTypeOf(userId).toExtend<IdBase>()
-    })
-
-    // oxlint-disable-next-line vitest/expect-expect -- this is a type test
-    it("should require a value matching the brand base type", () => {
-      // Act & Assert
-      // @ts-expect-error UserId is a branded object with string property, not a number
-      branded<UserId>({ id: 123 })
+  describe("Branded", () => {
+    it("should remain assignable to its base type while the base remains unassignable", () => {
+      expectTypeOf<UserId>().toExtend<IdBase>()
+      expectTypeOf<IdBase>().not.toExtend<UserId>()
     })
 
     it("should keep different brands with the same base type incompatible", () => {
-      // Arrange
-      const id = { id: "user-1" }
-
-      // Act
-      const userId = branded<UserId>(id)
-      const orgId = branded<OrganizationId>(id)
-
-      // Assert
-      expectTypeOf(userId).not.toEqualTypeOf(orgId)
+      expectTypeOf<UserId>().not.toExtend<OrganizationId>()
+      expectTypeOf<OrganizationId>().not.toExtend<UserId>()
     })
 
-    it("should preserve single-brand string usage", () => {
-      // Arrange
-      type UserId = Branded<"UserId", string>
+    it("should preserve single-brand primitive usage", () => {
+      type StringUserId = Branded<"UserId", string>
 
-      // Act
-      const userId = branded<UserId>("id")
-
-      // Assert
-      expectTypeOf(userId).toEqualTypeOf<UserId>()
+      expectTypeOf<StringUserId>().not.toEqualTypeOf<never>()
+      expectTypeOf<StringUserId>().toExtend<string>()
+      expectTypeOf<string>().not.toExtend<StringUserId>()
     })
 
     it("should compose independently defined brands", () => {
-      // Arrange
       type NegativeNumber = Branded<"NegativeNumber", number>
 
-      // Act
-      const positiveNumber = branded<PositiveNumber>(1)
-      const integer = branded<Integer>(1)
-      const positiveInteger = branded<PositiveInteger>(1)
-
-      // Assert
       expectTypeOf<PositiveInteger>().not.toEqualTypeOf<never>()
-      expectTypeOf(positiveInteger).toEqualTypeOf<PositiveInteger>()
-      expectTypeOf(positiveInteger).toExtend<PositiveNumber>()
-      expectTypeOf(positiveInteger).toExtend<Integer>()
+      expectTypeOf<PositiveInteger>().toExtend<PositiveNumber>()
+      expectTypeOf<PositiveInteger>().toExtend<Integer>()
+      expectTypeOf<PositiveNumber>().not.toExtend<PositiveInteger>()
+      expectTypeOf<Integer>().not.toExtend<PositiveInteger>()
+      expectTypeOf<PositiveInteger>().not.toExtend<NegativeNumber>()
+      expectTypeOf<number>().not.toExtend<PositiveInteger>()
+    })
+  })
 
-      // @ts-expect-error PositiveNumber is not necessarily an Integer
-      const notPositiveIntegerFromPositiveNumber: PositiveInteger = positiveNumber
-      void notPositiveIntegerFromPositiveNumber
+  describe("branded", () => {
+    it("should return the value as-is at runtime", () => {
+      const rawUserId = { id: "user-1" }
 
-      // @ts-expect-error Integer is not necessarily positive
-      const notPositiveIntegerFromInteger: PositiveInteger = integer
-      void notPositiveIntegerFromInteger
-
-      // @ts-expect-error PositiveInteger is not a NegativeNumber
-      const negativeNumber: NegativeNumber = positiveInteger
-      void negativeNumber
-
-      // @ts-expect-error An unbranded number cannot be used as a PositiveNumber
-      const unbrandedPositiveNumber: PositiveNumber = 1
-      void unbrandedPositiveNumber
-
-      // @ts-expect-error An unbranded number cannot be used as an Integer
-      const unbrandedInteger: Integer = 1
-      void unbrandedInteger
-
-      // @ts-expect-error An unbranded number cannot be used as a PositiveInteger
-      const unbrandedPositiveInteger: PositiveInteger = 1
-      void unbrandedPositiveInteger
-
-      // @ts-expect-error PositiveInteger has a number base type
-      branded<PositiveInteger>("1")
+      expect(branded<UserId>(rawUserId)).toBe(rawUserId)
     })
 
-    // oxlint-disable-next-line vitest/expect-expect -- this is a type test
-    it("should keep brands with incompatible base primitives incompatible", () => {
-      // Arrange
-      type StringBrand = Branded<"StringBrand", string>
-      type NumberBrand = Branded<"NumberBrand", number>
+    it("should derive its parameter and return types from the brand", () => {
+      expectTypeOf(branded<UserId>)
+        .parameter(0)
+        .toEqualTypeOf<IdBase>()
+      expectTypeOf(branded<UserId>).returns.toEqualTypeOf<UserId>()
+    })
 
-      // Act
-      const stringBrand = branded<StringBrand>("value")
-
-      // Assert
-      // @ts-expect-error A branded string is not a branded number
-      const numberBrand: NumberBrand = stringBrand
-      void numberBrand
+    it("should derive its parameter and return types from composed brands", () => {
+      expectTypeOf(branded<PositiveInteger>)
+        .parameter(0)
+        .toEqualTypeOf<number>()
+      expectTypeOf(branded<PositiveInteger>).returns.toEqualTypeOf<PositiveInteger>()
     })
   })
 
@@ -154,13 +95,11 @@ describe("Brand", () => {
     })
 
     it("should support partially specified raw object inputs", () => {
-      const input: Partial<UnbrandedProperties<ResourceUpdateModel>> = {
+      expectTypeOf({
         gameId: 1,
         amount: 1,
         playerId: "player-1",
-      }
-
-      expectTypeOf(input).toEqualTypeOf<Partial<UnbrandedProperties<ResourceUpdateModel>>>()
+      }).toExtend<Partial<UnbrandedProperties<ResourceUpdateModel>>>()
     })
   })
 })

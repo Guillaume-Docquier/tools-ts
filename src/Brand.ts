@@ -1,7 +1,7 @@
 declare const brand: unique symbol
 declare const baseType: unique symbol
 
-type AnyBrand = Branded<unknown, unknown>
+type AnyBrand = { [baseType]: unknown }
 type TypeOf<TBrand extends AnyBrand> = TBrand[typeof baseType]
 
 /**
@@ -18,8 +18,20 @@ type TypeOf<TBrand extends AnyBrand> = TBrand[typeof baseType]
  * getUser(str) // S2345: Argument of type string is not assignable to parameter of type UserId
  * getUser(userId) // works!
  * ```
+ *
+ * Brands can be composed with a normal type intersection.
+ *
+ * ```ts
+ * type PositiveNumber = Branded<"PositiveNumber", number>
+ * type Integer = Branded<"Integer", number>
+ * type PositiveInteger = PositiveNumber & Integer
+ *
+ * const positiveNumber: PositiveNumber = branded<PositiveInteger>(1)
+ * const integer: Integer = branded<PositiveInteger>(1)
+ * const positiveInteger: PositiveInteger  = branded<PositiveInteger>(1)
+ * ```
  */
-export type Branded<TBrand, TType> = TType & { [brand]: TBrand } & { [baseType]: TType }
+export type Branded<TBrand, TType> = TType & { readonly [brand]: (value: TBrand) => TBrand } & { [baseType]: TType }
 
 /**
  * Brands a value.
@@ -34,7 +46,7 @@ export function branded<TBrand extends AnyBrand>(value: TypeOf<TBrand>): TBrand 
  * Removes the brand from a branded type while leaving other types unchanged.
  * Usually useful for tests when you want to accept unbranded arguments and brand them to alleviate test code.
  */
-export type Unbranded<T> = T extends Branded<infer _Tag, infer Base> ? Base : T
+export type Unbranded<T> = T extends { [baseType]: infer Base } ? Base : T
 
 /**
  * Removes brands from an object's property types.

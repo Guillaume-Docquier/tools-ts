@@ -9,7 +9,7 @@ type TypeOf<TBrand extends AnyBrand> = TBrand[typeof baseType]
  *
  * @example
  * ```ts
- * type UserId = Branded<string, "userId">
+ * type UserId = Branded<"UserId", string>
  * function getUser(userId: UserId): User {}
  *
  * const str = "a string"
@@ -19,7 +19,7 @@ type TypeOf<TBrand extends AnyBrand> = TBrand[typeof baseType]
  * getUser(userId) // works!
  * ```
  */
-export type Branded<TType, TBrand> = TType & { [brand]: TBrand } & { [baseType]: TType }
+export type Branded<TBrand, TType> = TType & { [brand]: TBrand } & { [baseType]: TType }
 
 /**
  * Brands a value.
@@ -34,7 +34,7 @@ export function branded<TBrand extends AnyBrand>(value: TypeOf<TBrand>): TBrand 
  * Removes the brand from a branded type while leaving other types unchanged.
  * Usually useful for tests when you want to accept unbranded arguments and brand them to alleviate test code.
  */
-export type Unbranded<T> = T extends Branded<infer Base, infer _Tag> ? Base : T
+export type Unbranded<T> = T extends Branded<infer _Tag, infer Base> ? Base : T
 
 /**
  * Removes brands from an object's property types.

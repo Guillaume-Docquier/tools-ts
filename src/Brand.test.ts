@@ -2,8 +2,8 @@ import { describe, expect, expectTypeOf, it } from "vitest"
 import { branded, type Branded, type Unbranded, type UnbrandedProperties } from "./Brand.js"
 
 type IdBase = { id: string }
-type UserId = Branded<IdBase, "UserId">
-type OrganizationId = Branded<IdBase, "OrganizationId">
+type UserId = Branded<"UserId", IdBase>
+type OrganizationId = Branded<"OrganizationId", IdBase>
 
 describe("Brand", () => {
   describe("branded", () => {
@@ -51,8 +51,8 @@ describe("Brand", () => {
   })
 
   describe("Unbranded", () => {
-    type UserId = Branded<number, "UserId">
-    type UserName = Branded<string, "UserName">
+    type UserId = Branded<"UserId", number>
+    type UserName = Branded<"UserName", string>
 
     it("should unwrap branded types and leave other types unchanged", () => {
       expectTypeOf<Unbranded<UserId>>().toEqualTypeOf<number>()
@@ -64,8 +64,8 @@ describe("Brand", () => {
 
   describe("UnbrandedProperties", () => {
     type ResourceUpdateModel = {
-      readonly gameId: Branded<number, "GameId">
-      playerId?: Branded<string, "PlayerId">
+      readonly gameId: Branded<"GameId", number>
+      playerId?: Branded<"PlayerId", string>
       enabled: boolean
     }
 

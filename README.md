@@ -71,7 +71,7 @@ These exports are type-only helpers for common TypeScript modeling problems.
 
 | Export                                     | What it is                                                        | Use it when                                                                                |
 | ------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `Branded`, `branded`                       | A nominal typing helper plus a runtime no-op for branding values. | Structurally identical values need distinct domain types, such as separate ID kinds.       |
+| `Branded<TBrand, TType>`, `branded`        | A nominal typing helper plus a runtime no-op for branding values. | Structurally identical values need distinct domain types, such as separate ID kinds.       |
 | `Unbranded`                                | Removes a brand from a type.                                      | An API accepts the underlying value of a branded type.                                     |
 | `UnbrandedProperties`                      | Removes brands from an object's property types.                   | An object input should use raw values for branded fields.                                  |
 | `ConstructorType`                          | A type for class constructors.                                    | A function accepts a class and later uses `new` or `instanceof` against it.                |

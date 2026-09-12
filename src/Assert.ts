@@ -80,6 +80,39 @@ export class Assert {
   }
 
   /**
+   * Asserts that something is not defined (null or undefined).
+   * This function will throw a {@link AssertionError} if this is not the case, and narrow to null or undefined otherwise.
+   *
+   * @example
+   * ```ts
+   * const somethingDefined: number | undefined = 1
+   * Assert.isNotDefined(somethingDefined) // Will throw!
+   *
+   * const somethingNotDefined: number | undefined = undefined
+   * Assert.isNotDefined(somethingNotDefined)
+   * somethingNotDefined // undefined
+   * ```
+   */
+  // oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- Needed to extract from undefined | null
+  public static isNotDefined<TType>(
+    this: void,
+    maybeNotDefined: TType | undefined | null,
+    paramName?: string,
+  ): asserts maybeNotDefined is undefined | null {
+    if (maybeNotDefined !== undefined && maybeNotDefined !== null) {
+      throw new AssertionError(
+        "Defined.",
+        {
+          paramName,
+          expected: "null or undefined",
+          received: formatPrimitiveValue(maybeNotDefined),
+        },
+        Assert.isNotDefined,
+      )
+    }
+  }
+
+  /**
    * Asserts that something is a member of an enum.
    * This function will throw a {@link AssertionError} if this is not the case, and narrow to the expected type otherwise.
    *

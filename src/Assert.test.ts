@@ -133,6 +133,56 @@ describe("Assert", () => {
     })
   })
 
+  describe("isNotDefined", () => {
+    it.each([1, "hello", new Bar(), "", 0])("should throw an AssertionError when the argument is %o", (maybeDefined) => {
+      // Act & Assert
+      expect(() => {
+        Assert.isNotDefined(maybeDefined)
+      }).toThrow(AssertionError)
+    })
+
+    it.each([null, undefined])("should not throw when the argument is not defined (%o)", (maybeNotDefined) => {
+      // Act & Assert
+      expect(() => {
+        Assert.isNotDefined(maybeNotDefined)
+      }).not.toThrow()
+    })
+
+    it("should narrow the type when the argument is not defined", () => {
+      // Arrange
+      const maybeNotDefined = null as number | null | undefined
+      expectTypeOf(maybeNotDefined).toEqualTypeOf<number | null | undefined>()
+
+      // Act
+      Assert.isNotDefined(maybeNotDefined)
+
+      // Assert
+      expectTypeOf(maybeNotDefined).toEqualTypeOf<null | undefined>()
+      expect(maybeNotDefined).toBeNull()
+    })
+
+    it("should use the provided param name in the error message", () => {
+      // Arrange
+      const paramName = "my parameter name"
+
+      // Act
+      let error: unknown
+      try {
+        Assert.isNotDefined(1, paramName)
+      } catch (e) {
+        error = e
+      }
+
+      // Assert
+      Assert.isInstanceOf(AssertionError, error)
+      expect(error.context).toStrictEqual<(typeof error)["context"]>({
+        paramName,
+        expected: "null or undefined",
+        received: 1,
+      })
+    })
+  })
+
   describe("isEnumMember", () => {
     describe("when enum is a number (normal) enum", () => {
       const VALID_THEORY = ["ONE", "TWO", "THREE", NumberEnum.ONE, NumberEnum.TWO, NumberEnum.THREE, 0, 1, 2]

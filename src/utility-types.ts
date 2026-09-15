@@ -171,4 +171,4 @@ export type ValueOf<T> = T[keyof T]
  * useEnum("a") // also works
  * ```
  */
-export type Enumify<TObject extends Record<string, string>> = ValueOf<TObject>
+export type Enumify<TObject extends Record<string, string | number>> = ValueOf<TObject>

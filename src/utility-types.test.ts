@@ -1,5 +1,5 @@
 import { describe, it, expectTypeOf } from "vitest"
-import type { PartialProperties, ValueOf } from "./utility-types.js"
+import type { Enumify, PartialProperties, ValueOf } from "./utility-types.js"
 
 describe("utility-types", () => {
   describe("PartialProperties", () => {
@@ -60,6 +60,18 @@ describe("utility-types", () => {
       expectTypeOf({ error: "500" }).toMatchTypeOf<Responses>()
 
       expectTypeOf({ something: "not a response" }).not.toMatchTypeOf<Responses>()
+    })
+  })
+
+  describe("Enumify", () => {
+    const StringEnum = { ONE: "one", TWO: "two" } as const
+    const NumberEnum = { ONE: 1, TWO: 2 } as const
+    const MixedEnum = { ONE: "one", TWO: 2 } as const
+
+    it("should resolve string, number, and mixed enum values", () => {
+      expectTypeOf<Enumify<typeof StringEnum>>().toEqualTypeOf<"one" | "two">()
+      expectTypeOf<Enumify<typeof NumberEnum>>().toEqualTypeOf<1 | 2>()
+      expectTypeOf<Enumify<typeof MixedEnum>>().toEqualTypeOf<"one" | 2>()
     })
   })
 })

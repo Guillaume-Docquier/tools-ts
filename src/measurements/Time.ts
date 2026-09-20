@@ -26,13 +26,13 @@ const TIME_PER_SECONDS: Record<UnitOfTime, number> = {
 /**
  * Represents a time with its unit
  */
-export type Time = Measurement<UnitOfTime>
+export type Time<TUnit extends UnitOfTime = UnitOfTime> = Measurement<TUnit>
 
 /**
  * A set of functions to work with Times.
  */
 export const Time = {
-  create: (value: number, unit: UnitOfTime): Time => {
+  create: <TUnit extends UnitOfTime>(value: number, unit: TUnit): Time<TUnit> => {
     return {
       value,
       unit,

@@ -16,7 +16,7 @@ const RADIANS_PER_ANGLE: Record<UnitOfAngle, number> = {
 /**
  * Represents an angle with its unit.
  */
-export type Angle = Measurement<UnitOfAngle>
+export type Angle<TUnit extends UnitOfAngle = UnitOfAngle> = Measurement<TUnit>
 
 /**
  * A set of functions to work with angles.
@@ -25,7 +25,7 @@ export const Angle = {
   /**
    * Creates an angle.
    */
-  create(value: number, unit: UnitOfAngle): Angle {
+  create<TUnit extends UnitOfAngle>(value: number, unit: TUnit): Angle<TUnit> {
     return { value, unit }
   },
 

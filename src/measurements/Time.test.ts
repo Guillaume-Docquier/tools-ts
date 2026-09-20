@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest"
+import { describe, expect, expectTypeOf, it } from "vitest"
 import { Time, UnitOfTime } from "./Time.js"
 
 describe("Time", () => {
@@ -13,6 +13,18 @@ describe("Time", () => {
 
       // Assert
       expect(time).toStrictEqual<typeof time>({ value, unit })
+    })
+
+    it("should infer the created time's unit", () => {
+      // Arrange
+      const value = 1
+      const unit = UnitOfTime.MINUTES
+
+      // Act
+      const time = Time.create(value, unit)
+
+      // Assert
+      expectTypeOf(time).toEqualTypeOf<Time<UnitOfTime.MINUTES>>()
     })
   })
 

@@ -24,7 +24,7 @@ const METERS_PER_DISTANCE: Record<UnitOfDistance, number> = {
 /**
  * Represents a distance with its unit
  */
-export type Distance = Measurement<UnitOfDistance>
+export type Distance<TUnit extends UnitOfDistance = UnitOfDistance> = Measurement<TUnit>
 
 /**
  * A set of functions to work with Distances.
@@ -35,7 +35,7 @@ export const Distance = {
    * @param value The value for the distance.
    * @param unit The unit for the distance.
    */
-  create(value: number, unit: UnitOfDistance): Distance {
+  create<TUnit extends UnitOfDistance>(value: number, unit: TUnit): Distance<TUnit> {
     return { value, unit }
   },
 

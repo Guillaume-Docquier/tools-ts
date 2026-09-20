@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest"
+import { describe, expect, expectTypeOf, it } from "vitest"
 import { Distance, UnitOfDistance } from "./Distance.js"
 
 describe("Distance", () => {
@@ -41,6 +41,20 @@ describe("Distance", () => {
       // Asset
       expect(converted.unit).toBe(to.unit)
       expect(converted.value).toBeCloseTo(to.value, 12)
+    })
+  })
+
+  describe("create", () => {
+    it("should infer the created distance's unit", () => {
+      // Arrange
+      const value = 1
+      const unit = UnitOfDistance.METERS
+
+      // Act
+      const distance = Distance.create(value, unit)
+
+      // Assert
+      expectTypeOf(distance).toEqualTypeOf<Distance<UnitOfDistance.METERS>>()
     })
   })
 

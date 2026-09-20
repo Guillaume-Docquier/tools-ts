@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest"
+import { describe, expect, expectTypeOf, it } from "vitest"
 import { Angle, UnitOfAngle } from "./Angle.js"
 
 describe("Angle", () => {
@@ -8,6 +8,18 @@ describe("Angle", () => {
         value: 90,
         unit: UnitOfAngle.DEGREES,
       })
+    })
+
+    it("should infer the created angle's unit", () => {
+      // Arrange
+      const value = 90
+      const unit = UnitOfAngle.DEGREES
+
+      // Act
+      const angle = Angle.create(value, unit)
+
+      // Assert
+      expectTypeOf(angle).toEqualTypeOf<Angle<UnitOfAngle.DEGREES>>()
     })
   })
 

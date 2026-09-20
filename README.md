@@ -127,7 +127,7 @@ Use these helpers for quick profiling.
 
 | Export                       | What it is                                                                        | Use it when                                                                    |
 | ---------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `Angle`, `UnitOfAngle`       | An angle measurement and its supported degree and radian units.                   | You need to represent angles and convert between degrees and radians.          |
+| `Angle`, `UnitOfAngle`       | An angle measurement and its supported units.                                     | You need to represent angles and convert between units.                        |
 | `Time`, `UnitOfTime`         | A time measurement and its supported units, with conversion and arithmetic tools. | You need unit-aware durations or calculations across different time units.     |
 | `Distance`, `UnitOfDistance` | A distance measurement and its supported units, with conversion and comparison.   | You need unit-aware lengths, spatial comparisons, or distances between points. |
 | `Point2D`, `XY`              | A two-dimensional position and its plain coordinate-value shape.                  | You need 2D positions whose axes can use and convert between distance units.   |

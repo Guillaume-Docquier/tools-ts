@@ -21,12 +21,14 @@ describe("Time", () => {
     { from: Time.create(2500, UnitOfTime.SECONDS), to: Time.create(2500, UnitOfTime.SECONDS) },
     { from: Time.create(2500, UnitOfTime.SECONDS), to: Time.create(41.6666667, UnitOfTime.MINUTES) },
     { from: Time.create(2500, UnitOfTime.SECONDS), to: Time.create(0.6944444, UnitOfTime.HOURS) },
+    { from: Time.create(2500, UnitOfTime.SECONDS), to: Time.create(0.0289352, UnitOfTime.DAYS) },
     { from: Time.create(2500, UnitOfTime.MINUTES), to: Time.create(150000, UnitOfTime.SECONDS) },
     { from: Time.create(2500, UnitOfTime.MINUTES), to: Time.create(2500, UnitOfTime.MINUTES) },
     { from: Time.create(2500, UnitOfTime.MINUTES), to: Time.create(41.6666667, UnitOfTime.HOURS) },
     { from: Time.create(2500, UnitOfTime.HOURS), to: Time.create(9000000, UnitOfTime.SECONDS) },
     { from: Time.create(2500, UnitOfTime.HOURS), to: Time.create(150000, UnitOfTime.MINUTES) },
     { from: Time.create(2500, UnitOfTime.HOURS), to: Time.create(2500, UnitOfTime.HOURS) },
+    { from: Time.create(2500, UnitOfTime.HOURS), to: Time.create(104.1666667, UnitOfTime.DAYS) },
   ]
 
   describe("convert", () => {

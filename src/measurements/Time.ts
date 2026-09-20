@@ -8,6 +8,7 @@ export enum UnitOfTime {
   SECONDS = "seconds",
   MINUTES = "minutes",
   HOURS = "hours",
+  DAYS = "days",
 }
 
 /**
@@ -19,6 +20,7 @@ const TIME_PER_SECONDS: Record<UnitOfTime, number> = {
   [UnitOfTime.SECONDS]: 1,
   [UnitOfTime.MINUTES]: 1 / 60,
   [UnitOfTime.HOURS]: 1 / 60 / 60,
+  [UnitOfTime.DAYS]: 1 / 60 / 60 / 24,
 }
 
 /**

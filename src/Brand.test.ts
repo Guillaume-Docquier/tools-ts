@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from "vitest"
-import { branded, type Branded, type Unbranded, type UnbrandedProperties } from "./Brand.js"
+import { branded, type Branded, type DeepUnbranded, type Unbranded, type UnbrandedProperties } from "./Brand.js"
 
 type IdBase = { id: string }
 type UserId = Branded<"UserId", IdBase>
@@ -100,6 +100,75 @@ describe("Brand", () => {
         amount: 1,
         playerId: "player-1",
       }).toExtend<Partial<UnbrandedProperties<ResourceUpdateModel>>>()
+    })
+  })
+
+  describe("DeepUnbranded", () => {
+    it("should preserve nested object, array, union, and record structure when unbranding", () => {
+      // Arrange
+      type Id = Branded<"Id", string>
+      type Input = Readonly<{
+        optional?: Id | null
+        tuple: readonly [Id, { id: Id }]
+        byId: Readonly<Record<Id, { id: Id }>>
+      }>
+      type Expected = Readonly<{
+        optional?: string | null
+        tuple: readonly [string, { id: string }]
+        byId: Readonly<Record<string, { id: string }>>
+      }>
+
+      // Act
+      type DeepUnbrandedInput = DeepUnbranded<Input>
+
+      // Assert
+      expectTypeOf<DeepUnbrandedInput>().toExtend<Expected>()
+      expectTypeOf<Expected>().toExtend<DeepUnbrandedInput>()
+    })
+
+    it("should distribute over a top-level union of branded, object, and null values", () => {
+      // Arrange
+      type Id = Branded<"Id", string>
+      type Count = Branded<"Count", number>
+      type Input = Id | { count: Count } | null
+      type Expected = string | { count: number } | null
+
+      // Act
+      type Result = DeepUnbranded<Input>
+
+      // Assert
+      expectTypeOf<Result>().toExtend<Expected>()
+      expectTypeOf<Expected>().toExtend<Result>()
+    })
+
+    it("should preserve discriminated union members nested in an object", () => {
+      // Arrange
+      type Id = Branded<"Id", string>
+      type Input = { result: { kind: "found"; id: Id; related: ReadonlyArray<Id | null> } | { kind: "missing"; searched: Id } }
+      type Expected = {
+        result: { kind: "found"; id: string; related: ReadonlyArray<string | null> } | { kind: "missing"; searched: string }
+      }
+
+      // Act
+      type Result = DeepUnbranded<Input>
+
+      // Assert
+      expectTypeOf<Result>().toExtend<Expected>()
+      expectTypeOf<Expected>().toExtend<Result>()
+    })
+
+    it("should unbrand every member of a collection union", () => {
+      // Arrange
+      type Id = Branded<"Id", string>
+      type Input = Map<Id, { id: Id }> | ReadonlySet<Id> | readonly [Id, { id: Id }]
+      type Expected = Map<string, { id: string }> | ReadonlySet<string> | readonly [string, { id: string }]
+
+      // Act
+      type Result = DeepUnbranded<Input>
+
+      // Assert
+      expectTypeOf<Result>().toExtend<Expected>()
+      expectTypeOf<Expected>().toExtend<Result>()
     })
   })
 })

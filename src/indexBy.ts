@@ -11,7 +11,7 @@
  * // }
  * ```
  */
-export function indexBy<TProperty extends string, TElement extends Record<TProperty, string>>(
+export function indexBy<TProperty extends string, TElement extends Record<TProperty, string | number>>(
   property: TProperty,
   arrayOfObjects: readonly TElement[],
 ): Record<TElement[TProperty], TElement> {

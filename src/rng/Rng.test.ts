@@ -231,7 +231,7 @@ describe("Rng", () => {
       // Assert
       expect(arrayToShuffle).not.toStrictEqual(initialValues)
       expect(shuffled).toBe(arrayToShuffle)
-      expect(arrayToShuffle.toSorted(Sort.byAscending)).toStrictEqual(initialValues)
+      expect(arrayToShuffle.toSorted(Sort.numeric(Sort.Direction.Ascending))).toStrictEqual(initialValues)
     })
   })
 

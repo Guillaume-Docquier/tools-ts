@@ -1,33 +1,56 @@
+enum SortDirection {
+  /**
+   * From smallest to biggest.
+   */
+  Ascending = "Ascending",
+
+  /**
+   * From biggest to smallest.
+   */
+  Descending = "Descending",
+}
+
+export type Comparator<T> = (first: T, second: T) => number
+
 export const Sort = {
+  Direction: SortDirection,
+
   /**
-   * Sorts numbers by ascending values
+   * Composes comparators.
    */
-  byAscending: (a: number, b: number): number => {
-    return a - b
+  compose: <T>(...comparators: ReadonlyArray<Comparator<T>>): Comparator<T> => {
+    return (first, second) => {
+      for (const comparator of comparators) {
+        const comparison = comparator(first, second)
+        if (comparison !== 0) {
+          return comparison
+        }
+      }
+
+      return 0
+    }
   },
 
   /**
-   * Sorts records by a numeric property in ascending order
+   * Compares numbers in the selected direction.
+   * Defaults to Ascending.
    */
-  byAscendingProperty:
-    <TProperty extends PropertyKey>(property: TProperty) =>
-    <TRecord extends Record<TProperty, number>>(a: TRecord, b: TRecord): number => {
-      return Sort.byAscending(a[property], b[property])
-    },
-
-  /**
-   * Sorts numbers by ascending values
-   */
-  byDescending: (a: number, b: number): number => {
-    return b - a
+  numeric: (direction: SortDirection = SortDirection.Ascending): Comparator<number> => {
+    switch (direction) {
+      case SortDirection.Ascending:
+        return (first, second) => first - second
+      case SortDirection.Descending:
+        return (first, second) => second - first
+    }
   },
 
   /**
-   * Sorts records by a numeric property in descending order
+   * Compares records by a numeric property in the selected direction.
+   * Defaults to Ascending.
    */
-  byDescendingProperty:
-    <TProperty extends PropertyKey>(property: TProperty) =>
-    <TRecord extends Record<TProperty, number>>(a: TRecord, b: TRecord): number => {
-      return Sort.byDescending(a[property], b[property])
-    },
+  byNumericProperty: <TProperty extends PropertyKey>(property: TProperty, direction: SortDirection = SortDirection.Ascending) => {
+    const compare = Sort.numeric(direction)
+    return <TRecord extends Record<TProperty, number>>(first: TRecord, second: TRecord): number =>
+      compare(first[property], second[property])
+  },
 }

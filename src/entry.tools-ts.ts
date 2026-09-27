@@ -29,7 +29,7 @@ export type { LoggerContext } from "./logging/log-context/LoggerContext.js"
 export type { LogContextProvider } from "./logging/log-context/LogContextProvider.js"
 
 export { debounce } from "./debounce.js"
-export { Sort } from "./Sort.js"
+export { Sort, type Comparator } from "./Sort.js"
 export { Rng, type RngState } from "./rng/Rng.js"
 export type { Generator } from "./rng/Generator.js"
 export { createGeneratorStub } from "./rng/Generator.stub.js"

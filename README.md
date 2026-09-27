@@ -49,9 +49,10 @@ intervals.
 
 Use this tool when code needs shared ordering helpers.
 
-| Export | What it is                                     | Use it when                                                                             |
-| ------ | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `Sort` | Comparator helpers for common sort operations. | You want a shared sorting utility instead of rewriting compare callbacks at call sites. |
+| Export       | What it is                                                                     | Use it when                                                                             |
+| ------------ | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `Sort`       | Direction-aware numeric and property comparators, plus comparator composition. | You want a shared sorting utility instead of rewriting compare callbacks at call sites. |
+| `Comparator` | Helper type to define comparators compatible with the Sort utilities.          | You define sorting comparators.                                                         |
 
 ### Randomness
 

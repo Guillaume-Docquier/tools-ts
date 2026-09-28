@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from "vitest"
 import { z } from "zod"
 import { branded, type Branded } from "./Brand.js"
-import { typedParse, safeTypedParse } from "./typedParse.js"
+import { typedParse, safeTypedParse } from "./entry.schemas.js"
 
 type Id = Branded<"Id", string>
 const IdSchema = z

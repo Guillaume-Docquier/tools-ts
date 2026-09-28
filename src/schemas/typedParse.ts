@@ -1,5 +1,5 @@
 import type { z } from "zod"
-import type { DeepUnbranded } from "./Brand.js"
+import type { DeepUnbranded } from "../Brand.js"
 
 /**
  * We use zod schemas on unknown inputs to parse & validate the data.

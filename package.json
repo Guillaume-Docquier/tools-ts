@@ -18,6 +18,11 @@
       "types": "./dist/entry.tools-ts.d.ts",
       "import": "./dist/entry.tools-ts.js",
       "require": "./dist/entry.tools-ts.js"
+    },
+    "./schemas": {
+      "types": "./dist/entry.schemas.d.ts",
+      "import": "./dist/entry.schemas.js",
+      "require": "./dist/entry.schemas.js"
     }
   },
   "publishConfig": {

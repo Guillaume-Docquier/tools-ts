@@ -15,6 +15,7 @@ export { Profile } from "./Profile.js"
 export { Range } from "./Range.js"
 export { Scalar } from "./Scalar.js"
 export { TypeGuard } from "./TypeGuard.js"
+export { typedParse, safeTypedParse } from "./typedParse.js"
 export { setTimeoutAsync } from "./setTimeoutAsync.js"
 export { noop, asyncNoop } from "./noop.js"
 

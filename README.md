@@ -35,6 +35,15 @@ external APIs, CLI input, local storage, or other unknown data.
 | `getEnumKey` | Looks up the enum key associated with a value.                                    | You have an enum value and need the more descriptive key for display, logs, or diagnostics. |
 | `asArray`    | Normalizes a single value or array into an array.                                 | An API accepts both `T` and `T[]`, but downstream logic should iterate uniformly.           |
 
+### Zod Parsing
+
+Use these tools when constructing a value from trusted, typed data through a Zod schema. Install Zod in the consuming project to use them.
+
+| Export         | What it is                                                                       | Use it when                                                        |
+| -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| typedParse     | Parses a typed, deeply unbranded value with a Zod schema and returns its output. | Invalid data is an internal invariant violation that should throw. |
+| safeTypedParse | The non-throwing counterpart, returning a Zod safe parse result.                 | Validation may fail and the caller will handle the result.         |
+
 ### Numeric Utilities
 
 Use these tools when code needs reusable numeric operations or validated

@@ -39,12 +39,15 @@ external APIs, CLI input, local storage, or other unknown data.
 
 Import these tools from `@guillaume-docquier/tools-ts/schemas`. Install Zod in the consuming project to use this optional subpath; the root entry point does not load Zod.
 
-| Export                                    | What it is                                                                       | Use it when                                                        |
-| ----------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| typedParse                                | Parses a typed, deeply unbranded value with a Zod schema and returns its output. | Invalid data is an internal invariant violation that should throw. |
-| safeTypedParse                            | The non-throwing counterpart, returning a Zod safe parse result.                 | Validation may fail and the caller will handle the result.         |
-| IntegerSchema and `Integer`               | Parses and brands whole numbers.                                                 | A value must be an integer, including zero or a negative integer.  |
-| PositiveNumberSchema and `PositiveNumber` | Parses and brands numbers greater than zero.                                     | A value must be positive but may be fractional.                    |
+| Export                                          | What it is                                                                       | Use it when                                                        |
+| ----------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| typedParse                                      | Parses a typed, deeply unbranded value with a Zod schema and returns its output. | Invalid data is an internal invariant violation that should throw. |
+| safeTypedParse                                  | The non-throwing counterpart, returning a Zod safe parse result.                 | Validation may fail and the caller will handle the result.         |
+| IntegerSchema and `Integer`                     | Parses and brands whole numbers.                                                 | A value must be an integer, including zero or a negative integer.  |
+| PositiveNumberSchema and `PositiveNumber`       | Parses and brands numbers greater than zero.                                     | A value must be positive but may be fractional.                    |
+| NonNegativeNumberSchema and `NonNegativeNumber` | Parses and brands numbers greater than or equal to zero.                         | A value may be zero or positive, including fractions.              |
+| NegativeNumberSchema and `NegativeNumber`       | Parses and brands numbers less than zero.                                        | A value must be negative but may be fractional.                    |
+| NonPositiveNumberSchema and `NonPositiveNumber` | Parses and brands numbers less than or equal to zero.                            | A value may be zero or negative, including fractions.              |
 
 ### Numeric Utilities
 

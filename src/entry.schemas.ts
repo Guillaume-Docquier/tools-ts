@@ -1,3 +1,6 @@
 export { IntegerSchema, type Integer } from "./schemas/Integer.js"
+export { NegativeNumberSchema, type NegativeNumber } from "./schemas/NegativeNumber.js"
+export { NonNegativeNumberSchema, type NonNegativeNumber } from "./schemas/NonNegativeNumber.js"
+export { NonPositiveNumberSchema, type NonPositiveNumber } from "./schemas/NonPositiveNumber.js"
 export { PositiveNumberSchema, type PositiveNumber } from "./schemas/PositiveNumber.js"
 export { typedParse, safeTypedParse } from "./schemas/typedParse.js"

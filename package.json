@@ -43,8 +43,8 @@
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
-    "@logtape/logtape": "^2.3.6",
-    "@logtape/redaction": "^2.3.6"
+    "@logtape/logtape": "^2.3.8",
+    "@logtape/redaction": "^2.3.8"
   },
   "devDependencies": {
     "@guillaume-docquier/oxfmt": "^1.0.14",

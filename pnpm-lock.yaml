@@ -167,11 +167,11 @@ importers:
   .:
     dependencies:
       '@logtape/logtape':
-        specifier: ^2.3.8
-        version: 2.3.8
+        specifier: ^2.3.11
+        version: 2.3.11
       '@logtape/redaction':
-        specifier: ^2.3.8
-        version: 2.3.8(@logtape/logtape@2.3.8)
+        specifier: ^2.3.11
+        version: 2.3.11(@logtape/logtape@2.3.11)
     devDependencies:
       '@guillaume-docquier/oxfmt':
         specifier: ^1.0.14
@@ -301,13 +301,13 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@logtape/logtape@2.3.8':
-    resolution: {integrity: sha512-MufJjxJF9frfmRuDBmpTYxhMgENkNGqSaDw59DnSjVeZ+ptxkDgfEoaJkLcpxtF8is9TAptRsCYXfw+j+3yX3A==}
+  '@logtape/logtape@2.3.11':
+    resolution: {integrity: sha512-T7T+IShQBxofHCs7J1kVMZPLLHYAXAOqPEc/xwzd6/2q8va/D/t/HP7uCeJzTQOywpXF1tbyz15O4VHT8NF2hw==}
 
-  '@logtape/redaction@2.3.8':
-    resolution: {integrity: sha512-cU0KikvL5iSvjo6uEmiz4r9gNFZ4Lw1eZsTTJs+v/xm5XJg+7PB7PC7cCd7JqBKgU/B3Dvi+wIbujjC39Ca7nA==}
+  '@logtape/redaction@2.3.11':
+    resolution: {integrity: sha512-ouNFGMcXS0S4WJIRXwN7p7+wkrbTqzpVyuhR9fcEHwF7O+3Yk4z0TSmPZhFx4qa61aUCjT6E+s/YK5RM59ICYg==}
     peerDependencies:
-      '@logtape/logtape': ^2.3.8
+      '@logtape/logtape': ^2.3.11
 
   '@octokit/auth-token@6.0.0':
     resolution: {integrity: sha512-P4YJBPdPSpWTQ1NU4XYdvHvXJJDxM6YwpS0FZHRgP7YFkdVxsWcpWGy/NVqlAA7PcPCnMacXlRm1y2PFZRWL/w==}
@@ -2545,11 +2545,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@logtape/logtape@2.3.8': {}
+  '@logtape/logtape@2.3.11': {}
 
-  '@logtape/redaction@2.3.8(@logtape/logtape@2.3.8)':
+  '@logtape/redaction@2.3.11(@logtape/logtape@2.3.11)':
     dependencies:
-      '@logtape/logtape': 2.3.8
+      '@logtape/logtape': 2.3.11
 
   '@octokit/auth-token@6.0.0': {}
 

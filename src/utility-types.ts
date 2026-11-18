@@ -134,6 +134,20 @@ export type PartialProperties<TObject, TKey extends keyof TObject> = Omit<TObjec
 }
 
 /**
+ * Makes properties optional and allows them to be set to `undefined`.
+ * This is useful when using exactOptionalPropertyTypes and Partial is not enough.
+ *
+ * @example
+ * ```ts
+ * type Options = PartialOrUndefinedKeys<{ id: string; retries: number | undefined }>
+ * // { id?: string | undefined; retries?: number | undefined }
+ * ```
+ */
+export type PartialOrUndefinedKeys<T> = {
+  [K in keyof T]?: T[K] | undefined
+}
+
+/**
  * Like keyof T, but for the values.
  *
  * @example

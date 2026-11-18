@@ -20,4 +20,17 @@ export default defineConfig({
       files: ["**/*.test.ts"],
     },
   ],
+  rules: {
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          {
+            regex: "(^|/)entry\\.tools-ts(\\.(js|ts|d\\.ts))?$",
+            message: "Import directly from the module that defines the export.",
+          },
+        ],
+      },
+    ],
+  },
 })

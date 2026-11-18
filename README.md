@@ -97,6 +97,7 @@ These exports are type-only helpers for common TypeScript modeling problems.
 | `Prettify`                                 | Re-expands an object type for easier editor hovers.                          | Intersections or mapped types are correct but hard to read in tooling.                     |
 | `OmitOverUnion`                            | Applies `Omit` distributively across union members.                          | Native `Omit` collapses a discriminated union in a way that loses member-specific fields.  |
 | `PartialProperties`                        | Makes selected object properties partial, not the whole object.              | Only nested property objects should become partial while the parent shape stays required.  |
+| `PartialOrUndefinedKeys`                   | Makes all properties optional and allows explicit `undefined`.               | An object input should accept omitted keys and keys set to `undefined`.                    |
 | `Mutable`                                  | Removes `readonly` from selected properties.                                 | You have a narrow, deliberate mutation need. Avoid this unless there is no cleaner model.  |
 
 ### Logging

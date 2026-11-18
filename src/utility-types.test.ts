@@ -1,5 +1,5 @@
 import { describe, it, expectTypeOf } from "vitest"
-import type { Enumify, PartialProperties, ValueOf } from "./utility-types.js"
+import type { Enumify, PartialProperties, ValueOf, PartialOrUndefinedKeys } from "./utility-types.js"
 
 describe("utility-types", () => {
   describe("PartialProperties", () => {
@@ -42,6 +42,24 @@ describe("utility-types", () => {
 
       // @ts-expect-error -- c is required, as expected
       data.push({ a: 1, b: {} })
+    })
+  })
+
+  describe("PartialOrUndefinedKeys", () => {
+    it("should allow omission and explicit undefined for the selected properties", () => {
+      // Arrange
+      type Options =
+        | { kind: "remote"; url: string; readonly timeout: number; retries?: number }
+        | { kind: "local"; path: string; readonly timeout: number; retries?: number }
+
+      // Act
+      type Result = PartialOrUndefinedKeys<Options>
+
+      // Assert
+      expectTypeOf<Result>().toEqualTypeOf<
+        | { kind?: "remote" | undefined; url?: string | undefined; readonly timeout?: number | undefined; retries?: number | undefined }
+        | { kind?: "local" | undefined; path?: string | undefined; readonly timeout?: number | undefined; retries?: number | undefined }
+      >()
     })
   })
 

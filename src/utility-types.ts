@@ -1,3 +1,5 @@
+export type MaybePromise<T> = Promise<T> | T
+
 /**
  *
  * Utility type that represents the constructor of a given class or function.

@@ -56,6 +56,7 @@ intervals.
 
 | Export   | What it is                                                       | Use it when                                                                                   |
 | -------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `UInt32` | Unsigned 32-bit integers.                                        | You need to validate a value or generate a random value in the unsigned 32-bit range.         |
 | `Scalar` | Helpers for scalar number operations.                            | You need to constrain a number to an inclusive minimum and maximum.                           |
 | `Range`  | Helpers for creating, validating, comparing, and testing ranges. | You need finite integer or float intervals with inclusive minimums and configurable maximums. |
 
